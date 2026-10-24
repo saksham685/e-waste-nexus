@@ -25,9 +25,10 @@ import {
 interface NavbarProps {
   currentTab: string;
   onNavigate: (tab: string) => void;
+  onOpenNexusGPT?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate, onOpenNexusGPT }) => {
   const { user, logout, switchDemoRole } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [demoDropdownOpen, setDemoDropdownOpen] = useState(false);
@@ -145,6 +146,25 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
 
           {/* Right Controls: Audio Toggle, Notifications, Persona Switcher & Profile */}
           <div className="hidden md:flex items-center space-x-2.5">
+            {/* Ask NexusGPT AI Trigger */}
+            <button
+              onClick={() => {
+                soundEffects.playClick();
+                onOpenNexusGPT?.();
+              }}
+              className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-lime-500/20 border border-emerald-500/40 hover:border-emerald-400 text-xs font-semibold text-emerald-300 hover:text-white transition-all shadow-glow-green cursor-pointer group"
+              title="Open ChatGPT-style AI Assistant (Written & Spoken Answers)"
+            >
+              <div className="relative flex items-center justify-center">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping absolute" />
+                <Sparkles className="w-3.5 h-3.5 text-lime-400 group-hover:rotate-12 transition-transform" />
+              </div>
+              <span className="font-mono">Ask NexusGPT</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 uppercase tracking-widest font-mono">
+                AI
+              </span>
+            </button>
+
             {/* Audio Toggle */}
             <button
               onClick={handleToggleSound}
@@ -262,6 +282,22 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-b border-slate-800 bg-nexus-charcoal px-4 pt-2 pb-4 space-y-2">
+          {/* Mobile NexusGPT CTA */}
+          <button
+            onClick={() => {
+              soundEffects.playClick();
+              onOpenNexusGPT?.();
+              setMobileMenuOpen(false);
+            }}
+            className="w-full flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-emerald-500/20 to-lime-500/20 border border-emerald-500/40 text-emerald-300 font-semibold text-xs"
+          >
+            <span className="flex items-center space-x-2">
+              <Sparkles className="w-4 h-4 text-lime-400" />
+              <span>Ask NexusGPT AI (Write & Speak)</span>
+            </span>
+            <span className="text-[10px] font-mono uppercase bg-emerald-500/30 px-2 py-0.5 rounded-full text-white">OPEN</span>
+          </button>
+
           {navLinks.map(link => (
             <button
               key={link.id}

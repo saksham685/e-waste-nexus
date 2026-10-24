@@ -18,9 +18,10 @@ import {
 interface VoiceCompanionProps {
   currentTab: string;
   onNavigate: (tab: string) => void;
+  onOpenChat?: () => void;
 }
 
-export const VoiceCompanion: React.FC<VoiceCompanionProps> = ({ currentTab, onNavigate }) => {
+export const VoiceCompanion: React.FC<VoiceCompanionProps> = ({ currentTab, onNavigate, onOpenChat }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(voiceAssistant.getIsMuted());
   const [isListening, setIsListening] = useState(false);
@@ -180,6 +181,25 @@ export const VoiceCompanion: React.FC<VoiceCompanionProps> = ({ currentTab, onNa
 
           {/* Voice Actions Grid */}
           <div className="space-y-2">
+            {onOpenChat && (
+              <button
+                onClick={() => {
+                  soundEffects.playClick();
+                  setIsExpanded(false);
+                  onOpenChat();
+                }}
+                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-lime-500/20 border border-emerald-500/50 hover:border-emerald-400 text-left text-xs font-semibold text-emerald-300 hover:text-white flex items-center justify-between transition-all shadow-glow-green"
+              >
+                <span className="flex items-center space-x-2">
+                  <Sparkles className="w-3.5 h-3.5 text-lime-400" />
+                  <span>Open NexusGPT (Chat & Speak)</span>
+                </span>
+                <span className="text-[10px] font-mono uppercase bg-emerald-500/30 px-2 py-0.5 rounded-full text-emerald-300">
+                  AI
+                </span>
+              </button>
+            )}
+
             <button
               onClick={handleBriefPage}
               className="w-full py-2 px-3 rounded-xl bg-nexus-dark border border-slate-800 hover:border-emerald-500/50 text-left text-xs text-slate-200 hover:text-emerald-300 flex items-center justify-between transition-colors"

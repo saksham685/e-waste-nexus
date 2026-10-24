@@ -4,6 +4,7 @@ import { CyberBackground3D } from './components/CyberBackground3D';
 import { AuthGate } from './components/AuthGate';
 import { PageTransition3D } from './components/PageTransition3D';
 import { VoiceCompanion } from './components/VoiceCompanion';
+import { NexusGPTChat } from './components/NexusGPTChat';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { LandingPage } from './pages/LandingPage';
@@ -19,6 +20,7 @@ import { RegisterPage } from './pages/RegisterPage';
 
 const AppContent: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('landing');
+  const [isNexusGPTOpen, setIsNexusGPTOpen] = useState<boolean>(false);
   const { user, loading } = useAuth();
 
   const handleNavigate = (tab: string) => {
@@ -51,11 +53,15 @@ const AppContent: React.FC = () => {
     );
   }
 
-  // FULL UNLOCKED PLATFORM WITH 3D TAB TRANSITIONS & VOICE COMPANION
+  // FULL UNLOCKED PLATFORM WITH 3D TAB TRANSITIONS, VOICE COMPANION & NEXUSGPT
   return (
     <div className="min-h-screen flex flex-col bg-nexus-dark/95 text-slate-100 relative">
       <CyberBackground3D />
-      <Navbar currentTab={currentTab} onNavigate={handleNavigate} />
+      <Navbar
+        currentTab={currentTab}
+        onNavigate={handleNavigate}
+        onOpenNexusGPT={() => setIsNexusGPTOpen(true)}
+      />
 
       <main className="flex-1 relative z-10">
         <PageTransition3D currentTab={currentTab}>
@@ -73,7 +79,18 @@ const AppContent: React.FC = () => {
       </main>
 
       {/* Floating 3D AI Voice Companion (Speech Narration & Voice Command Control) */}
-      <VoiceCompanion currentTab={currentTab} onNavigate={handleNavigate} />
+      <VoiceCompanion
+        currentTab={currentTab}
+        onNavigate={handleNavigate}
+        onOpenChat={() => setIsNexusGPTOpen(true)}
+      />
+
+      {/* ChatGPT-Style NexusGPT AI (Written + Spoken Answers with Mic Input) */}
+      <NexusGPTChat
+        isOpen={isNexusGPTOpen}
+        onClose={() => setIsNexusGPTOpen(false)}
+        onNavigate={handleNavigate}
+      />
 
       <Footer onNavigate={handleNavigate} />
     </div>
