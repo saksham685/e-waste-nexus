@@ -116,6 +116,7 @@ class VoiceAssistant {
       analytics: "Environmental Life-Cycle Accounting. Review avoided greenhouse gas emissions, heavy metal diversion, and partner fleet KPIs.",
       partner: "Logistics Partner Operations Center. Record calibrated weigh-scale cargo manifests and photographic evidence.",
       recycler: "Certified Recycler Processing Hub. Document pyrometallurgical separation yields and claim verified EPR compliance credits.",
+      cinema: "Nexus 4K Cinema and Documentary Theater. Watch high-definition footage of urban gold mining, Apple Daisy robotic disassembly, and circular supply chain mechanics.",
       admin: "Administrator Control Center. Review pending weight calibration audits, user governance, and cryptographic system logs."
     };
 

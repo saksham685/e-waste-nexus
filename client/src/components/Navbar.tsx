@@ -19,7 +19,8 @@ import {
   Volume2,
   VolumeX,
   Bell,
-  Sparkles
+  Sparkles,
+  Film
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -62,6 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate, onOpenNe
     { id: 'centers', label: 'Centers', icon: MapPin },
     { id: 'epr', label: 'EPR Credits', icon: Award },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'cinema', label: 'Video Cinema', icon: Film, isNew: true },
   ];
 
   const roleTabs = [];
@@ -119,6 +121,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate, onOpenNe
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{link.label}</span>
+                  {link.id === 'cinema' && (
+                    <span className="text-[9px] font-mono px-1 rounded bg-red-500/30 border border-red-500/50 text-red-300 font-bold uppercase animate-pulse">
+                      4K
+                    </span>
+                  )}
                 </button>
               );
             })}

@@ -15,6 +15,7 @@ import { EprDashboard } from './pages/EprDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { CentersPage } from './pages/CentersPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
+import { CinemaPage } from './pages/CinemaPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 
@@ -73,6 +74,7 @@ const AppContent: React.FC = () => {
           {currentTab === 'admin' && <AdminDashboard />}
           {currentTab === 'centers' && <CentersPage onSchedulePickup={() => handleNavigate('pickups')} />}
           {currentTab === 'analytics' && <AnalyticsPage />}
+          {currentTab === 'cinema' && <CinemaPage onNavigate={handleNavigate} />}
           {currentTab === 'login' && <LoginPage onNavigate={handleNavigate} />}
           {currentTab === 'register' && <RegisterPage onNavigate={handleNavigate} />}
         </PageTransition3D>

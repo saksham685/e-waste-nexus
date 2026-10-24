@@ -105,6 +105,9 @@ export const VoiceCompanion: React.FC<VoiceCompanionProps> = ({ currentTab, onNa
         } else if (text.includes('home') || text.includes('ecosystem') || text.includes('landing')) {
           voiceAssistant.speak('Returning to Ecosystem Overview.');
           onNavigate('landing');
+        } else if (text.includes('video') || text.includes('cinema') || text.includes('movie') || text.includes('docu')) {
+          voiceAssistant.speak('Opening 4K Video Cinema and Industrial Documentaries.');
+          onNavigate('cinema');
         } else if (text.includes('admin') || text.includes('control')) {
           voiceAssistant.speak('Accessing Administrator Control Center.');
           onNavigate('admin');

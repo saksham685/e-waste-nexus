@@ -70,9 +70,9 @@ export const NexusGPTChat: React.FC<NexusGPTChatProps> = ({ isOpen, onClose, onN
   }, [isOpen, messages]);
 
   const promptSuggestions = [
+    "Where can I watch e-waste recycling videos?",
     "How are EPR credits calculated for lithium batteries?",
     "What precious metals can be recovered from laptops?",
-    "How does the chain-of-custody verification work?",
     "Can you help me schedule a pickup?"
   ];
 
@@ -106,6 +106,10 @@ export const NexusGPTChat: React.FC<NexusGPTChatProps> = ({ isOpen, onClose, onN
 
     if (q.includes('center') || q.includes('drop off') || q.includes('map') || q.includes('location')) {
       return "We operate licensed municipal collection hubs across major clean-tech corridors including Silicon Valley, San Francisco, Seattle, and Austin. You can visit the 'Centers' tab to explore our interactive geographic map, check operating hours, and verify accepted hazardous items.";
+    }
+
+    if (q.includes('video') || q.includes('cinema') || q.includes('documentary') || q.includes('movie') || q.includes('watch')) {
+      return "We have a dedicated 4K Video Cinema & Documentary Theater right on the platform! You can watch:\n\n1. 'Urban Mining: Extracting 99.9% Pure Gold from E-Waste'\n2. 'Robotic Deconstruction: Apple Daisy Disassembling 200 iPhones/Hour'\n3. 'The Circular Supply Chain: What Actually Happens to Your Tech'\n4. 'EPR Compliance Explained in Action'\n\nClick on the 'Video Cinema' tab in the navbar to start watching with ambient theater mode and audio briefings!";
     }
 
     if (q.includes('carbon') || q.includes('co2') || q.includes('environment') || q.includes('impact')) {

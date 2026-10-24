@@ -23,7 +23,9 @@ import {
   ChevronDown,
   HelpCircle,
   Zap,
-  Globe
+  Globe,
+  Play,
+  Film
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -166,10 +168,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
               <button
                 onClick={() => { soundEffects.playClick(); onNavigate('epr'); }}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-sm bg-nexus-charcoal/80 border border-slate-700 hover:border-emerald-500/50 text-slate-200 hover:text-white transition-all hover:scale-105 active:scale-95 backdrop-blur flex items-center justify-center space-x-2 cursor-pointer"
+                className="w-full sm:w-auto px-6 py-4 rounded-2xl font-bold text-sm bg-nexus-charcoal/80 border border-slate-700 hover:border-emerald-500/50 text-slate-200 hover:text-white transition-all hover:scale-105 active:scale-95 backdrop-blur flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <span>Explore EPR Registry</span>
                 <ChevronRight className="w-4 h-4 text-emerald-400" />
+              </button>
+
+              <button
+                onClick={() => { soundEffects.playClick(); onNavigate('cinema'); }}
+                className="w-full sm:w-auto px-6 py-4 rounded-2xl font-bold text-sm bg-gradient-to-r from-red-950/60 via-nexus-charcoal to-emerald-950/50 border border-red-500/40 hover:border-red-400 text-white transition-all hover:scale-105 active:scale-95 flex items-center justify-center space-x-2.5 cursor-pointer shadow-glow-green group"
+              >
+                <div className="w-6 h-6 rounded-full bg-red-500/90 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                  <Play className="w-3 h-3 fill-current ml-0.5" />
+                </div>
+                <span>Watch 4K Video Tour</span>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-red-500/30 text-red-300 border border-red-500/50 font-bold uppercase animate-pulse">
+                  4K
+                </span>
               </button>
             </div>
 
@@ -217,6 +232,98 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 {partner}
               </span>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 2.5 CINEMATIC 4K VIDEO HUB TEASER BANNER */}
+      <section className="py-14 bg-gradient-to-b from-nexus-dark via-slate-950 to-nexus-charcoal/50 border-b border-slate-800 relative overflow-hidden">
+        {/* Cinema spotlight backdrop glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[350px] bg-red-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl p-6 sm:p-10 bg-gradient-to-r from-red-950/40 via-nexus-charcoal to-emerald-950/40 border border-red-500/30 shadow-2xl relative overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Left copy */}
+              <div className="lg:col-span-7 space-y-4">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-950/80 border border-red-500/40 text-xs font-mono text-red-300">
+                  <Film className="w-3.5 h-3.5 text-red-400" />
+                  <span>4K INDUSTRIAL VIDEO SHOWCASE</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                  Watch High-Tech E-Waste Refining &{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-300 to-emerald-400">
+                    Urban Gold Recovery
+                  </span>
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+                  Step inside our interactive 4K cinema theater. Watch real pyrometallurgy furnaces extract 24K pure gold from discarded motherboards, see Apple's Daisy robot disassemble 200 phones an hour, and explore how EPR credits protect the environment.
+                </p>
+
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <button
+                    onClick={() => {
+                      soundEffects.playClick();
+                      onNavigate('cinema');
+                    }}
+                    className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-red-500 to-amber-400 text-slate-950 font-extrabold text-xs hover:scale-105 active:scale-95 transition-all shadow-[0_0_25px_rgba(239,68,68,0.35)] flex items-center space-x-2 cursor-pointer group"
+                  >
+                    <div className="w-6 h-6 rounded-full bg-slate-950 text-white flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Play className="w-3 h-3 fill-current ml-0.5" />
+                    </div>
+                    <span>Enter 4K Cinema Theater</span>
+                  </button>
+
+                  <div className="flex items-center space-x-2 text-xs font-mono text-slate-400 px-3 py-2 rounded-xl bg-nexus-dark/70 border border-slate-800">
+                    <span className="w-2 h-2 rounded-full bg-red-400 animate-ping" />
+                    <span>4 High-Octane Documentaries Loaded</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Interactive Cinema Preview Card */}
+              <div className="lg:col-span-5">
+                <div
+                  onClick={() => {
+                    soundEffects.playClick();
+                    onNavigate('cinema');
+                  }}
+                  className="relative group/box cursor-pointer rounded-2xl overflow-hidden border border-red-500/40 shadow-2xl bg-slate-950 transform group-hover/box:scale-105 transition-transform duration-300"
+                >
+                  <div className="relative aspect-video">
+                    <img
+                      src="https://img.youtube.com/vi/wzL4dYrE_8M/hqdefault.jpg"
+                      alt="Urban Mining E-Waste Refining"
+                      className="w-full h-full object-cover group-hover/box:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-between p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="px-2 py-0.5 rounded-full bg-red-500 text-[10px] font-mono text-white font-bold uppercase tracking-wider">
+                          4K ULTRA HD
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-black/80 text-[10px] font-mono text-amber-300 font-bold border border-amber-500/30">
+                          1.4M VIEWS
+                        </span>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 rounded-full bg-red-500/90 text-white flex items-center justify-center shadow-glow-green group-hover/box:scale-110 transition-transform">
+                          <Play className="w-6 h-6 fill-current ml-1" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-white line-clamp-1">
+                            Urban Mining: 99.9% Pure Gold from Tech
+                          </div>
+                          <div className="text-[10px] text-slate-300">
+                            Click to play in theater mode
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
