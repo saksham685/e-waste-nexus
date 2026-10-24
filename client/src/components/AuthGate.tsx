@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth, DEMO_CREDENTIALS } from '../context/AuthContext';
 import { UserRole } from '../types';
 import { soundEffects } from '../utils/sound';
+import { voiceAssistant } from '../utils/voiceAssistant';
 import * as THREE from 'three';
 import {
   Shield,
@@ -124,6 +125,13 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
       await switchDemoRole(role);
       soundEffects.playUnlock();
       confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+      const titles: Record<UserRole, string> = {
+        admin: 'Global Administrator',
+        partner: 'Logistics Fleet Partner',
+        recycler: 'Certified Recycler',
+        individual: 'Consumer Member'
+      };
+      voiceAssistant.speak(`Welcome to E-Waste Nexus. Clearance granted as ${titles[role]}. Chain of custody node active.`);
       onAuthorized();
     } catch (err: any) {
       setError(err.message || 'Authorization failed');
@@ -141,6 +149,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
       await login(email, password);
       soundEffects.playUnlock();
       confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+      voiceAssistant.speak('Authentication successful. Welcome to E-Waste Nexus platform.');
       onAuthorized();
     } catch (err: any) {
       setError(err.message || 'Invalid credentials');
@@ -164,6 +173,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
       });
       soundEffects.playUnlock();
       confetti({ particleCount: 100, spread: 90, origin: { y: 0.6 } });
+      voiceAssistant.speak('Registration complete. Welcome to E-Waste Nexus.');
       onAuthorized();
     } catch (err: any) {
       setError(err.message || 'Registration failed');

@@ -171,7 +171,7 @@
       "specialInstructions": "Decommissioned smartphones from QA device lab.",
       "assignedPartnerId": "usr_partner_01",
       "assignedPartnerName": "Marcus Sterling (GreenRoute Fleet)",
-      "currentStatus": "Weighed",
+      "currentStatus": "Sent for Recycling",
       "statusHistory": [
         {
           "status": "Requested",
@@ -202,10 +202,17 @@
           "timestamp": "2026-10-22T11:45:00.000Z",
           "changedBy": "usr_partner_01",
           "changedByName": "Marcus Sterling"
+        },
+        {
+          "status": "Sent for Recycling",
+          "timestamp": "2026-10-24T16:47:21.463Z",
+          "changedBy": "usr_admin_01",
+          "changedByName": "Dr. Evelyn Vance (Recycler)",
+          "note": "Material received at recycling facility. Processing status: In-Processing"
         }
       ],
       "createdAt": "2026-10-20T08:00:00.000Z",
-      "updatedAt": "2026-10-22T11:45:00.000Z"
+      "updatedAt": "2026-10-24T16:47:21.464Z"
     }
   ],
   "collections": [
@@ -259,6 +266,23 @@
       "processedAt": "2026-10-22T14:30:00.000Z",
       "createdAt": "2026-10-21T10:00:00.000Z",
       "updatedAt": "2026-10-22T15:00:00.000Z"
+    },
+    {
+      "id": "rec_1792860441456_bpoc",
+      "collectionRecordId": "col_202",
+      "pickupId": "pck_103",
+      "recyclerId": "usr_admin_01",
+      "recyclerName": "Dr. Evelyn Vance (E-Waste Nexus Global Governance)",
+      "receivedWeightKg": 5.1,
+      "processedWeightKg": 4.8,
+      "category": "Smartphones and Tablets",
+      "processingEvidenceUrls": [
+        "/uploads/aerosmelt_assay_yield_report.pdf"
+      ],
+      "processingStatus": "In-Processing",
+      "notes": "",
+      "createdAt": "2026-10-24T16:47:21.456Z",
+      "updatedAt": "2026-10-24T16:47:21.457Z"
     }
   ],
   "epr": [
@@ -520,6 +544,22 @@
         "creditStatus": "Available"
       },
       "timestamp": "2026-10-24T16:30:10.317Z"
+    },
+    {
+      "id": "audit_1792860441466_s1756",
+      "actorId": "usr_admin_01",
+      "actorName": "Dr. Evelyn Vance",
+      "actorRole": "admin",
+      "action": "SUBMIT_RECYCLING_RECORD",
+      "entityType": "RecyclerRecord",
+      "entityId": "rec_1792860441456_bpoc",
+      "updatedValues": {
+        "collectionRecordId": "col_202",
+        "receivedWeightKg": 5.1,
+        "processedWeightKg": 4.8,
+        "processingStatus": "In-Processing"
+      },
+      "timestamp": "2026-10-24T16:47:21.466Z"
     }
   ]
 }

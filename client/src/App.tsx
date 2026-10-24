@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { CyberBackground3D } from './components/CyberBackground3D';
 import { AuthGate } from './components/AuthGate';
 import { PageTransition3D } from './components/PageTransition3D';
+import { VoiceCompanion } from './components/VoiceCompanion';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { LandingPage } from './pages/LandingPage';
@@ -50,7 +51,7 @@ const AppContent: React.FC = () => {
     );
   }
 
-  // FULL UNLOCKED PLATFORM WITH 3D TAB TRANSITIONS
+  // FULL UNLOCKED PLATFORM WITH 3D TAB TRANSITIONS & VOICE COMPANION
   return (
     <div className="min-h-screen flex flex-col bg-nexus-dark/95 text-slate-100 relative">
       <CyberBackground3D />
@@ -70,6 +71,9 @@ const AppContent: React.FC = () => {
           {currentTab === 'register' && <RegisterPage onNavigate={handleNavigate} />}
         </PageTransition3D>
       </main>
+
+      {/* Floating 3D AI Voice Companion (Speech Narration & Voice Command Control) */}
+      <VoiceCompanion currentTab={currentTab} onNavigate={handleNavigate} />
 
       <Footer onNavigate={handleNavigate} />
     </div>
