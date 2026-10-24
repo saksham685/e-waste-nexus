@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth, DEMO_CREDENTIALS } from '../context/AuthContext';
 import { UserRole } from '../types';
+import { soundEffects } from '../utils/sound';
 import * as THREE from 'three';
 import {
   Shield,
@@ -13,7 +14,10 @@ import {
   AlertCircle,
   Recycle,
   Cpu,
-  KeyRound
+  KeyRound,
+  Terminal,
+  Building,
+  Fingerprint
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -26,6 +30,14 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [loadingRole, setLoadingRole] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
+
+  // Terminal log animation
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([
+    'INIT: Quantum TLS 1.3 handshaking with Node #819...',
+    'AUTH: Zero-Knowledge chain-of-custody active',
+    'GOV: WEEE ISO 14001 compliance standards loaded',
+    'READY: Clearance verification required to proceed.'
+  ]);
 
   // Form Fields
   const [email, setEmail] = useState('');
@@ -56,13 +68,13 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
     const group = new THREE.Group();
     scene.add(group);
 
-    // Outer Octagon / Torus Ring
+    // Torus Ring
     const torusGeo = new THREE.TorusGeometry(6.5, 0.4, 16, 32);
     const torusMat = new THREE.MeshBasicMaterial({ color: 0x22c55e, wireframe: true });
     const torus = new THREE.Mesh(torusGeo, torusMat);
     group.add(torus);
 
-    // Inner Cyber Octahedron Core
+    // Core Octahedron
     const coreGeo = new THREE.OctahedronGeometry(4, 0);
     const coreMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, wireframe: true });
     const core = new THREE.Mesh(coreGeo, coreMat);
@@ -105,11 +117,13 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
   }, []);
 
   const handle1ClickLogin = async (role: UserRole) => {
+    soundEffects.playClick();
     setLoadingRole(role);
     setError('');
     try {
       await switchDemoRole(role);
-      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+      soundEffects.playUnlock();
+      confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
       onAuthorized();
     } catch (err: any) {
       setError(err.message || 'Authorization failed');
@@ -120,11 +134,13 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
 
   const handleManualLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    soundEffects.playClick();
     setLoadingRole('manual');
     setError('');
     try {
       await login(email, password);
-      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+      soundEffects.playUnlock();
+      confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
       onAuthorized();
     } catch (err: any) {
       setError(err.message || 'Invalid credentials');
@@ -135,6 +151,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
 
   const handleManualRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    soundEffects.playClick();
     setLoadingRole('register');
     setError('');
     try {
@@ -145,7 +162,8 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
         role: selectedRole,
         organization
       });
-      confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+      soundEffects.playUnlock();
+      confetti({ particleCount: 100, spread: 90, origin: { y: 0.6 } });
       onAuthorized();
     } catch (err: any) {
       setError(err.message || 'Registration failed');
@@ -154,29 +172,42 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
     }
   };
 
+  const handleSSO = () => {
+    soundEffects.playClick();
+    alert('Connecting to Enterprise IdP (Okta / Azure AD SAML 2.0). Fast-forwarding via Demo Credentials.');
+    handle1ClickLogin('admin');
+  };
+
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 relative z-20">
+    <div className="min-h-screen w-full flex items-center justify-center p-4 relative z-20 py-12">
       <div className="w-full max-w-xl space-y-6">
         {/* Holographic 3D Header Emblem */}
         <div className="flex flex-col items-center text-center space-y-3">
           <div ref={emblemMountRef} className="w-36 h-36 flex items-center justify-center drop-shadow-[0_0_25px_rgba(34,197,94,0.4)]" />
 
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-[11px] font-mono text-red-300">
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-red-950/70 border border-red-500/40 text-[11px] font-mono text-red-300">
             <Lock className="w-3 h-3 text-red-400 animate-pulse" />
-            <span>MANDATORY SECURITY GATEWAY — ACCESS RESTRICTED</span>
+            <span>AUTHENTICATION GATEWAY — PLATFORM ACCESS RESTRICTED</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             E-WASTE <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-lime-400">NEXUS</span>
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-300 max-w-md">
-            Please log in to unlock the platform. Verification is strictly required for chain-of-custody tracking, collection dispatches, and EPR credit audits.
+          <p className="text-xs sm:text-sm text-slate-300 max-w-md leading-relaxed">
+            Please authenticate to unlock the circular platform, chain-of-custody tracking, and Extended Producer Responsibility (EPR) credit ledger.
           </p>
+
+          {/* Compliance Stamps */}
+          <div className="flex items-center space-x-3 text-[10px] font-mono text-slate-400">
+            <span className="px-2 py-0.5 rounded bg-nexus-charcoal border border-slate-800">SOC 2 Type II</span>
+            <span className="px-2 py-0.5 rounded bg-nexus-charcoal border border-slate-800">ISO 14001 WEEE</span>
+            <span className="px-2 py-0.5 rounded bg-nexus-charcoal border border-slate-800">TLS 1.3 Strict</span>
+          </div>
         </div>
 
         {/* 1-Click Fast Pass Box */}
-        <div className="p-5 rounded-3xl bg-nexus-charcoal/90 border border-emerald-500/40 shadow-2xl backdrop-blur-xl space-y-4">
+        <div className="p-6 rounded-3xl bg-nexus-charcoal/95 border border-emerald-500/40 shadow-2xl backdrop-blur-xl space-y-4">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div className="flex items-center space-x-2">
               <Sparkles className="w-4 h-4 text-emerald-400" />
@@ -184,7 +215,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
                 1-Click Instant Evaluation Pass
               </span>
             </div>
-            <span className="text-[10px] text-nexus-muted font-mono">No typing required</span>
+            <span className="text-[10px] text-nexus-muted font-mono">Bypass typing for live grading</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -192,7 +223,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
             <button
               onClick={() => handle1ClickLogin('admin')}
               disabled={!!loadingRole}
-              className="p-3 rounded-xl bg-nexus-dark/90 border border-slate-800 hover:border-emerald-400 hover:bg-emerald-950/30 text-left transition-all group flex items-center justify-between shadow-sm"
+              className="p-3.5 rounded-2xl bg-nexus-dark/90 border border-slate-800 hover:border-emerald-400 hover:bg-emerald-950/30 text-left transition-all group flex items-center justify-between shadow-sm"
             >
               <div>
                 <div className="text-xs font-bold text-white flex items-center space-x-1.5">
@@ -208,7 +239,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
             <button
               onClick={() => handle1ClickLogin('partner')}
               disabled={!!loadingRole}
-              className="p-3 rounded-xl bg-nexus-dark/90 border border-slate-800 hover:border-cyan-400 hover:bg-cyan-950/30 text-left transition-all group flex items-center justify-between shadow-sm"
+              className="p-3.5 rounded-2xl bg-nexus-dark/90 border border-slate-800 hover:border-cyan-400 hover:bg-cyan-950/30 text-left transition-all group flex items-center justify-between shadow-sm"
             >
               <div>
                 <div className="text-xs font-bold text-white flex items-center space-x-1.5">
@@ -224,7 +255,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
             <button
               onClick={() => handle1ClickLogin('recycler')}
               disabled={!!loadingRole}
-              className="p-3 rounded-xl bg-nexus-dark/90 border border-slate-800 hover:border-lime-400 hover:bg-lime-950/30 text-left transition-all group flex items-center justify-between shadow-sm"
+              className="p-3.5 rounded-2xl bg-nexus-dark/90 border border-slate-800 hover:border-lime-400 hover:bg-lime-950/30 text-left transition-all group flex items-center justify-between shadow-sm"
             >
               <div>
                 <div className="text-xs font-bold text-white flex items-center space-x-1.5">
@@ -240,7 +271,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
             <button
               onClick={() => handle1ClickLogin('individual')}
               disabled={!!loadingRole}
-              className="p-3 rounded-xl bg-nexus-dark/90 border border-slate-800 hover:border-emerald-400 hover:bg-emerald-950/30 text-left transition-all group flex items-center justify-between shadow-sm"
+              className="p-3.5 rounded-2xl bg-nexus-dark/90 border border-slate-800 hover:border-emerald-400 hover:bg-emerald-950/30 text-left transition-all group flex items-center justify-between shadow-sm"
             >
               <div>
                 <div className="text-xs font-bold text-white flex items-center space-x-1.5">
@@ -255,30 +286,29 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
         </div>
 
         {/* Credentials Form Terminal */}
-        <div className="p-6 rounded-3xl bg-nexus-charcoal/90 border border-slate-800 shadow-2xl backdrop-blur-xl space-y-4">
-          {/* Sub-tabs: Login / Register */}
+        <div className="p-6 rounded-3xl bg-nexus-charcoal/95 border border-slate-800 shadow-2xl backdrop-blur-xl space-y-4">
           <div className="flex items-center space-x-2 border-b border-slate-800 pb-3">
             <button
               type="button"
-              onClick={() => { setActiveTab('login'); setError(''); }}
+              onClick={() => { setActiveTab('login'); setError(''); soundEffects.playClick(); }}
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === 'login'
                   ? 'bg-emerald-500 text-slate-950 shadow-glow-green'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              Direct Sign In
+              Direct Credentials Sign In
             </button>
             <button
               type="button"
-              onClick={() => { setActiveTab('register'); setError(''); }}
+              onClick={() => { setActiveTab('register'); setError(''); soundEffects.playClick(); }}
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === 'register'
                   ? 'bg-emerald-500 text-slate-950 shadow-glow-green'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              Create New Persona
+              Register New Persona
             </button>
           </div>
 
@@ -296,14 +326,14 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                  <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="admin@nexus.eco"
-                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-nexus-dark border border-slate-800 text-xs text-white outline-none focus:border-emerald-500 font-mono"
+                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-nexus-dark border border-slate-800 text-xs text-white outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
               </div>
@@ -313,26 +343,38 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                  <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-nexus-dark border border-slate-800 text-xs text-white outline-none focus:border-emerald-500"
+                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-nexus-dark border border-slate-800 text-xs text-white outline-none focus:border-emerald-500"
                   />
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={loadingRole === 'manual'}
-                className="w-full py-3 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-glow-green disabled:opacity-50 flex items-center justify-center space-x-2"
-              >
-                <KeyRound className="w-4 h-4" />
-                <span>{loadingRole === 'manual' ? 'Verifying Credentials...' : 'Unlock Website Access'}</span>
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={loadingRole === 'manual'}
+                  className="flex-1 py-3 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-glow-green disabled:opacity-50 flex items-center justify-center space-x-2"
+                >
+                  <KeyRound className="w-4 h-4" />
+                  <span>{loadingRole === 'manual' ? 'Verifying...' : 'Authenticate & Unlock'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSSO}
+                  className="px-4 py-3 rounded-xl text-xs font-semibold bg-nexus-dark border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white transition-colors flex items-center space-x-1.5"
+                  title="Corporate Single Sign-On"
+                >
+                  <Fingerprint className="w-4 h-4 text-cyan-400" />
+                  <span className="hidden sm:inline">SSO</span>
+                </button>
+              </div>
             </form>
           ) : (
             <form onSubmit={handleManualRegister} className="space-y-3">
@@ -392,10 +434,21 @@ export const AuthGate: React.FC<AuthGateProps> = ({ onAuthorized }) => {
                 disabled={loadingRole === 'register'}
                 className="w-full py-3 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-glow-green disabled:opacity-50 mt-1"
               >
-                {loadingRole === 'register' ? 'Registering...' : 'Create Account & Enter'}
+                {loadingRole === 'register' ? 'Registering...' : 'Complete Registration & Enter'}
               </button>
             </form>
           )}
+
+          {/* Terminal Console Output */}
+          <div className="p-3 rounded-xl bg-nexus-dark border border-slate-900 font-mono text-[10px] text-slate-500 space-y-1">
+            <div className="flex items-center space-x-1.5 text-emerald-400/80 mb-1">
+              <Terminal className="w-3 h-3" />
+              <span>TLS Security Terminal Trace</span>
+            </div>
+            {terminalLogs.map((log, i) => (
+              <div key={i} className="truncate">{log}</div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

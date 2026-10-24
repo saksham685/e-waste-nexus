@@ -306,13 +306,15 @@
       "reportingPeriod": "2026-Q4",
       "eligibleWeightKg": 68,
       "creditUnits": 68,
-      "creditStatus": "Pending Review",
-      "approvalStatus": "Pending",
+      "creditStatus": "Available",
+      "approvalStatus": "Approved",
       "targetProducer": "VisionDisplay Tech",
       "isDemoRecord": true,
-      "notes": "Lead glass phosphor compliance documentation under technical audit.",
+      "notes": "Lead glass phosphor compliance documentation under technical audit.\n[Audit Note]: Compliance criteria validated against recycler assay logs.",
       "createdAt": "2026-10-23T14:00:00.000Z",
-      "updatedAt": "2026-10-23T14:00:00.000Z"
+      "updatedAt": "2026-10-24T16:30:10.312Z",
+      "approvedBy": "usr_admin_01",
+      "approvedAt": "2026-10-24T16:30:10.312Z"
     }
   ],
   "centers": [
@@ -488,6 +490,36 @@
         "creditUnits": 16.2
       },
       "timestamp": "2026-10-23T10:15:00.000Z"
+    },
+    {
+      "id": "audit_1792859410317_i5yyy",
+      "actorId": "usr_admin_01",
+      "actorName": "Dr. Evelyn Vance",
+      "actorRole": "admin",
+      "action": "APPROVE_EPR_RECORD",
+      "entityType": "EPRRecord",
+      "entityId": "epr_403",
+      "previousValues": {
+        "id": "epr_403",
+        "sourceRecyclerRecordId": "rec_sample_303",
+        "pickupId": "pck_sample_098",
+        "materialCategory": "Televisions and Monitors",
+        "reportingPeriod": "2026-Q4",
+        "eligibleWeightKg": 68,
+        "creditUnits": 68,
+        "creditStatus": "Pending Review",
+        "approvalStatus": "Pending",
+        "targetProducer": "VisionDisplay Tech",
+        "isDemoRecord": true,
+        "notes": "Lead glass phosphor compliance documentation under technical audit.",
+        "createdAt": "2026-10-23T14:00:00.000Z",
+        "updatedAt": "2026-10-23T14:00:00.000Z"
+      },
+      "updatedValues": {
+        "approvalStatus": "Approved",
+        "creditStatus": "Available"
+      },
+      "timestamp": "2026-10-24T16:30:10.317Z"
     }
   ]
 }

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Globe3D } from '../components/Globe3D';
 import { ImpactPanel } from '../components/ImpactPanel';
 import { Device3DViewer } from '../components/Device3DViewer';
+import { LiveActivityFeed } from '../components/LiveActivityFeed';
+import { ImpactCalculator } from '../components/ImpactCalculator';
+import { soundEffects } from '../utils/sound';
 import {
   Truck,
   Building2,
@@ -16,8 +19,10 @@ import {
   FileText,
   MapPin,
   ChevronRight,
-  Eye,
-  Zap
+  ChevronDown,
+  HelpCircle,
+  Zap,
+  Globe
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -25,6 +30,13 @@ interface LandingPageProps {
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const toggleFaq = (idx: number) => {
+    soundEffects.playClick();
+    setOpenFaq(openFaq === idx ? null : idx);
+  };
+
   const featureCards = [
     {
       id: 'collection',
@@ -79,11 +91,39 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   ];
 
   const workflowSteps = [
-    { step: '01', title: 'Schedule Request', desc: 'Individual or business books pickup with category & weight estimates', icon: FileText },
+    { step: '01', title: 'Schedule Request', desc: 'Individual or enterprise books pickup with category & weight estimates', icon: FileText },
     { step: '02', title: 'Physical Pickup', desc: 'Authorized fleet collects cargo, logs scale weight & photo evidence', icon: Truck },
     { step: '03', title: 'Weight QA Audit', desc: 'Central logistics auditor inspects tare receipts and certifies net weight', icon: ShieldCheck },
     { step: '04', title: 'Material Refining', desc: 'Recycler conducts recovery of precious copper, gold, cobalt & lithium', icon: Recycle },
     { step: '05', title: 'EPR Credit Issuance', desc: 'Verified recovery yields certified EPR credits for enterprise compliance', icon: Award }
+  ];
+
+  const corporatePartners = [
+    'HYPERSCALE DATA',
+    'AERODEFENSE TECH',
+    'NEOMOBILE LABS',
+    'VERTEX CIRCULAR',
+    'PACIFIC SMELTING',
+    'ECOFOUNDRY'
+  ];
+
+  const faqs = [
+    {
+      q: 'How does E-Waste Nexus guarantee that EPR credits are genuine?',
+      a: 'Credits are never issued solely from a pickup booking. The material must undergo physical collection, certified QA scale tare calibration, and licensed pyrometallurgical assay documentation. An immutable cryptographic hash prevents double-issuance of the same batch.'
+    },
+    {
+      q: 'What types of electronic waste are accepted?',
+      a: 'We accept seven certified categories: Smartphones & Tablets, Laptops & Computers, Batteries & Chargers, TVs & Monitors, Printers & Office Electronics, Large Electrical Appliances, and Other Circuitry.'
+    },
+    {
+      q: 'How is physical collection weight verified?',
+      a: 'Logistics partners submit scale tickets and photo documentation upon intake. The cargo remains in an "Unverified" state until central QA audits the calibrate certificate and records an audited net weight.'
+    },
+    {
+      q: 'Can enterprise clients download official destruction certificates?',
+      a: 'Yes. Every completed pickup provides an official Certificate of Destruction & Commodity Recovery with SHA-256 cryptographic hashes and NIST 800-88 data sanitization seals.'
+    }
   ];
 
   return (
@@ -93,17 +133,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <div className="absolute top-3/4 left-1/4 w-[500px] h-[400px] bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       {/* 1. HERO SECTION */}
-      <section className="relative pt-10 pb-20 md:pt-16 md:pb-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-8 pb-16 md:pt-14 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Hero Content */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            {/* Pill Badge */}
             <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-xs font-mono text-emerald-300 backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>AI-POWERED CIRCULAR LOGISTICS & EPR SUITE</span>
             </div>
 
-            {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
               Transform E-Waste Into a{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-lime-400">
@@ -111,7 +149,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </span>
             </h1>
 
-            {/* Supporting Text */}
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0">
               The unified intelligence platform connecting individuals, corporate enterprises, authorized collection centers, and certified recyclers. Automating traceable end-to-end chain of custody and verifiable Extended Producer Responsibility (EPR) compliance credits.
             </p>
@@ -119,7 +156,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             {/* CTAs */}
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
               <button
-                onClick={() => onNavigate('pickups')}
+                onClick={() => { soundEffects.playClick(); onNavigate('pickups'); }}
                 className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-500 to-emerald-400 text-slate-950 hover:from-emerald-400 hover:to-lime-400 transition-all shadow-glow-green flex items-center justify-center space-x-2 group"
               >
                 <span>Schedule a Pickup</span>
@@ -127,7 +164,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </button>
 
               <button
-                onClick={() => onNavigate('epr')}
+                onClick={() => { soundEffects.playClick(); onNavigate('epr'); }}
                 className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-sm bg-nexus-charcoal/80 border border-slate-700 hover:border-emerald-500/50 text-slate-200 hover:text-white transition-all backdrop-blur flex items-center justify-center space-x-2"
               >
                 <span>Explore EPR Registry</span>
@@ -135,7 +172,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </button>
             </div>
 
-            {/* Trust indicators */}
+            {/* Trust Indicators */}
             <div className="pt-4 flex items-center justify-center lg:justify-start space-x-6 text-xs text-slate-400">
               <div className="flex items-center space-x-1.5">
                 <CheckCircle className="w-4 h-4 text-emerald-400" />
@@ -164,33 +201,52 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 2. INTERACTIVE 3D HARDWARE ASSAY & RARE-EARTH RECOVERY SECTION */}
-      <section className="py-16 bg-nexus-charcoal/60 border-y border-slate-800/80">
+      {/* Real-time Streaming Circular Activity Ticker */}
+      <LiveActivityFeed />
+
+      {/* 2. ENTERPRISE CLIENTS / NETWORK TRUSTED BAR */}
+      <section className="py-8 bg-nexus-dark/80 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-[10px] uppercase font-mono tracking-widest text-nexus-muted mb-4">
+            Integrated With Leading CleanTech Logistics & Metal Recovery Facilities
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-60">
+            {corporatePartners.map((partner, i) => (
+              <span key={i} className="font-mono text-xs sm:text-sm font-bold tracking-widest text-slate-400 hover:text-emerald-400 transition-colors">
+                {partner}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. INTERACTIVE 3D EXPLODED DECONSTRUCTION VIEWER */}
+      <section className="py-20 bg-nexus-charcoal/50 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-5 space-y-4">
+            <div className="lg:col-span-5 space-y-5">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/40 text-xs font-mono text-cyan-300">
                 <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-                <span>INTERACTIVE 3D HARDWARE DECONSTRUCTION</span>
+                <span>INTERACTIVE 3D EXPLODED VIEW</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                Inspect Precious Secondary Commodities in 3D
+                Inspect Secondary Commodity Recovery in 3D
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                Modern electronic waste contains concentrations of gold, palladium, copper, and lithium up to 50 times richer than naturally occurring virgin ores. E-Waste Nexus maps and certifies every component.
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Modern electronic waste contains concentrations of gold, palladium, copper, and lithium up to 50 times richer than virgin geological ores. Use the slider on the 3D model to deconstruct the hardware layers in real-time.
               </p>
-              <div className="space-y-2 pt-2 text-xs">
+              <div className="space-y-2.5 pt-2 text-xs">
                 <div className="flex items-center space-x-2 text-slate-300">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
-                  <span>Gold & Palladium: High-density CPU substrate & connector traces</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0" />
+                  <span>Gold & Palladium: High-density CPU substrate and connector trace bus</span>
                 </div>
                 <div className="flex items-center space-x-2 text-slate-300">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                  <span>Lithium & Cobalt: Closed-loop rechargeable polymer cells</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0" />
+                  <span>Lithium & Cobalt: Closed-loop rechargeable polymer battery cells</span>
                 </div>
                 <div className="flex items-center space-x-2 text-slate-300">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span>High-Purity Copper: Transformer windings & multi-layer busbars</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0" />
+                  <span>High-Purity Copper: Vapor chamber heatpipes and multi-layer ground planes</span>
                 </div>
               </div>
             </div>
@@ -202,14 +258,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 3. PLATFORM OVERVIEW SECTION */}
-      <section className="py-20 bg-nexus-charcoal/40 border-b border-slate-800/80 relative">
+      {/* 4. INTERACTIVE E-WASTE IMPACT & EPR VALUE CALCULATOR */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ImpactCalculator
+          onScheduleForEstimate={() => {
+            soundEffects.playSuccess();
+            onNavigate('pickups');
+          }}
+        />
+      </section>
+
+      {/* 5. PLATFORM OVERVIEW SECTION (5 Premium Cards) */}
+      <section className="py-20 bg-nexus-charcoal/40 border-y border-slate-800/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <div className="inline-flex items-center space-x-1.5 text-xs font-mono uppercase tracking-widest text-emerald-400 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Enterprise Architectural Pillar</span>
+              <span>Enterprise Architectural Pillars</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
               One Connected Ecosystem. <br />
@@ -222,14 +287,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          {/* 5 Premium Feature Cards with 3D Hover & Glow */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featureCards.map((card, idx) => {
               const Icon = card.icon;
               return (
                 <div
                   key={card.id}
-                  onClick={() => onNavigate(card.actionTab)}
+                  onClick={() => { soundEffects.playClick(); onNavigate(card.actionTab); }}
                   className={`group relative p-7 rounded-2xl bg-gradient-to-b ${card.color} to-nexus-dark/90 border ${card.border} hover:border-emerald-400/80 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover cursor-pointer backdrop-blur-sm ${
                     idx === 3 ? 'md:col-span-2 lg:col-span-1 border-emerald-400/50 shadow-glow-green/30' : ''
                   }`}
@@ -264,7 +328,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 4. VERIFIABLE CIRCULAR LIFECYCLE WORKFLOW */}
+      {/* 6. VERIFIABLE CIRCULAR LIFECYCLE WORKFLOW */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="text-xs font-mono uppercase tracking-widest text-emerald-400">
@@ -284,7 +348,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             return (
               <div
                 key={ws.step}
-                className="relative p-5 rounded-xl bg-nexus-charcoal/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex flex-col justify-between"
+                className="relative p-5 rounded-2xl bg-nexus-charcoal/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -307,9 +371,45 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 5. CALL TO ACTION BANNER */}
-      <section className="pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-r from-emerald-950/60 via-nexus-charcoal to-emerald-950/60 border border-emerald-500/30 text-center relative overflow-hidden shadow-2xl">
+      {/* 7. ENTERPRISE FAQ SECTION */}
+      <section className="py-20 bg-nexus-charcoal/50 border-t border-slate-800">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center space-x-1.5 text-xs font-mono uppercase tracking-widest text-emerald-400">
+              <HelpCircle className="w-4 h-4" />
+              <span>Enterprise Compliance FAQ</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">Frequently Asked Questions</h3>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  onClick={() => toggleFaq(idx)}
+                  className="p-5 rounded-2xl bg-nexus-dark/90 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition-all space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-sm text-white">{faq.q}</span>
+                    <ChevronDown className={`w-4 h-4 text-emerald-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                  </div>
+                  {isOpen && (
+                    <p className="text-xs text-slate-400 leading-relaxed pt-2 border-t border-slate-800/60 animate-in fade-in">
+                      {faq.a}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. CALL TO ACTION BANNER */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="p-8 md:p-14 rounded-3xl bg-gradient-to-r from-emerald-950/60 via-nexus-charcoal to-emerald-950/60 border border-emerald-500/40 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-2xl mx-auto space-y-5">
             <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
               Ready to Dispose of E-Waste Responsibly?
@@ -319,14 +419,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </p>
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
-                onClick={() => onNavigate('pickups')}
-                className="w-full sm:w-auto px-8 py-3 rounded-xl font-bold text-sm bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-glow-green"
+                onClick={() => { soundEffects.playClick(); onNavigate('pickups'); }}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-glow-green"
               >
                 Schedule Doorstep Pickup
               </button>
               <button
-                onClick={() => onNavigate('centers')}
-                className="w-full sm:w-auto px-8 py-3 rounded-xl font-bold text-sm bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:border-slate-500 transition-colors"
+                onClick={() => { soundEffects.playClick(); onNavigate('centers'); }}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:border-slate-500 transition-colors"
               >
                 Find Collection Centers
               </button>

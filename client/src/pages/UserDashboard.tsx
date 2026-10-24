@@ -3,6 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { PickupRequest, WasteCategory } from '../types';
 import { StatusTimeline } from '../components/StatusTimeline';
+import { CertificateModal } from '../components/CertificateModal';
+import { soundEffects } from '../utils/sound';
 import {
   Smartphone,
   Laptop,
@@ -21,7 +23,8 @@ import {
   XCircle,
   CheckCircle2,
   ChevronRight,
-  ShieldCheck
+  ShieldCheck,
+  Award
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -36,7 +39,7 @@ const CATEGORIES: { id: WasteCategory; label: string; icon: any; hint: string }[
 ];
 
 export const UserDashboard: React.FC = () => {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const [pickups, setPickups] = useState<PickupRequest[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -44,6 +47,9 @@ export const UserDashboard: React.FC = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
+
+  // Certificate Modal State
+  const [certModalOpen, setCertModalOpen] = useState(false);
 
   // Form State
   const [category, setCategory] = useState<WasteCategory>('Laptops and Computers');
@@ -93,6 +99,7 @@ export const UserDashboard: React.FC = () => {
       });
 
       if (res.success) {
+        soundEffects.playSuccess();
         confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
         setSuccessMessage('Pickup scheduled successfully! Assigned to our certified eco-fleet.');
         setShowForm(false);
@@ -111,6 +118,7 @@ export const UserDashboard: React.FC = () => {
     try {
       const res = await api.pickups.cancel(pickupId, 'Cancelled by user via dashboard');
       if (res.success) {
+        soundEffects.playClick();
         setSuccessMessage('Pickup cancelled.');
         await loadPickups();
         if (selectedPickup?.id === pickupId) {
@@ -125,7 +133,7 @@ export const UserDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Top Banner / Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-nexus-charcoal via-nexus-card to-nexus-charcoal border border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-3xl bg-gradient-to-r from-nexus-charcoal via-nexus-card to-nexus-charcoal border border-slate-800">
         <div>
           <div className="flex items-center space-x-2 text-xs font-mono text-emerald-400 mb-1 uppercase tracking-wider">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -139,14 +147,14 @@ export const UserDashboard: React.FC = () => {
 
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => { soundEffects.playClick(); setShowForm(!showForm); }}
             className="px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-glow-green flex items-center space-x-2"
           >
             <Plus className="w-4 h-4" />
             <span>{showForm ? 'View Active Pickups' : 'Schedule New Pickup'}</span>
           </button>
           <button
-            onClick={loadPickups}
+            onClick={() => { soundEffects.playClick(); loadPickups(); }}
             className="p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white transition-colors"
             title="Refresh records"
           >
@@ -176,9 +184,9 @@ export const UserDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* SCHEDULE PICKUP FORM MODAL / COLLAPSIBLE */}
+      {/* SCHEDULE PICKUP FORM */}
       {showForm ? (
-        <div className="p-6 md:p-8 rounded-2xl bg-nexus-charcoal border border-emerald-500/30 shadow-2xl space-y-6">
+        <div className="p-6 md:p-8 rounded-3xl bg-nexus-charcoal border border-emerald-500/30 shadow-2xl space-y-6">
           <div className="border-b border-slate-800 pb-4">
             <h2 className="text-lg font-bold text-white">Schedule Discarded Device Pickup</h2>
             <p className="text-xs text-slate-400 mt-0.5">
@@ -187,7 +195,6 @@ export const UserDashboard: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Category Grid Selection */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-2 uppercase tracking-wider font-mono">
                 1. Select Waste Category
@@ -199,15 +206,15 @@ export const UserDashboard: React.FC = () => {
                   return (
                     <div
                       key={cat.id}
-                      onClick={() => setCategory(cat.id)}
-                      className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                      onClick={() => { soundEffects.playClick(); setCategory(cat.id); }}
+                      className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
                         isSelected
                           ? 'bg-emerald-500/20 border-emerald-400 text-white shadow-glow-green/40'
                           : 'bg-nexus-dark/60 border-slate-800 text-slate-400 hover:border-slate-700'
                       }`}
                     >
                       <div className="flex items-center space-x-2.5 mb-1.5">
-                        <div className={`p-2 rounded-lg ${isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-400'}`}>
+                        <div className={`p-2 rounded-xl ${isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-400'}`}>
                           <Icon className="w-4 h-4" />
                         </div>
                         <span className={`text-xs font-semibold ${isSelected ? 'text-emerald-300' : 'text-slate-200'}`}>
@@ -221,7 +228,6 @@ export const UserDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Quantity and Weight */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5">
@@ -255,7 +261,6 @@ export const UserDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Address */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                 Pickup Address & Floor / Suite
@@ -273,7 +278,6 @@ export const UserDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Date & Time Slot */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5">
@@ -310,7 +314,6 @@ export const UserDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Special Instructions */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                 Special Handling Instructions or Building Access Notes (Optional)
@@ -324,7 +327,6 @@ export const UserDashboard: React.FC = () => {
               />
             </div>
 
-            {/* Action Buttons */}
             <div className="flex items-center justify-end space-x-3 pt-2">
               <button
                 type="button"
@@ -345,7 +347,7 @@ export const UserDashboard: React.FC = () => {
         </div>
       ) : null}
 
-      {/* DASHBOARD CONTENT: ACTIVE & PAST PICKUPS */}
+      {/* DASHBOARD CONTENT */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left: Pickup Requests List */}
         <div className="lg:col-span-5 space-y-4">
@@ -358,7 +360,7 @@ export const UserDashboard: React.FC = () => {
           {loading ? (
             <div className="p-8 text-center text-xs text-nexus-muted">Loading pickup telemetry...</div>
           ) : pickups.length === 0 ? (
-            <div className="p-8 rounded-2xl bg-nexus-charcoal border border-slate-800 text-center space-y-3">
+            <div className="p-8 rounded-3xl bg-nexus-charcoal border border-slate-800 text-center space-y-3">
               <Box className="w-10 h-10 text-slate-600 mx-auto" />
               <div className="text-sm font-medium text-slate-300">No scheduled pickups yet</div>
               <p className="text-xs text-slate-400">
@@ -378,8 +380,8 @@ export const UserDashboard: React.FC = () => {
                 return (
                   <div
                     key={p.id}
-                    onClick={() => setSelectedPickup(p)}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                    onClick={() => { soundEffects.playClick(); setSelectedPickup(p); }}
+                    className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                       isSelected
                         ? 'bg-nexus-card border-emerald-500/70 shadow-[0_0_15px_rgba(34,197,94,0.15)]'
                         : 'bg-nexus-charcoal/60 border-slate-800 hover:border-slate-700'
@@ -415,7 +417,7 @@ export const UserDashboard: React.FC = () => {
         {/* Right: Detailed Inspection & Live Tracking Timeline */}
         <div className="lg:col-span-7">
           {selectedPickup ? (
-            <div className="p-6 md:p-8 rounded-2xl bg-nexus-charcoal border border-slate-800 space-y-6">
+            <div className="p-6 md:p-8 rounded-3xl bg-nexus-charcoal border border-slate-800 space-y-6">
               {/* Header */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-5">
                 <div>
@@ -423,16 +425,29 @@ export const UserDashboard: React.FC = () => {
                   <h3 className="text-xl font-bold text-white mt-0.5">{selectedPickup.category}</h3>
                 </div>
 
-                {/* Cancel button if eligible */}
-                {['Requested', 'Approved', 'Assigned'].includes(selectedPickup.currentStatus) && (
-                  <button
-                    onClick={() => handleCancelPickup(selectedPickup.id)}
-                    className="px-3.5 py-1.5 rounded-lg border border-red-500/40 text-red-400 hover:bg-red-950/40 text-xs font-medium transition-colors flex items-center space-x-1.5"
-                  >
-                    <XCircle className="w-3.5 h-3.5" />
-                    <span>Cancel Request</span>
-                  </button>
-                )}
+                <div className="flex items-center space-x-2">
+                  {/* Certificate Button if Completed */}
+                  {selectedPickup.currentStatus === 'Completed' && (
+                    <button
+                      onClick={() => { soundEffects.playSuccess(); setCertModalOpen(true); }}
+                      className="px-3.5 py-1.5 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 text-xs transition-all shadow-glow-green flex items-center space-x-1.5"
+                    >
+                      <Award className="w-3.5 h-3.5" />
+                      <span>Official Certificate</span>
+                    </button>
+                  )}
+
+                  {/* Cancel button if eligible */}
+                  {['Requested', 'Approved', 'Assigned'].includes(selectedPickup.currentStatus) && (
+                    <button
+                      onClick={() => handleCancelPickup(selectedPickup.id)}
+                      className="px-3.5 py-1.5 rounded-xl border border-red-500/40 text-red-400 hover:bg-red-950/40 text-xs font-medium transition-colors flex items-center space-x-1.5"
+                    >
+                      <XCircle className="w-3.5 h-3.5" />
+                      <span>Cancel Request</span>
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Progress Timeline */}
@@ -440,22 +455,22 @@ export const UserDashboard: React.FC = () => {
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono mb-2">
                   Chain-of-Custody Progress
                 </h4>
-                <div className="p-4 rounded-xl bg-nexus-dark/60 border border-slate-800">
+                <div className="p-4 rounded-2xl bg-nexus-dark/60 border border-slate-800">
                   <StatusTimeline currentStatus={selectedPickup.currentStatus} history={selectedPickup.statusHistory} />
                 </div>
               </div>
 
               {/* Specifications Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
-                <div className="p-3 rounded-lg bg-nexus-dark border border-slate-800">
+                <div className="p-3.5 rounded-xl bg-nexus-dark border border-slate-800">
                   <span className="text-nexus-muted block text-[10px]">Estimated Quantity</span>
                   <span className="font-semibold text-white text-sm">{selectedPickup.estimatedQuantity} units</span>
                 </div>
-                <div className="p-3 rounded-lg bg-nexus-dark border border-slate-800">
+                <div className="p-3.5 rounded-xl bg-nexus-dark border border-slate-800">
                   <span className="text-nexus-muted block text-[10px]">Estimated Weight</span>
                   <span className="font-semibold text-emerald-400 text-sm">{selectedPickup.estimatedWeightKg} kg</span>
                 </div>
-                <div className="p-3 rounded-lg bg-nexus-dark border border-slate-800">
+                <div className="p-3.5 rounded-xl bg-nexus-dark border border-slate-800">
                   <span className="text-nexus-muted block text-[10px]">Scheduled Slot</span>
                   <span className="font-semibold text-white">{selectedPickup.timeSlot || 'Standard'}</span>
                 </div>
@@ -463,13 +478,13 @@ export const UserDashboard: React.FC = () => {
 
               {/* Address & Partner */}
               <div className="space-y-3 text-xs">
-                <div className="p-3.5 rounded-lg bg-nexus-dark border border-slate-800">
+                <div className="p-3.5 rounded-xl bg-nexus-dark border border-slate-800">
                   <span className="text-nexus-muted block text-[10px] mb-1">Pickup Location</span>
                   <span className="text-slate-200">{selectedPickup.address}</span>
                 </div>
 
                 {selectedPickup.assignedPartnerName && (
-                  <div className="p-3.5 rounded-lg bg-nexus-dark border border-slate-800 flex items-center justify-between">
+                  <div className="p-3.5 rounded-xl bg-nexus-dark border border-slate-800 flex items-center justify-between">
                     <div>
                       <span className="text-nexus-muted block text-[10px]">Dispatched Fleet Partner</span>
                       <span className="text-emerald-300 font-medium">{selectedPickup.assignedPartnerName}</span>
@@ -481,21 +496,21 @@ export const UserDashboard: React.FC = () => {
                 )}
 
                 {selectedPickup.specialInstructions && (
-                  <div className="p-3.5 rounded-lg bg-nexus-dark border border-slate-800">
+                  <div className="p-3.5 rounded-xl bg-nexus-dark border border-slate-800">
                     <span className="text-nexus-muted block text-[10px] mb-1">Special Instructions</span>
                     <span className="text-slate-300 italic">"{selectedPickup.specialInstructions}"</span>
                   </div>
                 )}
               </div>
 
-              {/* Status Audit Log Mini Table */}
+              {/* Status Audit Log */}
               <div>
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono mb-2">
                   Event History
                 </h4>
                 <div className="space-y-2">
                   {selectedPickup.statusHistory.map((h, i) => (
-                    <div key={i} className="text-[11px] p-2.5 rounded bg-nexus-dark/40 border border-slate-800/80 flex items-center justify-between">
+                    <div key={i} className="text-[11px] p-2.5 rounded-xl bg-nexus-dark/40 border border-slate-800/80 flex items-center justify-between">
                       <div>
                         <span className="font-semibold text-slate-200">{h.status}</span>
                         {h.note && <span className="text-slate-400 ml-2">— {h.note}</span>}
@@ -509,12 +524,29 @@ export const UserDashboard: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="p-12 text-center text-xs text-nexus-muted rounded-2xl bg-nexus-charcoal border border-slate-800">
+            <div className="p-12 text-center text-xs text-nexus-muted rounded-3xl bg-nexus-charcoal border border-slate-800">
               Select a pickup request to inspect tracking telemetry.
             </div>
           )}
         </div>
       </div>
+
+      {/* Official Certificate Modal */}
+      {selectedPickup && (
+        <CertificateModal
+          isOpen={certModalOpen}
+          onClose={() => setCertModalOpen(false)}
+          record={{
+            id: selectedPickup.id,
+            category: selectedPickup.category,
+            userName: selectedPickup.userName,
+            weightKg: selectedPickup.estimatedWeightKg,
+            completedDate: selectedPickup.scheduledDate,
+            partnerName: selectedPickup.assignedPartnerName,
+            recyclerName: 'AeroSmelt Rare-Earth Refining Corp'
+          }}
+        />
+      )}
     </div>
   );
 };
