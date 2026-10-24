@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { voiceAssistant } from '../utils/voiceAssistant';
 import { soundEffects } from '../utils/sound';
 import {
@@ -22,6 +23,7 @@ interface VoiceCompanionProps {
 }
 
 export const VoiceCompanion: React.FC<VoiceCompanionProps> = ({ currentTab, onNavigate, onOpenChat }) => {
+  const { logout } = useAuth();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(voiceAssistant.getIsMuted());
   const [isListening, setIsListening] = useState(false);
@@ -111,6 +113,9 @@ export const VoiceCompanion: React.FC<VoiceCompanionProps> = ({ currentTab, onNa
         } else if (text.includes('admin') || text.includes('control')) {
           voiceAssistant.speak('Accessing Administrator Control Center.');
           onNavigate('admin');
+        } else if (text.includes('logout') || text.includes('log out') || text.includes('sign out') || text.includes('exit')) {
+          voiceAssistant.speak('Logging out of your account.');
+          logout();
         } else {
           voiceAssistant.speak(`Received: ${text}. Try saying "Schedule pickup" or "Open EPR credits".`);
         }
