@@ -1,6 +1,7 @@
 import React from 'react';
 import { Globe3D } from '../components/Globe3D';
 import { ImpactPanel } from '../components/ImpactPanel';
+import { Device3DViewer } from '../components/Device3DViewer';
 import {
   Truck,
   Building2,
@@ -14,7 +15,9 @@ import {
   CheckCircle,
   FileText,
   MapPin,
-  ChevronRight
+  ChevronRight,
+  Eye,
+  Zap
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -161,8 +164,46 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 2. PLATFORM OVERVIEW SECTION */}
-      <section className="py-20 bg-nexus-charcoal/40 border-y border-slate-800/80 relative">
+      {/* 2. INTERACTIVE 3D HARDWARE ASSAY & RARE-EARTH RECOVERY SECTION */}
+      <section className="py-16 bg-nexus-charcoal/60 border-y border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-5 space-y-4">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/40 text-xs font-mono text-cyan-300">
+                <Cpu className="w-3.5 h-3.5 text-cyan-400" />
+                <span>INTERACTIVE 3D HARDWARE DECONSTRUCTION</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+                Inspect Precious Secondary Commodities in 3D
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                Modern electronic waste contains concentrations of gold, palladium, copper, and lithium up to 50 times richer than naturally occurring virgin ores. E-Waste Nexus maps and certifies every component.
+              </p>
+              <div className="space-y-2 pt-2 text-xs">
+                <div className="flex items-center space-x-2 text-slate-300">
+                  <span className="w-2 h-2 rounded-full bg-amber-400" />
+                  <span>Gold & Palladium: High-density CPU substrate & connector traces</span>
+                </div>
+                <div className="flex items-center space-x-2 text-slate-300">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                  <span>Lithium & Cobalt: Closed-loop rechargeable polymer cells</span>
+                </div>
+                <div className="flex items-center space-x-2 text-slate-300">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span>High-Purity Copper: Transformer windings & multi-layer busbars</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7">
+              <Device3DViewer />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. PLATFORM OVERVIEW SECTION */}
+      <section className="py-20 bg-nexus-charcoal/40 border-b border-slate-800/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -193,7 +234,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                     idx === 3 ? 'md:col-span-2 lg:col-span-1 border-emerald-400/50 shadow-glow-green/30' : ''
                   }`}
                 >
-                  {/* Subtle card top glow */}
                   <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   <div className="flex items-center justify-between mb-6">
@@ -224,7 +264,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 3. VERIFIABLE CIRCULAR LIFECYCLE WORKFLOW */}
+      {/* 4. VERIFIABLE CIRCULAR LIFECYCLE WORKFLOW */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="text-xs font-mono uppercase tracking-widest text-emerald-400">
@@ -267,7 +307,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 4. CALL TO ACTION BANNER */}
+      {/* 5. CALL TO ACTION BANNER */}
       <section className="pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-r from-emerald-950/60 via-nexus-charcoal to-emerald-950/60 border border-emerald-500/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-2xl mx-auto space-y-5">
