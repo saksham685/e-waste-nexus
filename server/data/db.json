@@ -1,0 +1,493 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_01",
+      "name": "Dr. Evelyn Vance",
+      "email": "admin@nexus.eco",
+      "passwordHash": "$2a$10$Hhb4FCLMHcGQ.Saje1LfOe9qMLjTpXck5l1GYX6fz5OQT9ZcbbNGO",
+      "role": "admin",
+      "status": "active",
+      "phone": "+1 (555) 019-2831",
+      "organization": "E-Waste Nexus Global Governance",
+      "createdAt": "2026-01-15T08:00:00.000Z",
+      "updatedAt": "2026-01-15T08:00:00.000Z"
+    },
+    {
+      "id": "usr_partner_01",
+      "name": "Marcus Sterling",
+      "email": "partner@nexus.eco",
+      "passwordHash": "$2a$10$Hhb4FCLMHcGQ.Saje1LfOeJmpYrYOZuehG99FNlfTC20MdRwmYJgW",
+      "role": "partner",
+      "status": "active",
+      "phone": "+1 (555) 342-8819",
+      "organization": "GreenRoute Eco-Logistics Fleet",
+      "createdAt": "2026-01-18T10:15:00.000Z",
+      "updatedAt": "2026-01-18T10:15:00.000Z"
+    },
+    {
+      "id": "usr_recycler_01",
+      "name": "Elena Rostova",
+      "email": "recycler@nexus.eco",
+      "passwordHash": "$2a$10$Hhb4FCLMHcGQ.Saje1LfOeyazQDlTQA8aDFVul.5DO15.5EUw2kc2",
+      "role": "recycler",
+      "status": "active",
+      "phone": "+1 (555) 871-3342",
+      "organization": "AeroSmelt Rare-Earth Refining Corp",
+      "createdAt": "2026-01-20T12:00:00.000Z",
+      "updatedAt": "2026-01-20T12:00:00.000Z"
+    },
+    {
+      "id": "usr_individual_01",
+      "name": "Sarah Jenkins",
+      "email": "user@nexus.eco",
+      "passwordHash": "$2a$10$Hhb4FCLMHcGQ.Saje1LfOehGyFe0c2pyCZvF9TGrmGYEzJXV9e.hO",
+      "role": "individual",
+      "status": "active",
+      "phone": "+1 (555) 612-9901",
+      "address": "420 Innovation Way, Silicon Valley, CA 94025",
+      "organization": "Cognitive Dynamics Labs",
+      "createdAt": "2026-02-01T09:30:00.000Z",
+      "updatedAt": "2026-02-01T09:30:00.000Z"
+    }
+  ],
+  "pickups": [
+    {
+      "id": "pck_101",
+      "userId": "usr_individual_01",
+      "userName": "Sarah Jenkins",
+      "userEmail": "user@nexus.eco",
+      "userPhone": "+1 (555) 612-9901",
+      "category": "Laptops and Computers",
+      "estimatedQuantity": 6,
+      "estimatedWeightKg": 14.5,
+      "address": "420 Innovation Way, Silicon Valley, CA 94025",
+      "scheduledDate": "2026-10-28",
+      "timeSlot": "10:00 AM - 01:00 PM",
+      "specialInstructions": "Decommissioned server units and ThinkPad laptops from our AI test bench. Reception is at lobby 2.",
+      "assignedPartnerId": "usr_partner_01",
+      "assignedPartnerName": "Marcus Sterling (GreenRoute Fleet)",
+      "currentStatus": "Assigned",
+      "statusHistory": [
+        {
+          "status": "Requested",
+          "timestamp": "2026-10-24T10:00:00.000Z",
+          "changedBy": "usr_individual_01",
+          "changedByName": "Sarah Jenkins",
+          "note": "Pickup request scheduled online"
+        },
+        {
+          "status": "Approved",
+          "timestamp": "2026-10-24T11:30:00.000Z",
+          "changedBy": "usr_admin_01",
+          "changedByName": "Dr. Evelyn Vance (Admin)",
+          "note": "Request passed environmental criteria and hazard audit"
+        },
+        {
+          "status": "Assigned",
+          "timestamp": "2026-10-24T12:00:00.000Z",
+          "changedBy": "usr_admin_01",
+          "changedByName": "Dr. Evelyn Vance (Admin)",
+          "note": "Dispatched to GreenRoute Eco-Logistics Fleet"
+        }
+      ],
+      "createdAt": "2026-10-24T10:00:00.000Z",
+      "updatedAt": "2026-10-24T12:00:00.000Z"
+    },
+    {
+      "id": "pck_102",
+      "userId": "usr_individual_01",
+      "userName": "Sarah Jenkins",
+      "userEmail": "user@nexus.eco",
+      "userPhone": "+1 (555) 612-9901",
+      "category": "Batteries and Chargers",
+      "estimatedQuantity": 25,
+      "estimatedWeightKg": 8.2,
+      "address": "420 Innovation Way, Silicon Valley, CA 94025",
+      "scheduledDate": "2026-10-20",
+      "timeSlot": "02:00 PM - 05:00 PM",
+      "specialInstructions": "Lithium-ion cells stored in fireproof safe box.",
+      "assignedPartnerId": "usr_partner_01",
+      "assignedPartnerName": "Marcus Sterling (GreenRoute Fleet)",
+      "currentStatus": "Completed",
+      "statusHistory": [
+        {
+          "status": "Requested",
+          "timestamp": "2026-10-18T09:00:00.000Z",
+          "changedBy": "usr_individual_01",
+          "changedByName": "Sarah Jenkins"
+        },
+        {
+          "status": "Approved",
+          "timestamp": "2026-10-18T10:00:00.000Z",
+          "changedBy": "usr_admin_01",
+          "changedByName": "Admin"
+        },
+        {
+          "status": "Assigned",
+          "timestamp": "2026-10-18T11:00:00.000Z",
+          "changedBy": "usr_admin_01",
+          "changedByName": "Admin"
+        },
+        {
+          "status": "Collected",
+          "timestamp": "2026-10-20T14:30:00.000Z",
+          "changedBy": "usr_partner_01",
+          "changedByName": "Marcus Sterling"
+        },
+        {
+          "status": "Weighed",
+          "timestamp": "2026-10-20T16:00:00.000Z",
+          "changedBy": "usr_partner_01",
+          "changedByName": "Marcus Sterling"
+        },
+        {
+          "status": "Sent for Recycling",
+          "timestamp": "2026-10-21T09:00:00.000Z",
+          "changedBy": "usr_partner_01",
+          "changedByName": "Marcus Sterling"
+        },
+        {
+          "status": "Completed",
+          "timestamp": "2026-10-22T15:00:00.000Z",
+          "changedBy": "usr_recycler_01",
+          "changedByName": "Elena Rostova (Recycler)"
+        }
+      ],
+      "createdAt": "2026-10-18T09:00:00.000Z",
+      "updatedAt": "2026-10-22T15:00:00.000Z"
+    },
+    {
+      "id": "pck_103",
+      "userId": "usr_individual_01",
+      "userName": "Sarah Jenkins",
+      "userEmail": "user@nexus.eco",
+      "userPhone": "+1 (555) 612-9901",
+      "category": "Smartphones and Tablets",
+      "estimatedQuantity": 12,
+      "estimatedWeightKg": 4.8,
+      "address": "420 Innovation Way, Silicon Valley, CA 94025",
+      "scheduledDate": "2026-10-22",
+      "timeSlot": "09:00 AM - 12:00 PM",
+      "specialInstructions": "Decommissioned smartphones from QA device lab.",
+      "assignedPartnerId": "usr_partner_01",
+      "assignedPartnerName": "Marcus Sterling (GreenRoute Fleet)",
+      "currentStatus": "Weighed",
+      "statusHistory": [
+        {
+          "status": "Requested",
+          "timestamp": "2026-10-20T08:00:00.000Z",
+          "changedBy": "usr_individual_01",
+          "changedByName": "Sarah Jenkins"
+        },
+        {
+          "status": "Approved",
+          "timestamp": "2026-10-20T09:30:00.000Z",
+          "changedBy": "usr_admin_01",
+          "changedByName": "Admin"
+        },
+        {
+          "status": "Assigned",
+          "timestamp": "2026-10-20T10:00:00.000Z",
+          "changedBy": "usr_admin_01",
+          "changedByName": "Admin"
+        },
+        {
+          "status": "Collected",
+          "timestamp": "2026-10-22T10:15:00.000Z",
+          "changedBy": "usr_partner_01",
+          "changedByName": "Marcus Sterling"
+        },
+        {
+          "status": "Weighed",
+          "timestamp": "2026-10-22T11:45:00.000Z",
+          "changedBy": "usr_partner_01",
+          "changedByName": "Marcus Sterling"
+        }
+      ],
+      "createdAt": "2026-10-20T08:00:00.000Z",
+      "updatedAt": "2026-10-22T11:45:00.000Z"
+    }
+  ],
+  "collections": [
+    {
+      "id": "col_201",
+      "pickupId": "pck_102",
+      "partnerId": "usr_partner_01",
+      "partnerName": "Marcus Sterling (GreenRoute Fleet)",
+      "submittedWeightKg": 8.4,
+      "verifiedWeightKg": 8.4,
+      "verificationStatus": "verified",
+      "evidenceUrls": [
+        "/uploads/evidence_battery_pack_weight.jpg"
+      ],
+      "notes": "25 hazardous lithium-ion polymer modules securely packed in fire-suppression vermiculite containers.",
+      "verifiedBy": "usr_admin_01",
+      "verifiedAt": "2026-10-21T08:30:00.000Z",
+      "createdAt": "2026-10-20T16:00:00.000Z",
+      "updatedAt": "2026-10-21T08:30:00.000Z"
+    },
+    {
+      "id": "col_202",
+      "pickupId": "pck_103",
+      "partnerId": "usr_partner_01",
+      "partnerName": "Marcus Sterling (GreenRoute Fleet)",
+      "submittedWeightKg": 5.1,
+      "verificationStatus": "unverified",
+      "evidenceUrls": [
+        "/uploads/scale_smartphones_12units.jpg"
+      ],
+      "notes": "12 test devices intact. Awaiting official weigh-scale hub calibration audit.",
+      "createdAt": "2026-10-22T11:45:00.000Z",
+      "updatedAt": "2026-10-22T11:45:00.000Z"
+    }
+  ],
+  "recyclers": [
+    {
+      "id": "rec_301",
+      "collectionRecordId": "col_201",
+      "pickupId": "pck_102",
+      "recyclerId": "usr_recycler_01",
+      "recyclerName": "Elena Rostova (AeroSmelt Corp)",
+      "receivedWeightKg": 8.4,
+      "processedWeightKg": 8.1,
+      "category": "Batteries and Chargers",
+      "processingEvidenceUrls": [
+        "/uploads/aerosmelt_pyrometallurgy_batch_409.pdf"
+      ],
+      "processingStatus": "Recycled",
+      "notes": "Hydro-metallurgical closed-loop recovery executed. 96.2% cobalt and 98.1% lithium carbonate recovery yield.",
+      "processedAt": "2026-10-22T14:30:00.000Z",
+      "createdAt": "2026-10-21T10:00:00.000Z",
+      "updatedAt": "2026-10-22T15:00:00.000Z"
+    }
+  ],
+  "epr": [
+    {
+      "id": "epr_401",
+      "sourceRecyclerRecordId": "rec_301",
+      "pickupId": "pck_102",
+      "materialCategory": "Batteries and Chargers",
+      "reportingPeriod": "2026-Q4",
+      "eligibleWeightKg": 8.1,
+      "creditUnits": 16.2,
+      "creditStatus": "Available",
+      "approvalStatus": "Approved",
+      "approvedBy": "usr_admin_01",
+      "approvedAt": "2026-10-23T10:15:00.000Z",
+      "targetProducer": "OmniConsumer Tech Global",
+      "isDemoRecord": true,
+      "notes": "Eligible for Tier-1 Closed-Loop Battery Directive Compliance. Verified against AeroSmelt Batch #409.",
+      "createdAt": "2026-10-22T16:00:00.000Z",
+      "updatedAt": "2026-10-23T10:15:00.000Z"
+    },
+    {
+      "id": "epr_402",
+      "sourceRecyclerRecordId": "rec_sample_302",
+      "pickupId": "pck_sample_099",
+      "materialCategory": "Laptops and Computers",
+      "reportingPeriod": "2026-Q3",
+      "eligibleWeightKg": 142.5,
+      "creditUnits": 171,
+      "creditStatus": "Utilized",
+      "approvalStatus": "Approved",
+      "approvedBy": "usr_admin_01",
+      "approvedAt": "2026-09-30T17:00:00.000Z",
+      "targetProducer": "Nexus Computing Devices Corp",
+      "isDemoRecord": true,
+      "notes": "Applied toward Annual Extended Producer Responsibility Mandatory Target 2026.",
+      "createdAt": "2026-09-28T11:00:00.000Z",
+      "updatedAt": "2026-09-30T17:00:00.000Z"
+    },
+    {
+      "id": "epr_403",
+      "sourceRecyclerRecordId": "rec_sample_303",
+      "pickupId": "pck_sample_098",
+      "materialCategory": "Televisions and Monitors",
+      "reportingPeriod": "2026-Q4",
+      "eligibleWeightKg": 68,
+      "creditUnits": 68,
+      "creditStatus": "Pending Review",
+      "approvalStatus": "Pending",
+      "targetProducer": "VisionDisplay Tech",
+      "isDemoRecord": true,
+      "notes": "Lead glass phosphor compliance documentation under technical audit.",
+      "createdAt": "2026-10-23T14:00:00.000Z",
+      "updatedAt": "2026-10-23T14:00:00.000Z"
+    }
+  ],
+  "centers": [
+    {
+      "id": "ctr_01",
+      "name": "Metro Silicon Valley Clean Tech Hub",
+      "address": "1040 Innovation Parkway, Suite 100",
+      "city": "San Jose",
+      "state": "CA",
+      "postalCode": "95134",
+      "phone": "+1 (408) 555-0144",
+      "email": "sv-hub@nexus.eco",
+      "acceptedCategories": [
+        "Smartphones and Tablets",
+        "Laptops and Computers",
+        "Batteries and Chargers",
+        "Televisions and Monitors",
+        "Printers and Office Electronics"
+      ],
+      "operatingHours": "Mon-Sat: 08:00 AM - 07:00 PM",
+      "isVerified": true,
+      "latitude": 37.403,
+      "longitude": -121.944,
+      "createdAt": "2026-01-10T00:00:00.000Z"
+    },
+    {
+      "id": "ctr_02",
+      "name": "Bay Area Certified Circular Center",
+      "address": "750 Mission Bay Blvd North",
+      "city": "San Francisco",
+      "state": "CA",
+      "postalCode": "94158",
+      "phone": "+1 (415) 555-0189",
+      "email": "sf-circ@nexus.eco",
+      "acceptedCategories": [
+        "Smartphones and Tablets",
+        "Laptops and Computers",
+        "Batteries and Chargers",
+        "Large Electrical Appliances",
+        "Other Electronic Waste"
+      ],
+      "operatingHours": "Mon-Sun: 09:00 AM - 06:00 PM",
+      "isVerified": true,
+      "latitude": 37.769,
+      "longitude": -122.391,
+      "createdAt": "2026-01-12T00:00:00.000Z"
+    },
+    {
+      "id": "ctr_03",
+      "name": "East Bay Lithium & Precious Metal Vault",
+      "address": "2200 Powell Street",
+      "city": "Emeryville",
+      "state": "CA",
+      "postalCode": "94608",
+      "phone": "+1 (510) 555-0199",
+      "email": "eastbay-vault@nexus.eco",
+      "acceptedCategories": [
+        "Batteries and Chargers",
+        "Smartphones and Tablets",
+        "Laptops and Computers"
+      ],
+      "operatingHours": "Tue-Sat: 10:00 AM - 05:00 PM",
+      "isVerified": true,
+      "latitude": 37.844,
+      "longitude": -122.298,
+      "createdAt": "2026-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "ctr_04",
+      "name": "Seattle Pacific E-Waste Terminal",
+      "address": "400 Pine Street",
+      "city": "Seattle",
+      "state": "WA",
+      "postalCode": "98101",
+      "phone": "+1 (206) 555-0212",
+      "email": "seattle@nexus.eco",
+      "acceptedCategories": [
+        "Smartphones and Tablets",
+        "Laptops and Computers",
+        "Televisions and Monitors",
+        "Printers and Office Electronics",
+        "Large Electrical Appliances"
+      ],
+      "operatingHours": "Mon-Fri: 08:30 AM - 05:30 PM",
+      "isVerified": true,
+      "latitude": 47.611,
+      "longitude": -122.336,
+      "createdAt": "2026-01-18T00:00:00.000Z"
+    },
+    {
+      "id": "ctr_05",
+      "name": "Austin Green Foundry Depository",
+      "address": "500 E 4th Street",
+      "city": "Austin",
+      "state": "TX",
+      "postalCode": "78701",
+      "phone": "+1 (512) 555-0318",
+      "email": "austin@nexus.eco",
+      "acceptedCategories": [
+        "Smartphones and Tablets",
+        "Laptops and Computers",
+        "Batteries and Chargers",
+        "Other Electronic Waste"
+      ],
+      "operatingHours": "Mon-Sat: 09:00 AM - 06:00 PM",
+      "isVerified": true,
+      "latitude": 30.266,
+      "longitude": -97.74,
+      "createdAt": "2026-01-22T00:00:00.000Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "audit_init_01",
+      "actorId": "usr_admin_01",
+      "actorName": "Dr. Evelyn Vance",
+      "actorRole": "admin",
+      "action": "PLATFORM_INITIALIZATION",
+      "entityType": "PlatformSetting",
+      "entityId": "global_config",
+      "updatedValues": {
+        "environment": "production-ready",
+        "eprRulesVersion": "2026.4"
+      },
+      "timestamp": "2026-01-15T08:00:00.000Z"
+    },
+    {
+      "id": "audit_init_02",
+      "actorId": "usr_partner_01",
+      "actorName": "Marcus Sterling",
+      "actorRole": "partner",
+      "action": "SUBMIT_COLLECTION_WEIGHT",
+      "entityType": "CollectionRecord",
+      "entityId": "col_201",
+      "updatedValues": {
+        "submittedWeightKg": 8.4,
+        "evidenceProvided": true
+      },
+      "timestamp": "2026-10-20T16:00:00.000Z"
+    },
+    {
+      "id": "audit_init_03",
+      "actorId": "usr_admin_01",
+      "actorName": "Dr. Evelyn Vance",
+      "actorRole": "admin",
+      "action": "VERIFY_COLLECTION_WEIGHT",
+      "entityType": "CollectionRecord",
+      "entityId": "col_201",
+      "previousValues": {
+        "verificationStatus": "unverified"
+      },
+      "updatedValues": {
+        "verificationStatus": "verified",
+        "verifiedWeightKg": 8.4
+      },
+      "timestamp": "2026-10-21T08:30:00.000Z"
+    },
+    {
+      "id": "audit_init_04",
+      "actorId": "usr_admin_01",
+      "actorName": "Dr. Evelyn Vance",
+      "actorRole": "admin",
+      "action": "APPROVE_EPR_CREDIT",
+      "entityType": "EPRRecord",
+      "entityId": "epr_401",
+      "previousValues": {
+        "approvalStatus": "Pending",
+        "creditStatus": "Pending Review"
+      },
+      "updatedValues": {
+        "approvalStatus": "Approved",
+        "creditStatus": "Available",
+        "creditUnits": 16.2
+      },
+      "timestamp": "2026-10-23T10:15:00.000Z"
+    }
+  ]
+}
