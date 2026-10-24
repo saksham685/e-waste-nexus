@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import pickupRoutes from './routes/pickupRoutes.js';
@@ -53,6 +54,26 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/centers', centerRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/upload', uploadRoutes);
+
+// Serve compiled React frontend directly via Node.js Express
+const clientDistCandidates = [
+  path.resolve(process.cwd(), '../client/dist'),
+  path.resolve(process.cwd(), 'client/dist'),
+  path.resolve(__dirname, '../../client/dist'),
+  path.resolve(__dirname, '../../../client/dist')
+];
+
+const clientDist = clientDistCandidates.find(p => fs.existsSync(p));
+if (clientDist) {
+  console.log(`📦 Node.js serving frontend build from: ${clientDist}`);
+  app.use(express.static(clientDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
 // Error Handler
 app.use(errorHandler);

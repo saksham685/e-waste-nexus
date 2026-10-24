@@ -5,6 +5,7 @@
   "description": "E-Waste Nexus - AI-Powered E-Waste Collection & EPR Credit Management Platform",
   "scripts": {
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "start": "node server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
