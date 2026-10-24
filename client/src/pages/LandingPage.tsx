@@ -4,6 +4,7 @@ import { ImpactPanel } from '../components/ImpactPanel';
 import { Device3DViewer } from '../components/Device3DViewer';
 import { LiveActivityFeed } from '../components/LiveActivityFeed';
 import { ImpactCalculator } from '../components/ImpactCalculator';
+import { TiltCard3D } from '../components/TiltCard3D';
 import { soundEffects } from '../utils/sound';
 import {
   Truck,
@@ -137,8 +138,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Hero Content */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-xs font-mono text-emerald-300 backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-xs font-mono text-emerald-300 backdrop-blur-md animate-pulse">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
               <span>AI-POWERED CIRCULAR LOGISTICS & EPR SUITE</span>
             </div>
 
@@ -153,19 +154,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               The unified intelligence platform connecting individuals, corporate enterprises, authorized collection centers, and certified recyclers. Automating traceable end-to-end chain of custody and verifiable Extended Producer Responsibility (EPR) compliance credits.
             </p>
 
-            {/* CTAs */}
+            {/* CTAs with 3D Pop */}
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
               <button
                 onClick={() => { soundEffects.playClick(); onNavigate('pickups'); }}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-500 to-emerald-400 text-slate-950 hover:from-emerald-400 hover:to-lime-400 transition-all shadow-glow-green flex items-center justify-center space-x-2 group"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-sm bg-gradient-to-r from-emerald-500 to-emerald-400 text-slate-950 hover:from-emerald-400 hover:to-lime-400 transition-all hover:scale-105 active:scale-95 shadow-glow-green flex items-center justify-center space-x-2 group cursor-pointer"
               >
                 <span>Schedule a Pickup</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
               </button>
 
               <button
                 onClick={() => { soundEffects.playClick(); onNavigate('epr'); }}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-sm bg-nexus-charcoal/80 border border-slate-700 hover:border-emerald-500/50 text-slate-200 hover:text-white transition-all backdrop-blur flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-sm bg-nexus-charcoal/80 border border-slate-700 hover:border-emerald-500/50 text-slate-200 hover:text-white transition-all hover:scale-105 active:scale-95 backdrop-blur flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <span>Explore EPR Registry</span>
                 <ChevronRight className="w-4 h-4 text-emerald-400" />
@@ -204,7 +205,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       {/* Real-time Streaming Circular Activity Ticker */}
       <LiveActivityFeed />
 
-      {/* 2. ENTERPRISE CLIENTS / NETWORK TRUSTED BAR */}
+      {/* 2. ENTERPRISE CLIENTS TRUST BAR */}
       <section className="py-8 bg-nexus-dark/80 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-[10px] uppercase font-mono tracking-widest text-nexus-muted mb-4">
@@ -268,7 +269,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         />
       </section>
 
-      {/* 5. PLATFORM OVERVIEW SECTION (5 Premium Cards) */}
+      {/* 5. PLATFORM OVERVIEW SECTION (5 Premium 3D Tilt Cards) */}
       <section className="py-20 bg-nexus-charcoal/40 border-y border-slate-800/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -291,17 +292,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             {featureCards.map((card, idx) => {
               const Icon = card.icon;
               return (
-                <div
+                <TiltCard3D
                   key={card.id}
                   onClick={() => { soundEffects.playClick(); onNavigate(card.actionTab); }}
-                  className={`group relative p-7 rounded-2xl bg-gradient-to-b ${card.color} to-nexus-dark/90 border ${card.border} hover:border-emerald-400/80 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover cursor-pointer backdrop-blur-sm ${
+                  intensity={14}
+                  className={`group relative p-7 rounded-3xl bg-gradient-to-b ${card.color} to-nexus-dark/95 border ${card.border} hover:border-emerald-400/80 transition-shadow duration-300 hover:shadow-card-hover cursor-pointer backdrop-blur-sm ${
                     idx === 3 ? 'md:col-span-2 lg:col-span-1 border-emerald-400/50 shadow-glow-green/30' : ''
                   }`}
                 >
                   <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-12 h-12 rounded-xl bg-nexus-dark/80 border border-slate-700/80 group-hover:border-emerald-400 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-2xl bg-nexus-dark/80 border border-slate-700/80 group-hover:border-emerald-400 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                       <Icon className="w-6 h-6" />
                     </div>
                     <span className="font-mono text-xs font-bold text-slate-500 group-hover:text-emerald-400 transition-colors">
@@ -317,18 +319,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                     {card.description}
                   </p>
 
-                  <div className="flex items-center text-xs font-medium text-emerald-400 group-hover:text-emerald-300">
+                  <div className="flex items-center text-xs font-semibold text-emerald-400 group-hover:text-emerald-300">
                     <span>Explore module</span>
-                    <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1.5 transition-transform" />
+                    <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-2 transition-transform" />
                   </div>
-                </div>
+                </TiltCard3D>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* 6. VERIFIABLE CIRCULAR LIFECYCLE WORKFLOW */}
+      {/* 6. VERIFIABLE CIRCULAR LIFECYCLE WORKFLOW (Tilt Cards) */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="text-xs font-mono uppercase tracking-widest text-emerald-400">
@@ -346,13 +348,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           {workflowSteps.map((ws, i) => {
             const Icon = ws.icon;
             return (
-              <div
+              <TiltCard3D
                 key={ws.step}
+                intensity={10}
                 className="relative p-5 rounded-2xl bg-nexus-charcoal/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-mono text-xs text-emerald-400 font-bold">
+                    <span className="w-7 h-7 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-mono text-xs text-emerald-400 font-bold">
                       {ws.step}
                     </span>
                     <Icon className="w-5 h-5 text-slate-500" />
@@ -365,7 +368,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                     →
                   </div>
                 )}
-              </div>
+              </TiltCard3D>
             );
           })}
         </div>
@@ -420,13 +423,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={() => { soundEffects.playClick(); onNavigate('pickups'); }}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-glow-green"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-sm bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-glow-green hover:scale-105 active:scale-95 cursor-pointer"
               >
                 Schedule Doorstep Pickup
               </button>
               <button
                 onClick={() => { soundEffects.playClick(); onNavigate('centers'); }}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:border-slate-500 transition-colors"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-sm bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:border-slate-500 transition-colors hover:scale-105 active:scale-95 cursor-pointer"
               >
                 Find Collection Centers
               </button>
