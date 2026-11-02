@@ -34,38 +34,52 @@ interface CinemaVideo {
 }
 
 const CINEMA_VIDEOS: CinemaVideo[] = [
-  // 1. English - Bloomberg / Vice Urban Mining
+  // 1. English - Gold Recovery from Electronics
   {
     id: 'vid-1',
-    youtubeId: '327kXmC346I',
-    title: 'How Gold Is Extracted From Millions of Discarded Phones',
+    youtubeId: 'Ou-LPYzH3nE',
+    title: 'Extracting Gold from Electronic Waste | Modern Hydrometallurgy Assay',
     description:
-      'A deep-dive investigation into modern industrial hydrometallurgy. Discover how high-efficiency smelting facilities extract 99.9% fine gold bullion from smartphone logic boards with zero cyanide.',
+      'A scientific investigation into modern industrial hydrometallurgy. Discover how high-efficiency refining facilities extract 99.9% fine gold bullion from computer circuit boards with zero cyanide.',
     language: 'english',
     category: 'Urban Gold Mining',
     duration: '14:28',
     resolution: '4K UHD',
-    narrator: 'Bloomberg Quicktake',
-    takeaway: '1 metric ton of smartphones yields ~350g of gold, over 50x richer than gold ore.',
+    narrator: 'Tech Gold Recovery Science',
+    takeaway: '1 metric ton of printed circuit boards contains up to 350 grams of fine gold bullion.',
   },
-  // 2. Hindi - Seelampur E-Waste Reality & Solutions
+  // 2. Hindi - E-Waste Management & Seelampur Ground Reality
   {
     id: 'vid-2',
-    youtubeId: 'wO6b6_z125w',
-    title: 'भारत में ई-कचरे का सच: सीलमपुर की कबाड़ मंडी और आधुनिक समाधान',
-    hindiTitle: 'India E-Waste Reality: Seelampur Market & Clean Recycling',
+    youtubeId: 'bwljsb2yEYo',
+    title: 'भारत में ई-कचरे का प्रबंधन कैसे करें? सरकारी नियम व आधुनिक तकनीकें',
+    hindiTitle: 'How to Deal With E-Waste in India? StudyIQ Hindi Special',
     description:
-      'दिल्ली के सीलमपुर में ई-कचरे की रीसाइक्लिंग कैसे होती है और कैसे आधुनिक वैज्ञानिक तकनीकें लाखों लोगों को जहरीले रसायनों और लेड पॉइजनिंग से बचा सकती हैं।',
+      'जानिए भारत में ई-कचरे का सुरक्षित निस्तारण कैसे किया जाता है और नए CPCB 2022 नियमों के तहत EPR सर्टिफिकेशन क्यों आवश्यक है।',
     language: 'hindi',
     category: 'Hazardous Recycling',
     duration: '18:45',
     resolution: '1080p HD',
-    narrator: 'NDTV Hindi Ground Report',
+    narrator: 'StudyIQ IAS Hindi Special',
     takeaway: 'असुरक्षित तरीके से ई-कचरा जलाने से भूमिगत जल में सीसा और पारा घुल जाता है।',
   },
-  // 3. English - Apple Daisy Disassembly Robot
+  // 3. English - The Tragic Costs of Unregulated E-Waste
   {
     id: 'vid-3',
+    youtubeId: '4GtWGHvX-rk',
+    title: 'The Tragic Costs of Global E-Waste & Why Closed-Loop Is Vital',
+    description:
+      'An investigative deep-dive tracking informal e-waste dumping and showing why blockchain-verified chain-of-custody tracking is essential for modern electronics.',
+    language: 'english',
+    category: 'Hazardous Recycling',
+    duration: '22:15',
+    resolution: '4K UHD',
+    narrator: 'Global Environment Documentary',
+    takeaway: 'Closed-loop digital manifest systems prevent toxic heavy metals from contaminating aquifers.',
+  },
+  // 4. English - Apple Daisy Disassembly Robot
+  {
+    id: 'vid-4',
     youtubeId: 'AYshVbcEmUc',
     title: 'Apple Daisy: The Robot That Recycles 200 iPhones An Hour',
     description:
@@ -77,11 +91,11 @@ const CINEMA_VIDEOS: CinemaVideo[] = [
     narrator: 'CNET Tech Insider',
     takeaway: 'Robotic component isolation preserves 100% material grade for next-gen manufacturing.',
   },
-  // 4. Hindi - E-Waste Rules 2022 & EPR Explanation
+  // 5. Hindi - Understanding E-Waste Rules & EPR Quotas
   {
-    id: 'vid-4',
+    id: 'vid-5',
     youtubeId: 'V9w9h3kU324',
-    title: 'ई-वेस्ट मैनेजमेंट नियम 2022 और EPR क्या है? पूरी जानकारी',
+    title: 'ई-वेस्ट मैनेजमेंट नियम और EPR क्या है? भारतीय उद्योगों के लिए गाइड',
     hindiTitle: 'Understanding India E-Waste Rules 2022 & EPR Quotas',
     description:
       'केंद्रीय प्रदूषण नियंत्रण बोर्ड (CPCB) के नए ई-कचरा नियम और कंपनियों के लिए एक्सटेंडेड प्रोड्यूसर रिस्पॉन्सिबिलिटी (EPR) के नियम कैसे काम करते हैं।',
@@ -92,25 +106,11 @@ const CINEMA_VIDEOS: CinemaVideo[] = [
     narrator: 'Drishti IAS Environment Special',
     takeaway: 'कंपनियों को अपने कुल इलेक्ट्रॉनिक उत्पादन का 60% से 100% रीसायकल करना अनिवार्य है।',
   },
-  // 5. English - The Toxic Secret of Electronics Agbogbloshie
-  {
-    id: 'vid-5',
-    youtubeId: 'mleQVO1Vd1I',
-    title: 'The Dark Secret Behind Behind Where Global Tech Dies',
-    description:
-      'An investigative documentary documenting the international flow of unverified electronic waste and why closed-loop chain-of-custody tracking is essential.',
-    language: 'english',
-    category: 'Hazardous Recycling',
-    duration: '22:15',
-    resolution: '4K UHD',
-    narrator: 'DW Documentary',
-    takeaway: 'Digital QR manifests eliminate unauthorized maritime dumping.',
-  },
-  // 6. Hindi - Mobile & Laptop se Sona Kaise Nikale (Scientific Method)
+  // 6. Hindi - RAM aur Motherboard se Sona Nikalne ki Vidhi
   {
     id: 'vid-6',
     youtubeId: '1nO5q4Fh5kM',
-    title: 'पुराने मोबाइल और रैम (RAM) से सोना कैसे निकाला जाता है? वैज्ञानिक प्रक्रिया',
+    title: 'पुराने कंप्यूटर और रैम (RAM) से 24 कैरेट सोना कैसे निकाला जाता है?',
     hindiTitle: 'How Gold Is Recovered from Motherboards & RAM Chips',
     description:
       'हाइड्रोमेटालर्जी (Hydrometallurgy) और एसिड-फ्री केमिकल लीचिंग के जरिए सर्किट बोर्ड से शुद्ध 24 कैरेट सोना अलग करने की पूरी प्रयोगशाला प्रक्रिया।',
@@ -121,7 +121,7 @@ const CINEMA_VIDEOS: CinemaVideo[] = [
     narrator: 'Vigyan Recharge',
     takeaway: 'कॉपर और निकेल को अलग करने के बाद गोल्ड अवक्षेपण (Precipitation) किया जाता है।',
   },
-  // 7. English - Redwood Materials: Electric Car Battery Recycling
+  // 7. English - Redwood Materials Battery Recycling Gigafactory
   {
     id: 'vid-7',
     youtubeId: 'F16g8vLz3h4',
@@ -135,11 +135,11 @@ const CINEMA_VIDEOS: CinemaVideo[] = [
     narrator: 'Fully Charged Show',
     takeaway: 'Battery Black Mass refining uses 80% less energy than virgin lithium brines.',
   },
-  // 8. Hindi - Future of Clean Tech & E-Waste Startups in India
+  // 8. Hindi - Future of Clean Tech Startups in India
   {
     id: 'vid-8',
     youtubeId: 't6l9v8m7u2k',
-    title: 'भारत में ई-वेस्ट रीसाइक्लिंग का भविष्य: अरबों डॉलर का नया उद्योग',
+    title: 'भारत में ई-वेस्ट रीसाइक्लिंग का भविष्य: अरबों डॉलर का नया स्वच्छ उद्योग',
     hindiTitle: 'The Multi-Billion Dollar Circular Economy Opportunity',
     description:
       'भारत में उभरते हुए क्लीन-टेक रीसाइक्लिंग प्लांट्स और ग्रीन जॉब्स का एक समग्र विश्लेषण। जानिए कैसे कचरा अब एक मूल्यवान संसाधन बन चुका है।',
