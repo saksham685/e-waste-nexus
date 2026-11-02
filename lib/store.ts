@@ -72,17 +72,32 @@ export const DEMO_USERS: Record<UserRole, User> = {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      user: DEMO_USERS.individual, // default signed in for instant evaluation
-      token: 'nexus_jwt_demo_token_session_2026',
+      user: null, // default strictly unauthenticated: requires login to enter
+      token: null,
       isLoading: false,
-      setUser: (user, token = null) => set({ user, token: token || (user ? 'nexus_jwt_token' : null) }),
-      logout: () => set({ user: null, token: null }),
+      setUser: (user, token = null) => {
+        const sessionToken = token || (user ? `nexus_jwt_${user.role}_token` : null);
+        if (typeof document !== 'undefined' && sessionToken) {
+          document.cookie = `nexus_token=${sessionToken}; path=/; max-age=604800; SameSite=Lax`;
+        }
+        set({ user, token: sessionToken });
+      },
+      logout: () => {
+        if (typeof document !== 'undefined') {
+          document.cookie = 'nexus_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+        set({ user: null, token: null });
+      },
       switchDemoRole: (role: UserRole) => {
-        set({ user: DEMO_USERS[role], token: `nexus_jwt_${role}_token` });
+        const token = `nexus_jwt_${role}_token`;
+        if (typeof document !== 'undefined') {
+          document.cookie = `nexus_token=${token}; path=/; max-age=604800; SameSite=Lax`;
+        }
+        set({ user: DEMO_USERS[role], token });
       },
     }),
     {
-      name: 'nexus-auth-storage',
+      name: 'nexus-auth-storage-v2',
     }
   )
 );

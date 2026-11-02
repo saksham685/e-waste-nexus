@@ -4,6 +4,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { VoiceCompanion } from '@/components/VoiceCompanion';
 import { NexusGPTChat } from '@/components/NexusGPTChat';
+import { AuthGuard } from '@/components/AuthGuard';
 import './globals.css';
 
 // Lazy load Three.js background for optimal SSR hydration & code splitting (Unit V)
@@ -79,8 +80,10 @@ export default function RootLayout({
         {/* Global Navigation Bar */}
         <Navbar />
 
-        {/* Main Content Area */}
-        <main className="flex-1 relative z-10">{children}</main>
+        {/* Main Content Area Protected by Auth Wall */}
+        <AuthGuard>
+          <main className="flex-1 relative z-10">{children}</main>
+        </AuthGuard>
 
         {/* Global Floating AI Voice Companion */}
         <VoiceCompanion />

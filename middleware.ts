@@ -25,12 +25,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 4. If user already has a token and visits /login or /signup, redirect them to dashboard
-  if (token && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  // 5. Attach Security Headers (Unit VI: Industry Practices & Security Best Practices)
+  // 4. Attach Security Headers (Unit VI: Industry Practices & Security Best Practices)
   const response = NextResponse.next();
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
