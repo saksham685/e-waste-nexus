@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-nexus-dark text-slate-100 font-sans selection:bg-emerald-500 selection:text-slate-950;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07090e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* 3D Perspective & Preservation Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* 3D Tab Page Transition Animation */
+@keyframes pageEnter3D {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) rotateX(6deg) translateY(28px) scale(0.965);
+    filter: blur(4px);
+  }
+  60% {
+    transform: perspective(1200px) rotateX(-1deg) translateY(-2px) scale(1.005);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) rotateX(0deg) translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+.animate-page-enter-3d {
+  animation: pageEnter3D 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Cyber Scanline Transition Beam */
+@keyframes cyberScan {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.animate-cyber-scan {
+  animation: cyberScan 0.45s ease-in-out forwards;
+}
+
+/* Floating 3D Micro-Motion */
+@keyframes float3D {
+  0%, 100% {
+    transform: translateY(0px) rotateX(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotateX(2deg);
+  }
+}
+
+.animate-float-3d {
+  animation: float3D 6s ease-in-out infinite;
+}

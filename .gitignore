@@ -1,8 +1,11 @@
 node_modules
 dist
+.next
 .env
+.env.local
 uploads/*
 !uploads/.gitkeep
 data/db.json
 .DS_Store
 *.log
+tsconfig.tsbuildinfo
