@@ -26,6 +26,7 @@ import {
 import { ImpactCalculator } from '@/components/ImpactCalculator';
 import { LiveActivityFeed } from '@/components/LiveActivityFeed';
 import { TiltCard3D } from '@/components/TiltCard3D';
+import { RealtimeWorldIntelligence } from '@/components/RealtimeWorldIntelligence';
 
 // Next.js Unit V: Lazy Loading Three.js Heavy 3D Canvas elements with code splitting
 const Globe3D = dynamic(() => import('@/components/Globe3D').then((mod) => mod.Globe3D), {
@@ -167,6 +168,9 @@ export default function HomePage() {
           </TiltCard3D>
         </div>
       </section>
+
+      {/* REAL-TIME WORLD INTELLIGENCE & COMMODITIES PULSE */}
+      <RealtimeWorldIntelligence />
 
       {/* 2. ROLE-BASED ECOSYSTEM PORTAL CARDS */}
       <section className="w-full py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">

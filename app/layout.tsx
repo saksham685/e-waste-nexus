@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer';
 import { VoiceCompanion } from '@/components/VoiceCompanion';
 import { NexusGPTChat } from '@/components/NexusGPTChat';
 import { AuthGuard } from '@/components/AuthGuard';
+import { LiveMarketTicker } from '@/components/LiveMarketTicker';
 import './globals.css';
 
 // Lazy load Three.js background for optimal SSR hydration & code splitting (Unit V)
@@ -79,6 +80,9 @@ export default function RootLayout({
 
         {/* Global Navigation Bar */}
         <Navbar />
+
+        {/* Global Real-Time Urban Mining Commodity Spot Ticker */}
+        <LiveMarketTicker />
 
         {/* Main Content Area Protected by Auth Wall */}
         <AuthGuard>
