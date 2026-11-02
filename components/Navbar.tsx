@@ -60,8 +60,9 @@ export const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     soundEffects.playClick();
+    document.cookie = 'nexus_token=; path=/; max-age=0';
     logout();
-    router.push('/login');
+    window.location.href = '/login';
   };
 
   const navLinks = [
@@ -309,10 +310,19 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center space-x-2 pl-2 border-l border-slate-800">
                 <Link
                   href="/login"
-                  className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-400 text-slate-950 font-bold text-xs hover:scale-105 active:scale-95 transition-all shadow-glow-green cursor-pointer"
+                  onClick={handleNavClick}
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold text-xs transition-all cursor-pointer"
                 >
-                  <LogIn className="w-3.5 h-3.5 fill-current" />
-                  <span>Login / Sign In</span>
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Login</span>
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={handleNavClick}
+                  className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-400 text-slate-950 font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-glow-green cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 fill-current" />
+                  <span>Sign Up</span>
                 </Link>
               </div>
             )}

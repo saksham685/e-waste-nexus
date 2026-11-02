@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -32,6 +32,9 @@ import {
   QrCode,
   Zap,
   Check,
+  Smartphone,
+  Send,
+  BellRing,
 } from 'lucide-react';
 
 // Lazy-load Three.js 3D Holographic Vault to ensure SSR safety and fast hydration
@@ -120,6 +123,10 @@ export default function LoginPage() {
   const [activeCardKey, setActiveCardKey] = useState<string>('individual');
   const [isScanningBiometric, setIsScanningBiometric] = useState(false);
 
+  // SMS Notification tracking states
+  const [smsDispatched, setSmsDispatched] = useState(false);
+  const [smsTimestamp, setSmsTimestamp] = useState<string>('');
+
   // Form states
   const [email, setEmail] = useState('user@nexus.eco');
   const [password, setPassword] = useState('User@123');
@@ -128,6 +135,34 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Trigger automated SMS access alert to 98059 26846 & 9417453249 as soon as the login gate is accessed
+  useEffect(() => {
+    fetch('/api/notify-access', { method: 'POST' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setSmsDispatched(true);
+          setSmsTimestamp(data.timestamp || new Date().toLocaleTimeString());
+        }
+      })
+      .catch((err) => console.warn('Access notification alert error:', err));
+  }, []);
+
+  // 1-Click Instant Login as any persona
+  const handleInstantLogin = (personaKey: string) => {
+    soundEffects.playUnlock();
+    const persona = SMART_CARDS.find((c) => c.key === personaKey) || SMART_CARDS[0];
+    const sessionToken = `nexus_jwt_${persona.key}_token_session_2026`;
+    document.cookie = `nexus_token=${sessionToken}; path=/; max-age=604800; SameSite=Lax`;
+    switchDemoRole(persona.key);
+    setUser(persona.user, sessionToken);
+    setSuccessMsg(`Access Authorized for ${persona.user.name}. Opening platform...`);
+    voiceAssistant.speak(`Access verified for ${persona.user.name}. Opening ecosystem.`);
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 300);
+  };
 
   // Biometric 1-Click Thumbprint Scan
   const handleBiometricScan = () => {
@@ -140,17 +175,21 @@ export default function LoginPage() {
       soundEffects.playUnlock();
       setIsScanningBiometric(false);
       const persona = SMART_CARDS.find((c) => c.key === activeCardKey) || SMART_CARDS[0];
+
+      // Set session cookie so Next.js Edge Middleware permits entry across all protected routes
+      const sessionToken = `nexus_jwt_${persona.key}_token_session_2026`;
+      document.cookie = `nexus_token=${sessionToken}; path=/; max-age=604800; SameSite=Lax`;
+
       switchDemoRole(persona.key);
+      setUser(persona.user, sessionToken);
+
       setSuccessMsg(`Biometric matched: Clearance granted to ${persona.user.name}.`);
-      voiceAssistant.speak(`Biometric identity verified for ${persona.user.name}. Welcome.`);
+      voiceAssistant.speak(`Biometric identity verified for ${persona.user.name}. Opening ecosystem.`);
 
       setTimeout(() => {
-        if (persona.key === 'partner') router.push('/partner');
-        else if (persona.key === 'recycler') router.push('/recycler');
-        else if (persona.key === 'admin') router.push('/admin');
-        else router.push('/pickups');
-      }, 700);
-    }, 1200);
+        window.location.href = '/';
+      }, 300);
+    }, 800);
   };
 
   // Instant SmartCard Insertion
@@ -191,9 +230,14 @@ export default function LoginPage() {
         if (res.success && res.user) {
           soundEffects.playSuccess();
           setSuccessMsg(`Registered identity for ${res.user.name}. Redirecting...`);
+          if (res.token) {
+            document.cookie = `nexus_token=${res.token}; path=/; max-age=604800; SameSite=Lax`;
+          }
           setUser(res.user, res.token);
           voiceAssistant.speak(`Welcome to E-Waste Nexus, ${res.user.name}.`);
-          setTimeout(() => router.push('/pickups'), 600);
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 300);
         } else {
           soundEffects.playError();
           setErrorMsg(res.error || 'Registration failed');
@@ -203,14 +247,14 @@ export default function LoginPage() {
         if (res.success && res.user) {
           soundEffects.playSuccess();
           setSuccessMsg(`Access passcode verified. Loading workspace...`);
+          if (res.token) {
+            document.cookie = `nexus_token=${res.token}; path=/; max-age=604800; SameSite=Lax`;
+          }
           setUser(res.user, res.token);
           voiceAssistant.speak(`Welcome back, ${res.user.name}.`);
           setTimeout(() => {
-            if (res.user?.role === 'partner') router.push('/partner');
-            else if (res.user?.role === 'recycler') router.push('/recycler');
-            else if (res.user?.role === 'admin') router.push('/admin');
-            else router.push('/pickups');
-          }, 600);
+            window.location.href = '/';
+          }, 300);
         } else {
           soundEffects.playError();
           setErrorMsg(res.error || 'Invalid credentials');
@@ -225,25 +269,54 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="w-full min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background ambient lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Futuristic Telemetry Status Bar */}
-      <div className="w-full max-w-5xl flex items-center justify-between py-2 px-4 mb-6 rounded-2xl bg-nexus-card/60 border border-emerald-500/20 backdrop-blur-xl text-[11px] font-mono text-gray-400">
+      {/* Futuristic Telemetry Status Bar with SMS Alert Notification */}
+      <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-2 py-2.5 px-4 mb-4 rounded-2xl bg-nexus-card/70 border border-emerald-500/20 backdrop-blur-xl text-[11px] font-mono text-gray-400">
         <div className="flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-emerald-400 font-bold uppercase">SECURITY GATE ACTIVE</span>
-          <span className="hidden sm:inline">&bull; ZERO-KNOWLEDGE ENCLAVE</span>
+          <span className="text-emerald-400 font-bold uppercase">MANDATORY SECURITY GATE ACTIVE</span>
+          <span className="hidden sm:inline">&bull; AUTH REQUIRED TO ACCESS ECOSYSTEM</span>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="hidden md:inline text-cyan-400 font-semibold">CIPHER: AES-256-GCM</span>
-          <span className="text-gray-400 font-mono">PORTAL ID: #NX-8820</span>
+        <div className="flex items-center space-x-3">
+          <span className="text-cyan-400 font-semibold flex items-center space-x-1">
+            <Lock className="w-3 h-3" />
+            <span>PROTECTED NEXT.JS MIDDLEWARE</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Prominent SMS Notification Live Dispatch Banner */}
+      <div className="w-full max-w-5xl mb-6 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-nexus-card/90 to-emerald-950/90 border border-emerald-500/40 shadow-glow-green backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div className="flex items-center space-x-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+            <Smartphone className="w-5 h-5 animate-pulse" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-2 font-bold text-white">
+              <span>SMS Access Notification Dispatcher</span>
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                ACTIVE
+              </span>
+            </div>
+            <p className="text-[11px] text-gray-300 mt-0.5">
+              Automated mobile SMS alert triggered to registered devices: <span className="text-emerald-400 font-mono font-bold">+91 98059 26846</span> and <span className="text-cyan-400 font-mono font-bold">+91 9417453249</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="text-right shrink-0">
+          <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-[10px] font-bold">
+            <Send className="w-3 h-3" />
+            <span>{smsDispatched ? `ALERT SENT (${smsTimestamp || 'Live'})` : 'DISPATCHING SMS...'}</span>
+          </span>
         </div>
       </div>
 
       {/* Main Unique Cyber Terminal Box */}
-      <div className="w-full max-w-5xl bg-gradient-to-b from-nexus-card/95 via-nexus-card/80 to-nexus-dark/95 border-2 border-emerald-500/40 rounded-3xl p-6 sm:p-10 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-5xl bg-gradient-to-b from-nexus-card/95 via-nexus-card/85 to-nexus-dark/95 border-2 border-emerald-500/40 rounded-3xl p-6 sm:p-10 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
         {/* Holographic scanner laser line effect */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-cyan-400 to-lime-400 shadow-glow-green" />
 
@@ -253,7 +326,7 @@ export default function LoginPage() {
           <div className="lg:col-span-4 h-[220px] relative flex items-center justify-center rounded-2xl bg-nexus-dark/70 border border-emerald-500/20 overflow-hidden">
             <HologramVault3D />
             <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-[10px] font-mono text-emerald-400/90 pointer-events-none">
-              <span>HOLOGRAPHIC VAULT</span>
+              <span>HOLOGRAPHIC GATE</span>
               <span className="animate-pulse">ONLINE</span>
             </div>
           </div>
@@ -263,13 +336,13 @@ export default function LoginPage() {
             <div>
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono uppercase tracking-wider mb-2">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Next.js App Router &bull; Biometric &amp; SmartCard Gate</span>
+                <span>Next.js Protected Gateway &bull; Biometric &amp; SmartCard Gate</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-snug">
                 Circular Electronics Clearance Terminal
               </h1>
               <p className="text-xs sm:text-sm text-gray-300 leading-relaxed font-light mt-1">
-                Select an institutional NFC SmartCard below for 1-click clearance, or switch to the manual Passcode Terminal.
+                You must authenticate here to access the E-Waste Nexus ecosystem. Select an NFC SmartCard below for 1-click entry, or use your passcode.
               </p>
             </div>
 
@@ -304,8 +377,17 @@ export default function LoginPage() {
                 }`}
               >
                 <Key className="w-4 h-4" />
-                <span>Terminal Passcode &amp; Register</span>
+                <span>Terminal Passcode</span>
               </button>
+
+              <Link
+                href="/signup"
+                onClick={() => soundEffects.playClick()}
+                className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-nexus-dark/80 hover:bg-emerald-500/20 text-emerald-400 hover:text-white border border-emerald-500/30 transition-all cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-emerald-400" />
+                <span>Create Account / Sign Up &rarr;</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -388,8 +470,21 @@ export default function LoginPage() {
                           </div>
                         </div>
 
+                        {/* 1-Click Login CTA on each card */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleInstantLogin(card.key);
+                          }}
+                          className="w-full mt-3 py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-nexus-dark font-black text-xs transition-all flex items-center justify-center space-x-1.5 shadow-md cursor-pointer hover:scale-102"
+                        >
+                          <Zap className="w-3.5 h-3.5 fill-current" />
+                          <span>⚡ 1-Click Login</span>
+                        </button>
+
                         {/* Card Footer */}
-                        <div className="mt-4 pt-3 border-t border-emerald-500/15 flex items-center justify-between">
+                        <div className="mt-3 pt-2.5 border-t border-emerald-500/15 flex items-center justify-between">
                           <span className="text-[9px] font-mono text-gray-500">
                             {card.clearanceLevel}
                           </span>
@@ -415,34 +510,47 @@ export default function LoginPage() {
                   <h3 className="text-base font-bold text-white">Biometric Clearance Dock</h3>
                 </div>
                 <p className="text-xs text-gray-400">
-                  Touch sensor to simulate biometric thumbprint scanning and instant sign in for the docked persona.
+                  Touch sensor or click Enter to authenticate and access the full platform immediately.
                 </p>
                 <div className="text-xs font-mono text-emerald-400 pt-1">
                   Ready to Authenticate: <span className="font-bold">{DEMO_USERS[activeCardKey as keyof typeof DEMO_USERS].name}</span>
                 </div>
               </div>
 
-              {/* Glowing Sensor Button */}
-              <button
-                type="button"
-                onClick={handleBiometricScan}
-                disabled={isScanningBiometric}
-                className={`w-20 h-20 rounded-full border-2 flex flex-col items-center justify-center transition-all duration-300 relative group cursor-pointer shrink-0 ${
-                  isScanningBiometric
-                    ? 'border-emerald-400 bg-emerald-500/20 shadow-glow-green scale-110 animate-pulse'
-                    : 'border-emerald-500/40 hover:border-emerald-400 bg-nexus-card hover:bg-emerald-500/10 shadow-glow-green hover:scale-105'
-                }`}
-                title="Click to scan fingerprint"
-              >
-                <Fingerprint
-                  className={`w-10 h-10 transition-colors ${
-                    isScanningBiometric ? 'text-emerald-300 animate-bounce' : 'text-emerald-400 group-hover:text-emerald-300'
+              {/* Action Buttons: Big Enter Button + Glowing Biometric Sensor */}
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <button
+                  type="button"
+                  onClick={handleBiometricScan}
+                  disabled={isScanningBiometric}
+                  className="py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-nexus-dark font-black text-xs sm:text-sm tracking-wide shadow-glow-green transition-all flex items-center space-x-2 cursor-pointer hover:scale-105 active:scale-95"
+                >
+                  <Zap className="w-4 h-4 fill-current" />
+                  <span>{isScanningBiometric ? 'Verifying Identity...' : `Enter Website as ${DEMO_USERS[activeCardKey as keyof typeof DEMO_USERS].name}`}</span>
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleBiometricScan}
+                  disabled={isScanningBiometric}
+                  className={`w-16 h-16 rounded-full border-2 flex flex-col items-center justify-center transition-all duration-300 relative group cursor-pointer shrink-0 ${
+                    isScanningBiometric
+                      ? 'border-emerald-400 bg-emerald-500/20 shadow-glow-green scale-110 animate-pulse'
+                      : 'border-emerald-500/40 hover:border-emerald-400 bg-nexus-card hover:bg-emerald-500/10 shadow-glow-green hover:scale-105'
                   }`}
-                />
-                <span className="text-[8px] font-mono text-emerald-400 mt-1 uppercase">
-                  {isScanningBiometric ? 'SCANNING' : 'TOUCH'}
-                </span>
-              </button>
+                  title="Click to scan fingerprint and access website"
+                >
+                  <Fingerprint
+                    className={`w-8 h-8 transition-colors ${
+                      isScanningBiometric ? 'text-emerald-300 animate-bounce' : 'text-emerald-400 group-hover:text-emerald-300'
+                    }`}
+                  />
+                  <span className="text-[8px] font-mono text-emerald-400 mt-0.5 uppercase">
+                    {isScanningBiometric ? 'SCANNING' : 'TOUCH'}
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -585,6 +693,22 @@ export default function LoginPage() {
             </form>
           </div>
         )}
+
+        {/* Bottom Navigation Link to Dedicated Signup Page */}
+        <div className="mt-8 pt-6 border-t border-emerald-500/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <div className="text-gray-400 flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>Need a new authorized account for your household or enterprise?</span>
+          </div>
+          <Link
+            href="/signup"
+            onClick={() => soundEffects.playClick()}
+            className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-nexus-dark font-black transition-all shadow-glow-green cursor-pointer hover:scale-105"
+          >
+            <Sparkles className="w-4 h-4 fill-current" />
+            <span>Go to Sign Up Page &rarr;</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

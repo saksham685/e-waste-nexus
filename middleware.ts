@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Static files and internal routes passthrough
+  // 1. Allow static files, Next.js internal bundles, and API endpoints
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
@@ -14,10 +14,23 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Token from cookie
+  // 2. Read session token from cookie
   const token = request.cookies.get('nexus_token')?.value;
 
-  // Add security headers to response (Security Best Practices - Unit VI)
+  // 3. ENFORCE STRICT AUTH WALL:
+  // If no token exists and user is trying to access ANY page other than /login or /signup, redirect to /login immediately
+  if (!token && pathname !== '/login' && pathname !== '/signup') {
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // 4. If user already has a token and visits /login or /signup, redirect them to dashboard
+  if (token && (pathname === '/login' || pathname === '/signup')) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  // 5. Attach Security Headers (Unit VI: Industry Practices & Security Best Practices)
   const response = NextResponse.next();
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
