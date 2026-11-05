@@ -17,14 +17,32 @@ export function middleware(request: NextRequest) {
   // 2. Read session token from cookie
   const token = request.cookies.get('nexus_token')?.value;
 
-  // 3. Only protect the strict internal Admin Governance route if unauthenticated
-  if (!token && pathname.startsWith('/admin')) {
+  // 3. Public authentication routes
+  const isAuthRoute =
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/signup') ||
+    pathname.startsWith('/logout');
+
+  // If user is already authenticated and visits /login or /signup, direct to dashboard
+  if (token && (pathname === '/login' || pathname === '/signup')) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  // If on public auth page, let them proceed
+  if (isAuthRoute) {
+    return NextResponse.next();
+  }
+
+  // 4. Strict Login Gate: All platform pages require login first (Standard Web Security)
+  if (!token) {
     const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
+    if (pathname !== '/') {
+      loginUrl.searchParams.set('redirect', pathname);
+    }
     return NextResponse.redirect(loginUrl);
   }
 
-  // 4. Attach Security Headers (Next.js Unit VI: Industry Practices & Security Best Practices)
+  // 5. Attach Security Headers (Next.js Unit VI: Industry Practices & Security Best Practices)
   const response = NextResponse.next();
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');

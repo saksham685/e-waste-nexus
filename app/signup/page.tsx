@@ -95,9 +95,11 @@ export default function SignupPage() {
         setUser(res.user, res.token);
         voiceAssistant.speak(`Welcome to E-Waste Nexus, ${res.user.name}. Launching your workspace.`);
 
+        const redirect = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('redirect') : null;
+        const target = redirect && redirect.startsWith('/') ? redirect : '/';
         setTimeout(() => {
-          window.location.href = '/';
-        }, 600);
+          window.location.href = target;
+        }, 500);
       } else {
         soundEffects.playError();
         setErrorMsg(res.error || 'Registration failed. Please check your inputs.');
