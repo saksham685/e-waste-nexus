@@ -17,15 +17,14 @@ export function middleware(request: NextRequest) {
   // 2. Read session token from cookie
   const token = request.cookies.get('nexus_token')?.value;
 
-  // 3. ENFORCE STRICT AUTH WALL:
-  // If no token exists and user is trying to access ANY page other than /login, /signup or /logout, redirect to /login immediately
-  if (!token && pathname !== '/login' && pathname !== '/signup' && pathname !== '/logout') {
+  // 3. Only protect the strict internal Admin Governance route if unauthenticated
+  if (!token && pathname.startsWith('/admin')) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // 4. Attach Security Headers (Unit VI: Industry Practices & Security Best Practices)
+  // 4. Attach Security Headers (Next.js Unit VI: Industry Practices & Security Best Practices)
   const response = NextResponse.next();
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
