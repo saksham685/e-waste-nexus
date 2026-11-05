@@ -46,21 +46,6 @@ export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [smsDispatched, setSmsDispatched] = useState(false);
-  const [smsTimestamp, setSmsTimestamp] = useState<string>('');
-
-  // Dispatch automated SMS access alert to admin numbers on signup page open
-  useEffect(() => {
-    fetch('/api/notify-access', { method: 'POST' })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setSmsDispatched(true);
-          setSmsTimestamp(data.timestamp || new Date().toLocaleTimeString());
-        }
-      })
-      .catch((err) => console.warn('Signup page notify error:', err));
-  }, []);
 
   const handleRoleSelect = (selectedRole: 'individual' | 'partner' | 'recycler') => {
     soundEffects.playClick();
@@ -130,28 +115,6 @@ export default function SignupPage() {
       {/* Background ambient lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-lime-500/10 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* SMS Alert Live Status Bar */}
-      <div className="w-full max-w-2xl mb-4 p-3 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-nexus-card/90 to-emerald-950/80 border border-emerald-500/30 backdrop-blur-xl flex items-center justify-between gap-3 text-xs">
-        <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
-            <Smartphone className="w-4 h-4 animate-pulse" />
-          </div>
-          <div>
-            <div className="text-[11px] font-bold text-white flex items-center space-x-1.5">
-              <span>SMS Access Notification</span>
-              <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px]">
-                LIVE
-              </span>
-            </div>
-            <p className="text-[10px] text-gray-300">
-              Alert configured for: <span className="text-emerald-400 font-mono font-bold">+91 98059 26846</span> &amp; <span className="text-cyan-400 font-mono font-bold">+91 9417453249</span>
-            </p>
-          </div>
-        </div>
-        <span className="text-[10px] font-mono font-bold text-emerald-300 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 shrink-0">
-          {smsDispatched ? `DISPATCHED (${smsTimestamp || 'Live'})` : 'CONNECTING...'}
-        </span>
-      </div>
 
       {/* Main Signup Form Container */}
       <div className="w-full max-w-2xl bg-gradient-to-b from-nexus-card/95 via-nexus-card/85 to-nexus-dark/95 border-2 border-emerald-500/40 rounded-3xl p-6 sm:p-10 backdrop-blur-2xl shadow-2xl relative overflow-hidden">

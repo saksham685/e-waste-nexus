@@ -106,10 +106,10 @@ export default function LogoutPage() {
 
           <div className="flex items-center justify-between text-gray-400">
             <span className="flex items-center space-x-1.5">
-              <Smartphone className="w-3.5 h-3.5 text-amber-400" />
-              <span>Registered Monitors:</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Storage Clearance:</span>
             </span>
-            <span className="text-gray-300 font-bold text-[11px]">98059 26846 / 9417453249</span>
+            <span className="text-emerald-400 font-bold text-[11px]">LOCAL &amp; HTTPONLY WIPED</span>
           </div>
         </div>
 
