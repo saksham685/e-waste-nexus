@@ -25,7 +25,8 @@ import {
   Bell,
   Sparkles,
   Film,
-  LogIn
+  LogIn,
+  BookOpen
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -60,9 +61,9 @@ export const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     soundEffects.playClick();
-    document.cookie = 'nexus_token=; path=/; max-age=0';
+    document.cookie = 'nexus_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     logout();
-    window.location.href = '/login';
+    window.location.href = '/logout';
   };
 
   const navLinks = [
@@ -72,6 +73,7 @@ export const Navbar: React.FC = () => {
     { href: '/epr', label: 'EPR Credits', icon: Award },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/cinema', label: 'Video Cinema', icon: Film, is4K: true },
+    { href: '/syllabus', label: 'Syllabus Map', icon: BookOpen },
   ];
 
   const roleTabs = [];

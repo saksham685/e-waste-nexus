@@ -10,7 +10,7 @@ export const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children })
   const { user, token } = useAuthStore();
   const [isChecking, setIsChecking] = useState(true);
 
-  const isPublicPage = pathname === '/login' || pathname === '/signup';
+  const isPublicPage = pathname === '/login' || pathname === '/signup' || pathname === '/logout';
 
   useEffect(() => {
     // Check if cookie exists

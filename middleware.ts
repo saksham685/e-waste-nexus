@@ -18,8 +18,8 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('nexus_token')?.value;
 
   // 3. ENFORCE STRICT AUTH WALL:
-  // If no token exists and user is trying to access ANY page other than /login or /signup, redirect to /login immediately
-  if (!token && pathname !== '/login' && pathname !== '/signup') {
+  // If no token exists and user is trying to access ANY page other than /login, /signup or /logout, redirect to /login immediately
+  if (!token && pathname !== '/login' && pathname !== '/signup' && pathname !== '/logout') {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
