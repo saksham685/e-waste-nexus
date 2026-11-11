@@ -68,7 +68,6 @@ export const Navbar: React.FC = () => {
     { href: '/centers', label: 'Centers Map', icon: MapPin },
     { href: '/epr', label: 'EPR Exchange', icon: Award },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-    { href: '/login', label: 'Login / Switch Role', icon: UserIcon },
   ];
 
   const stakeholderPortals = [
