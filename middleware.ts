@@ -21,7 +21,8 @@ export function middleware(request: NextRequest) {
   const isAuthRoute =
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
-    pathname.startsWith('/logout');
+    pathname.startsWith('/logout') ||
+    pathname.startsWith('/auth');
 
   // If user is already authenticated and visits /login or /signup, direct to dashboard
   if (token && (pathname === '/login' || pathname === '/signup')) {
