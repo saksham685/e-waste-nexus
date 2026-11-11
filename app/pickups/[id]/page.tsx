@@ -20,6 +20,7 @@ import {
   ArrowRight,
   Scale,
 } from 'lucide-react';
+import { DriverRouteSimulator } from '@/components/DriverRouteSimulator';
 
 interface Props {
   params: {
@@ -129,7 +130,7 @@ export default async function PickupDetailsPage({ params }: Props) {
               <span>Assigned Logistics &amp; Security</span>
             </div>
             <p className="text-gray-200 font-medium">
-              {pickup.assignedPartnerName || 'Apex Green Fleet • Driver: Vikram Singh (DL-12-EA-9821)'}
+              {pickup.assignedPartnerName || 'Apex Green Fleet • Driver: Rajesh Sharma (DL-12-EA-9821)'}
             </p>
             <div className="flex items-center justify-between text-[11px] font-mono text-gray-400 pt-1">
               <span>Handover PIN: <strong className="text-emerald-400">{otpCode}</strong></span>
@@ -138,6 +139,15 @@ export default async function PickupDetailsPage({ params }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Live Driver GPS Route Simulator */}
+      <DriverRouteSimulator
+        pickupId={pickup.id}
+        address={pickup.address}
+        driverName={pickup.assignedPartnerName?.split('•')[1]?.split('(')[0]?.trim() || 'Rajesh Sharma'}
+        vehicleNumber="DL-12-EA-9821"
+        otpCode={otpCode}
+      />
 
       {/* Custody Timeline */}
       <div className="bg-nexus-card border border-emerald-500/20 rounded-3xl p-6 sm:p-8 backdrop-blur-xl space-y-6">
@@ -148,10 +158,13 @@ export default async function PickupDetailsPage({ params }: Props) {
           </h2>
 
           {isCertified && (
-            <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 flex items-center space-x-1">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>CPCB Form-6 Minted</span>
-            </span>
+            <Link
+              href={`/verify/${pickup.id}`}
+              className="text-xs font-mono text-emerald-300 bg-emerald-500/20 hover:bg-emerald-500/30 px-3 py-1.5 rounded-full border border-emerald-500/40 flex items-center space-x-1.5 transition-colors"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Verify Form-6 Public Registry &rarr;</span>
+            </Link>
           )}
         </div>
 

@@ -25,6 +25,7 @@ import {
   Calendar,
   Scale,
   Flame,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -97,6 +98,13 @@ export const Navbar: React.FC = () => {
       desc: 'Auditable manifests, statutory quotas & action ledger',
       icon: Shield,
       color: 'text-red-400',
+    },
+    {
+      href: '/verify',
+      title: 'Verify CPCB Certificate',
+      desc: 'Verify Form-6 recycling manifests & SHA-256 proofs',
+      icon: ShieldCheck,
+      color: 'text-lime-400',
     },
   ];
 

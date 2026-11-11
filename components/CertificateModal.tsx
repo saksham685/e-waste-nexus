@@ -131,13 +131,26 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ pickup, onCl
             {/* Signatures & Security Seal */}
             <div className="flex flex-col sm:flex-row items-center justify-between pt-6 border-t border-emerald-500/20 text-xs">
               <div className="flex items-center space-x-3 mb-4 sm:mb-0">
-                <div className="w-14 h-14 bg-white p-1 rounded-xl flex items-center justify-center">
+                <a
+                  href={`/verify/${pickup.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-14 h-14 bg-white p-1 rounded-xl flex items-center justify-center hover:scale-105 transition-transform"
+                  title="Click to verify on public CPCB registry"
+                >
                   <QrCode className="w-12 h-12 text-black" />
-                </div>
+                </a>
                 <div>
                   <span className="text-[10px] font-mono text-gray-400 block">Cryptographic Hash</span>
                   <span className="font-mono text-xs text-emerald-400">0x79d...440c</span>
-                  <span className="text-[10px] text-gray-400 block mt-0.5">Scannable Public Ledger</span>
+                  <a
+                    href={`/verify/${pickup.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-cyan-400 hover:underline block mt-0.5 font-mono"
+                  >
+                    Click to Verify Publicly &rarr;
+                  </a>
                 </div>
               </div>
 

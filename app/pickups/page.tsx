@@ -12,6 +12,8 @@ import {
 } from '@/actions/pickupActions';
 import { PickupRequest } from '@/lib/types';
 import { CertificateModal } from '@/components/CertificateModal';
+import { CorporateBulkUpload } from '@/components/CorporateBulkUpload';
+import { GreenWalletModal } from '@/components/GreenWalletModal';
 import {
   Truck,
   PlusCircle,
@@ -42,6 +44,8 @@ import {
   Award,
   ArrowUpRight,
   ShieldAlert,
+  Building2,
+  Gift,
 } from 'lucide-react';
 
 interface CategoryPreset {
@@ -69,7 +73,8 @@ export default function PickupsPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [selectedCertPickup, setSelectedCertPickup] = useState<PickupRequest | null>(null);
-  const [activeTab, setActiveTab] = useState<'schedule' | 'book' | 'list'>('schedule');
+  const [activeTab, setActiveTab] = useState<'schedule' | 'book' | 'corporate' | 'list'>('schedule');
+  const [isWalletOpen, setIsWalletOpen] = useState(false);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -221,7 +226,7 @@ export default function PickupsPage() {
       const res = await simulateAdvancePickupStep(pickupId, actor);
       if (res.success) {
         soundEffects.playSuccess();
-        const nextStatus = res.pickup?.currentStatus;
+        const nextStatus = (res as any).pickup?.currentStatus;
         setSuccessMsg(`Consignment #${pickupId.slice(-6)} advanced to: ${nextStatus}`);
         voiceAssistant.speak(`Consignment updated to ${nextStatus}.`);
         await fetchPickups();
@@ -440,7 +445,23 @@ export default function PickupsPage() {
             }`}
           >
             <PlusCircle className="w-4 h-4" />
-            <span>Book New Doorstep Collection</span>
+            <span>Book Doorstep Collection</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              soundEffects.playClick();
+              setActiveTab('corporate');
+            }}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+              activeTab === 'corporate'
+                ? 'bg-emerald-500 text-nexus-dark shadow-glow-green'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            <Building2 className="w-4 h-4" />
+            <span>Corporate B2B Bulk Disposal</span>
           </button>
 
           <button
@@ -460,8 +481,20 @@ export default function PickupsPage() {
           </button>
         </div>
 
-        {/* Global Refresh & Role indicator */}
+        {/* Global Refresh & Green Wallet Button */}
         <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={() => {
+              soundEffects.playClick();
+              setIsWalletOpen(true);
+            }}
+            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-lime-500/20 hover:from-emerald-500/30 hover:to-lime-500/30 border border-emerald-500/40 text-emerald-300 hover:text-white text-xs font-mono font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-glow-green"
+          >
+            <Coins className="w-4 h-4 text-emerald-400" />
+            <span>Green Wallet (1,450 Pts)</span>
+          </button>
+
           <button
             type="button"
             onClick={() => {
@@ -1138,12 +1171,22 @@ export default function PickupsPage() {
         </div>
       )}
 
+      {/* ========================================================================= */}
+      {/* TAB 4: CORPORATE B2B BULK ASSET DISPOSAL                                  */}
+      {/* ========================================================================= */}
+      {activeTab === 'corporate' && <CorporateBulkUpload />}
+
       {/* Certificate Modal */}
       {selectedCertPickup && (
         <CertificateModal
           pickup={selectedCertPickup}
           onClose={() => setSelectedCertPickup(null)}
         />
+      )}
+
+      {/* Green Wallet Modal */}
+      {isWalletOpen && (
+        <GreenWalletModal onClose={() => setIsWalletOpen(false)} />
       )}
     </div>
   );
