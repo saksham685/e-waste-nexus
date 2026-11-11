@@ -176,12 +176,14 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
     const handleAuthMessage = (event: MessageEvent) => {
       if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
         const { user, token } = event.data;
+        if (typeof document !== 'undefined') {
+          document.cookie = `nexus_token=${token}; path=/; max-age=604800; SameSite=Lax`;
+        }
         setUser(user, token);
         setSuccessMsg(`Welcome back, ${user.name}`);
         setGoogleLoading(false);
         const target = getDestination();
-        router.push(target);
-        router.refresh();
+        window.location.replace(target);
       }
     };
 
@@ -238,9 +240,11 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
       const data = await res.json();
       if (data.success && data.user) {
         setSuccessMsg(`Signing in as ${data.user.name}...`);
+        if (typeof document !== 'undefined') {
+          document.cookie = `nexus_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+        }
         setUser(data.user, data.token);
-        router.push(getDestination());
-        router.refresh();
+        window.location.replace(getDestination());
       } else {
         throw new Error(data.error || 'Authentication failed');
       }
@@ -251,22 +255,42 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
     }
   };
 
-  // Preset Credentials Helper
+  // Preset Credentials Helper & 1-Click Fast Sign-In
   const fillPreset = (userType: 'admin' | 'partner' | 'recycler' | 'user') => {
     setActiveTab('credentials');
+    let email = 'user@nexus.eco';
+    let name = 'Aarav Sharma (Citizen)';
+    let role: 'individual' | 'partner' | 'recycler' | 'admin' = 'individual';
+    let pass = 'User@123';
+
     if (userType === 'admin') {
-      setIdentifier('admin@nexus.eco');
-      setPassword('Admin@123');
+      email = 'admin@nexus.eco';
+      name = 'Dr. Evelyn Vance';
+      role = 'admin';
+      pass = 'Admin@123';
     } else if (userType === 'partner') {
-      setIdentifier('partner@nexus.eco');
-      setPassword('Partner@123');
+      email = 'partner@nexus.eco';
+      name = 'Marcus Sterling';
+      role = 'partner';
+      pass = 'Partner@123';
     } else if (userType === 'recycler') {
-      setIdentifier('recycler@nexus.eco');
-      setPassword('Recycler@123');
-    } else {
-      setIdentifier('user@nexus.eco');
-      setPassword('User@123');
+      email = 'recycler@nexus.eco';
+      name = 'Elena Rostova';
+      role = 'recycler';
+      pass = 'Recycler@123';
     }
+
+    setIdentifier(email);
+    setPassword(pass);
+
+    // Auto sign-in in 1-click
+    handleQuickAccountSignIn({
+      id: `preset_${userType}`,
+      name,
+      email,
+      role: role as any,
+      isGoogle: false,
+    });
   };
 
   // Form Submit Handler
@@ -334,9 +358,11 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
         const data = await res.json();
         if (data.success && data.user) {
           setSuccessMsg(`Welcome, ${data.user.name}! Account registered successfully.`);
+          if (typeof document !== 'undefined') {
+            document.cookie = `nexus_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+          }
           setUser(data.user, data.token);
-          router.push(getDestination());
-          router.refresh();
+          window.location.replace(getDestination());
         } else {
           setErrorMsg(data.error || 'Registration failed');
           setIsLoading(false);
@@ -356,9 +382,11 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
         const data = await res.json();
         if (data.success && data.user) {
           setSuccessMsg(`Signed in as ${data.user.name}`);
+          if (typeof document !== 'undefined') {
+            document.cookie = `nexus_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+          }
           setUser(data.user, data.token);
-          router.push(getDestination());
-          router.refresh();
+          window.location.replace(getDestination());
         } else {
           setErrorMsg(data.error || 'Invalid User ID or Password.');
           setIsLoading(false);
@@ -492,11 +520,11 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
           
           {/* Top Pill Switcher */}
           <div className="flex items-center justify-between">
-            <div className="p-1 rounded-xl bg-zinc-900 border border-zinc-800 flex space-x-1">
+            <div className="p-1 rounded-xl bg-zinc-900 border border-zinc-800 flex space-x-1 select-none">
               <button
                 type="button"
                 onClick={() => switchMode('signin')}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all touch-manipulation cursor-pointer active:scale-95 select-none ${
                   mode === 'signin'
                     ? 'bg-zinc-800 text-white shadow-sm'
                     : 'text-zinc-400 hover:text-white'
@@ -507,7 +535,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
               <button
                 type="button"
                 onClick={() => switchMode('signup')}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all touch-manipulation cursor-pointer active:scale-95 select-none ${
                   mode === 'signup'
                     ? 'bg-zinc-800 text-white shadow-sm'
                     : 'text-zinc-400 hover:text-white'
@@ -554,7 +582,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
             type="button"
             onClick={handleOpenGoogleModal}
             disabled={googleLoading || isLoading}
-            className="w-full py-2.5 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-850 text-white border border-zinc-800 hover:border-zinc-700 text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center space-x-3 cursor-pointer disabled:opacity-50"
+            className="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-850 active:bg-zinc-800 text-white border border-zinc-800 hover:border-zinc-700 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center space-x-3 touch-manipulation cursor-pointer active:scale-[0.98] select-none disabled:opacity-50"
           >
             {googleLoading ? (
               <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
@@ -588,7 +616,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
           </button>
 
           {/* Divider */}
-          <div className="relative flex items-center justify-center">
+          <div className="relative flex items-center justify-center select-none">
             <div className="border-t border-zinc-800 w-full" />
             <span className="bg-zinc-950 px-3 text-[11px] uppercase tracking-wider text-zinc-500 font-mono">
               or continue with account
@@ -598,7 +626,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
 
           {/* SIGN IN: Active Accounts Switcher (Antigravity Style) */}
           {mode === 'signin' && savedAccounts.length > 0 && (
-            <div className="space-y-2">
+            <div className="space-y-2 select-none">
               <div className="text-xs font-semibold text-zinc-400 flex items-center justify-between">
                 <span>Select active account:</span>
                 <span className="text-[11px] text-emerald-400 font-mono">1-Click Sign In</span>
@@ -612,7 +640,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
                       type="button"
                       disabled={isLoading || googleLoading}
                       onClick={() => handleQuickAccountSignIn(acc)}
-                      className="w-full p-2.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-850 border border-zinc-800 hover:border-zinc-700 transition-all flex items-center justify-between text-left group cursor-pointer"
+                      className="w-full p-3 rounded-xl bg-zinc-900/90 hover:bg-zinc-850 active:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all flex items-center justify-between text-left group touch-manipulation cursor-pointer active:scale-[0.98] select-none"
                     >
                       <div className="flex items-center space-x-3 min-w-0">
                         <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-white shrink-0">
@@ -643,34 +671,34 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
             
             {/* Quick Demo Credentials Bar */}
             {mode === 'signin' && (
-              <div className="p-2.5 rounded-xl bg-zinc-900/50 border border-zinc-800 text-[11px] text-zinc-400 flex items-center justify-between">
-                <span>Demo Fill:</span>
+              <div className="p-2.5 rounded-xl bg-zinc-900/50 border border-zinc-800 text-[11px] text-zinc-400 flex items-center justify-between select-none">
+                <span className="font-medium">1-Click Fast Fill:</span>
                 <div className="flex items-center space-x-1.5">
                   <button
                     type="button"
                     onClick={() => fillPreset('user')}
-                    className="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-200 font-medium transition-all touch-manipulation cursor-pointer active:scale-95 select-none"
                   >
                     User
                   </button>
                   <button
                     type="button"
                     onClick={() => fillPreset('admin')}
-                    className="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-amber-300 font-medium transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-amber-300 font-medium transition-all touch-manipulation cursor-pointer active:scale-95 select-none"
                   >
                     Admin
                   </button>
                   <button
                     type="button"
                     onClick={() => fillPreset('partner')}
-                    className="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-cyan-300 font-medium transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-cyan-300 font-medium transition-all touch-manipulation cursor-pointer active:scale-95 select-none"
                   >
                     Logistics
                   </button>
                   <button
                     type="button"
                     onClick={() => fillPreset('recycler')}
-                    className="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-emerald-300 font-medium transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-emerald-300 font-medium transition-all touch-manipulation cursor-pointer active:scale-95 select-none"
                   >
                     Recycler
                   </button>
@@ -906,7 +934,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
             <button
               type="submit"
               disabled={isLoading || googleLoading}
-              className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-semibold text-xs sm:text-sm transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer shadow-sm mt-2"
+              className="w-full py-3 px-4 rounded-xl bg-white hover:bg-zinc-100 active:bg-zinc-200 text-zinc-950 font-bold text-xs sm:text-sm transition-all flex items-center justify-center space-x-2 disabled:opacity-50 touch-manipulation cursor-pointer active:scale-[0.98] select-none shadow-sm mt-2"
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">

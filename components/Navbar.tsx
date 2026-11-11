@@ -357,7 +357,7 @@ export const Navbar: React.FC = () => {
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-slate-900 border border-white/10 text-slate-300 hover:text-white"
+              className="p-2.5 rounded-xl bg-slate-900 border border-white/10 text-slate-300 hover:text-white touch-manipulation cursor-pointer active:scale-95 select-none"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -381,7 +381,7 @@ export const Navbar: React.FC = () => {
                   href={link.href}
                   prefetch={true}
                   onClick={handleNavClick}
-                  className={`flex items-center space-x-2 p-2.5 rounded-xl text-xs font-medium ${
+                  className={`flex items-center space-x-2 p-3 rounded-xl text-xs font-medium touch-manipulation cursor-pointer active:scale-95 select-none ${
                     isActive
                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                       : 'bg-slate-900/80 text-slate-300'
