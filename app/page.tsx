@@ -20,11 +20,11 @@ import {
   Radio,
   Globe2,
   TrendingUp,
-  BookOpen,
   ArrowUpRight,
   Shield,
   Coins,
   Compass,
+  Calendar,
 } from 'lucide-react';
 import { ImpactCalculator } from '@/components/ImpactCalculator';
 import { LiveActivityFeed } from '@/components/LiveActivityFeed';
@@ -32,8 +32,10 @@ import { RealtimeWorldIntelligence } from '@/components/RealtimeWorldIntelligenc
 import { InstantValuationCalculator } from '@/components/InstantValuationCalculator';
 import { HowItWorksJourney } from '@/components/HowItWorksJourney';
 import { CustomerReviewsAndFaq } from '@/components/CustomerReviewsAndFaq';
+import { PlatformArchitectureWorkflow } from '@/components/PlatformArchitectureWorkflow';
+import { LiveOperationsConsole } from '@/components/LiveOperationsConsole';
 
-// Next.js Unit V: Lazy Loading Three.js Heavy 3D Canvas elements with code splitting
+// Lazy loading 3D Three.js canvas components
 const Globe3D = dynamic(() => import('@/components/Globe3D').then((mod) => mod.Globe3D), {
   ssr: false,
   loading: () => (
@@ -107,7 +109,7 @@ export default function HomePage() {
             href="/pickups"
             className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 hover:from-emerald-400 hover:to-cyan-300 text-slate-950 font-black text-sm tracking-wide shadow-[0_0_30px_rgba(16,185,129,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center space-x-2 cursor-pointer group"
           >
-            <Truck className="w-4 h-4" />
+            <Calendar className="w-4 h-4" />
             <span>Schedule Doorstep Pickup</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -129,9 +131,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* =============================================================== */}
-        {/* HERO BENTO METRIC BAR: 4 HIGH-IMPACT LIVE COUNTERS              */}
-        {/* =============================================================== */}
+        {/* Hero Bento Metrics Bar */}
         <div className="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-5xl">
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-white/10 hover:border-emerald-500/30 transition-all text-left backdrop-blur-xl shadow-lg group">
             <div className="flex items-center justify-between mb-2">
@@ -172,17 +172,27 @@ export default function HomePage() {
       </section>
 
       {/* =================================================================== */}
-      {/* 2. INSTANT DEVICE VALUATION & SCRAP QUOTE CALCULATOR                */}
+      {/* 2. INTERACTIVE 4-STAKEHOLDER ARCHITECTURE WORKFLOW                  */}
+      {/* =================================================================== */}
+      <PlatformArchitectureWorkflow />
+
+      {/* =================================================================== */}
+      {/* 3. INSTANT DEVICE VALUATION & SCRAP QUOTE CALCULATOR                */}
       {/* =================================================================== */}
       <InstantValuationCalculator />
 
       {/* =================================================================== */}
-      {/* 3. REAL-TIME COMMODITIES & WORLD INTELLIGENCE STREAM                */}
+      {/* 4. LIVE OPERATIONS COMMAND CONSOLE (DISPATCHES, SCALES, ASSAYS)     */}
+      {/* =================================================================== */}
+      <LiveOperationsConsole />
+
+      {/* =================================================================== */}
+      {/* 5. REAL-TIME COMMODITIES & WORLD INTELLIGENCE STREAM                */}
       {/* =================================================================== */}
       <RealtimeWorldIntelligence />
 
       {/* =================================================================== */}
-      {/* 3. INTERACTIVE 3D WEBGL LAB: HARDWARE ASSAY & PLANETARY TELEMETRY   */}
+      {/* 6. INTERACTIVE 3D WEBGL LAB: HARDWARE ASSAY & PLANETARY TELEMETRY   */}
       {/* =================================================================== */}
       <section className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-10">
@@ -209,12 +219,12 @@ export default function HomePage() {
       </section>
 
       {/* =================================================================== */}
-      {/* 5. HOW DOORSTEP E-WASTE COLLECTION WORKS & DATA SANITIZATION        */}
+      {/* 7. HOW DOORSTEP E-WASTE COLLECTION WORKS & DATA SANITIZATION        */}
       {/* =================================================================== */}
       <HowItWorksJourney />
 
       {/* =================================================================== */}
-      {/* 6. ROLE-BASED ACCESS CONTROL (RBAC) PORTAL SUITE                    */}
+      {/* 8. ROLE-BASED ACCESS CONTROL (RBAC) PORTAL SUITE                    */}
       {/* =================================================================== */}
       <section className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-10">
@@ -246,7 +256,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold text-emerald-400">
-                <span>Book Pickup</span>
+                <span>Book Pickup &bull; Schedule</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
@@ -318,12 +328,12 @@ export default function HomePage() {
       </section>
 
       {/* =================================================================== */}
-      {/* 5. INTERACTIVE COMMODITY YIELD & CARBON IMPACT CALCULATOR           */}
+      {/* 9. INTERACTIVE COMMODITY YIELD & CARBON IMPACT CALCULATOR           */}
       {/* =================================================================== */}
       <ImpactCalculator />
 
       {/* =================================================================== */}
-      {/* 6. 4K CINEMA DOCUMENTARY THEATER TEASER                             */}
+      {/* 10. 4K CINEMA DOCUMENTARY THEATER TEASER                            */}
       {/* =================================================================== */}
       <section className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="relative rounded-[32px] overflow-hidden border border-white/15 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-8 sm:p-12 shadow-2xl">
@@ -357,7 +367,7 @@ export default function HomePage() {
       </section>
 
       {/* =================================================================== */}
-      {/* 7. NATIONAL E-WASTE LOGISTICS & PRECIOUS METAL YIELDS               */}
+      {/* 11. NATIONAL E-WASTE LOGISTICS & PRECIOUS METAL YIELDS              */}
       {/* =================================================================== */}
       <section className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -437,7 +447,7 @@ export default function HomePage() {
       </section>
 
       {/* =================================================================== */}
-      {/* 8. VERIFIED CUSTOMER REVIEWS, CITIES COVERAGE & ACCORDION FAQS     */}
+      {/* 12. VERIFIED CUSTOMER REVIEWS, CITIES COVERAGE & ACCORDION FAQS    */}
       {/* =================================================================== */}
       <CustomerReviewsAndFaq />
 
