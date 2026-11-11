@@ -11,15 +11,22 @@ export default function GoogleAuthPopupPage() {
   const [error, setError] = useState<string | null>(null);
   const [savedAccounts, setSavedAccounts] = useState<string[]>([]);
 
-  // Load recently used real accounts if any
+  // Load clean demo accounts and purge personal email
   useEffect(() => {
     try {
       const stored = localStorage.getItem('nexus_google_saved_emails');
+      let accounts = ['aarav.sharma@gmail.com', 'citizen.nexus@gmail.com'];
       if (stored) {
-        setSavedAccounts(JSON.parse(stored));
+        const parsed: string[] = JSON.parse(stored);
+        const filtered = parsed.filter((e) => !e.toLowerCase().includes('sakshamdadwal'));
+        if (filtered.length > 0) {
+          accounts = Array.from(new Set([...filtered, ...accounts])).slice(0, 3);
+        }
       }
+      localStorage.setItem('nexus_google_saved_emails', JSON.stringify(accounts));
+      setSavedAccounts(accounts);
     } catch {
-      // Ignore
+      setSavedAccounts(['aarav.sharma@gmail.com', 'citizen.nexus@gmail.com']);
     }
   }, []);
 

@@ -167,7 +167,7 @@ export async function POST(req: NextRequest) {
         password === 'Partner@123' ||
         password === 'Recycler@123' ||
         password === 'User@123' ||
-        password === 'Saksham@123'
+        password === 'Citizen@123'
       : true;
 
     if (!isMatch) {

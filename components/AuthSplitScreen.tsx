@@ -90,11 +90,13 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
         const data = await res.json();
         let dbAccounts: SavedAccount[] = data.accounts || [];
 
-        // Check local Google emails saved
+        // Check local Google emails saved (exclude personal emails)
         try {
           const localGmails = localStorage.getItem('nexus_google_saved_emails');
           if (localGmails) {
-            const parsed: string[] = JSON.parse(localGmails);
+            let parsed: string[] = JSON.parse(localGmails);
+            parsed = parsed.filter((e) => !e.toLowerCase().includes('sakshamdadwal'));
+            localStorage.setItem('nexus_google_saved_emails', JSON.stringify(parsed));
             parsed.forEach((gEmail) => {
               if (!dbAccounts.some((a) => a.email.toLowerCase() === gEmail.toLowerCase())) {
                 const namePart = gEmail.split('@')[0].replace(/[._-]/g, ' ');
