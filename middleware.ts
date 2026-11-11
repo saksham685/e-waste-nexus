@@ -14,37 +14,33 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Read session token from cookie
-  const token = request.cookies.get('nexus_token')?.value;
-  const isAuthenticated = Boolean(token && token !== 'mock_jwt_citizen');
+  // 2. ROOT LINK DIRECT TO LOGIN: Jab koi link open kare, sabse pehle Login Page aayega!
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
 
-  // 3. Authentication routes (Login, Signup, Logout, Google OAuth popup)
-  const isAuthRoute =
+  // 3. Dedicated authentication routes (Always accessible)
+  if (
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
     pathname.startsWith('/logout') ||
-    pathname.startsWith('/auth');
-
-  // If already authenticated and visits /login or /signup, direct to dashboard
-  if (isAuthenticated && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  // If on an auth page, allow it freely
-  if (isAuthRoute) {
+    pathname.startsWith('/auth')
+  ) {
     return NextResponse.next();
   }
 
-  // 4. Jab koi visitor link open kare toh sabse pehle Login Page aayega!
+  // 4. Read session token from cookie
+  const token = request.cookies.get('nexus_token')?.value;
+  const isAuthenticated = Boolean(token && token !== 'mock_jwt_citizen');
+
+  // If not authenticated and visiting protected pages, redirect to login
   if (!isAuthenticated) {
     const loginUrl = new URL('/login', request.url);
-    if (pathname !== '/') {
-      loginUrl.searchParams.set('redirect', pathname);
-    }
+    loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // 5. Attach Security Headers for authenticated visitors
+  // 5. Attach Security Headers
   const response = NextResponse.next();
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');

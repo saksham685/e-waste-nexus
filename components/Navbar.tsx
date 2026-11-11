@@ -63,7 +63,7 @@ export const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { href: '/', label: 'Overview', icon: Layers },
+    { href: '/overview', label: 'Overview', icon: Layers },
     { href: '/pickups', label: 'Doorstep Pickup & Schedule', icon: Calendar },
     { href: '/centers', label: 'Centers Map', icon: MapPin },
     { href: '/epr', label: 'EPR Exchange', icon: Award },
@@ -118,7 +118,7 @@ export const Navbar: React.FC = () => {
           
           {/* Brand Logo */}
           <Link
-            href="/"
+            href="/overview"
             onClick={handleNavClick}
             className="flex items-center space-x-3 cursor-pointer group select-none shrink-0"
           >

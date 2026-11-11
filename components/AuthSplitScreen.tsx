@@ -130,9 +130,9 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
   }, []);
 
   const getDestination = () => {
-    if (typeof window === 'undefined') return '/';
+    if (typeof window === 'undefined') return '/overview';
     const redirect = new URLSearchParams(window.location.search).get('redirect');
-    return redirect && redirect.startsWith('/') ? redirect : '/';
+    return redirect && redirect.startsWith('/') && redirect !== '/' ? redirect : '/overview';
   };
 
   // Password Strength Calculation
