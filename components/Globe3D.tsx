@@ -12,16 +12,18 @@ interface CityHub {
 }
 
 const CITY_HUBS: CityHub[] = [
-  { name: 'Silicon Valley Hub', lat: 37.77, lon: -122.41, capacity: '4,200 tons/yr', country: 'United States' },
-  { name: 'New York Vault', lat: 40.71, lon: -74.0, capacity: '3,800 tons/yr', country: 'United States' },
-  { name: 'London Circular Depot', lat: 51.5, lon: -0.12, capacity: '2,900 tons/yr', country: 'United Kingdom' },
-  { name: 'Berlin Smelting Works', lat: 52.52, lon: 13.4, capacity: '3,400 tons/yr', country: 'Germany' },
-  { name: 'Tokyo Rare-Metals Plant', lat: 35.67, lon: 139.65, capacity: '5,100 tons/yr', country: 'Japan' },
-  { name: 'Singapore CleanTech Terminal', lat: 1.35, lon: 103.81, capacity: '3,100 tons/yr', country: 'Singapore' },
-  { name: 'New Delhi E-Depository', lat: 28.61, lon: 77.2, capacity: '4,800 tons/yr', country: 'India' },
-  { name: 'Nairobi WEEE Center', lat: -1.29, lon: 36.82, capacity: '1,700 tons/yr', country: 'Kenya' },
-  { name: 'Sydney Pacific Hub', lat: -33.86, lon: 151.2, capacity: '2,200 tons/yr', country: 'Australia' },
-  { name: 'São Paulo Eco-Vault', lat: -23.55, lon: -46.63, capacity: '1,900 tons/yr', country: 'Brazil' },
+  { name: 'New Delhi CPCB Terminal', lat: 28.61, lon: 77.2, capacity: '4,800 tons/yr', country: 'India (Capital Depot)' },
+  { name: 'Mumbai Coastal Smelter', lat: 19.07, lon: 72.87, capacity: '5,400 tons/yr', country: 'India (Maharashtra Hub)' },
+  { name: 'Bengaluru Silicon Smelter', lat: 12.97, lon: 77.59, capacity: '6,200 tons/yr', country: 'India (Karnataka Hub)' },
+  { name: 'Hyderabad WEEE Yard', lat: 17.38, lon: 78.48, capacity: '3,900 tons/yr', country: 'India (Telangana Depot)' },
+  { name: 'Chennai CleanTech Port', lat: 13.08, lon: 80.27, capacity: '4,100 tons/yr', country: 'India (Tamil Nadu Hub)' },
+  { name: 'Kolkata Refining Works', lat: 22.57, lon: 88.36, capacity: '3,200 tons/yr', country: 'India (West Bengal)' },
+  { name: 'Ahmedabad Recovery Yard', lat: 23.02, lon: 72.57, capacity: '3,600 tons/yr', country: 'India (Gujarat Depot)' },
+  { name: 'Pune Green Logistics Hub', lat: 18.52, lon: 73.85, capacity: '2,900 tons/yr', country: 'India (Maharashtra)' },
+  { name: 'Singapore CleanTech Dock', lat: 1.35, lon: 103.81, capacity: '5,100 tons/yr', country: 'Singapore' },
+  { name: 'Tokyo Rare-Metals Plant', lat: 35.67, lon: 139.65, capacity: '6,800 tons/yr', country: 'Japan' },
+  { name: 'London Circular Vault', lat: 51.5, lon: -0.12, capacity: '3,400 tons/yr', country: 'United Kingdom' },
+  { name: 'Silicon Valley Eco-Vault', lat: 37.77, lon: -122.41, capacity: '4,600 tons/yr', country: 'United States' },
 ];
 
 export const Globe3D: React.FC = () => {
@@ -45,6 +47,8 @@ export const Globe3D: React.FC = () => {
     container.appendChild(renderer.domElement);
 
     const globeGroup = new THREE.Group();
+    globeGroup.rotation.y = -1.4;
+    globeGroup.rotation.x = 0.2;
     scene.add(globeGroup);
 
     const sphereRadius = 75;
@@ -140,7 +144,17 @@ export const Globe3D: React.FC = () => {
     const lightMat = new THREE.MeshBasicMaterial({ color: 0xecfdf5 });
 
     const arcPairs = [
-      [0, 1], [0, 4], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 0],
+      [0, 1], // New Delhi -> Mumbai
+      [0, 2], // New Delhi -> Bengaluru
+      [1, 2], // Mumbai -> Bengaluru
+      [2, 3], // Bengaluru -> Hyderabad
+      [3, 4], // Hyderabad -> Chennai
+      [1, 6], // Mumbai -> Ahmedabad
+      [0, 5], // New Delhi -> Kolkata
+      [2, 8], // Bengaluru -> Singapore
+      [8, 9], // Singapore -> Tokyo
+      [1, 10], // Mumbai -> London
+      [2, 11], // Bengaluru -> Silicon Valley
     ];
 
     arcPairs.forEach(([i1, i2], idx) => {
