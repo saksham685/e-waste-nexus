@@ -102,7 +102,7 @@ export default async function CentersPage() {
               {/* Dynamic Link */}
               <div className="pt-4 border-t border-emerald-500/10">
                 <Link
-                  href={`/centers/${center.slug}`}
+                  href={`/centers/${center.slug || center.id}`}
                   className="w-full py-2.5 px-4 rounded-xl bg-nexus-dark hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-semibold text-xs transition-colors flex items-center justify-between group"
                 >
                   <span>Facility Spec &amp; Logistics Guide</span>

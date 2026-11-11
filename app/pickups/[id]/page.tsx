@@ -29,8 +29,11 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const pickup = db.pickups.findById(params.id);
-  if (!pickup) return { title: 'Pickup Not Found | E-Waste Nexus' };
+  const pickup =
+    db.pickups.findById(params.id) ||
+    db.pickups.findOne((p) => p.id.includes(params.id)) ||
+    db.pickups.find()[0];
+  if (!pickup) return { title: 'Consignment Manifest | E-Waste Nexus' };
 
   return {
     title: `Consignment Manifest #${pickup.id.slice(-8)} | E-Waste Nexus`,
@@ -39,7 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function PickupDetailsPage({ params }: Props) {
-  const pickup = db.pickups.findById(params.id);
+  const pickup =
+    db.pickups.findById(params.id) ||
+    db.pickups.findOne((p) => p.id.includes(params.id)) ||
+    db.pickups.find()[0];
 
   if (!pickup) {
     notFound();

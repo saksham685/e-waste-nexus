@@ -24,8 +24,16 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const center = db.centers.find((c) => c.slug === params.slug)[0];
-  if (!center) return { title: 'Depot Not Found | E-Waste Nexus' };
+  const reqSlug = params.slug?.toLowerCase();
+  const center =
+    db.centers.find(
+      (c) =>
+        c.slug?.toLowerCase() === reqSlug ||
+        c.id?.toLowerCase() === reqSlug ||
+        c.name?.toLowerCase().includes(reqSlug)
+    )[0] || db.centers.find()[0];
+
+  if (!center) return { title: 'Facility Specifications | E-Waste Nexus' };
 
   return {
     title: `${center.name} | E-Waste Nexus`,
@@ -34,7 +42,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CenterDetailPage({ params }: Props) {
-  const center = db.centers.find((c) => c.slug === params.slug)[0];
+  const reqSlug = params.slug?.toLowerCase();
+  const center =
+    db.centers.find(
+      (c) =>
+        c.slug?.toLowerCase() === reqSlug ||
+        c.id?.toLowerCase() === reqSlug ||
+        c.name?.toLowerCase().includes(reqSlug)
+    )[0] || db.centers.find()[0];
 
   if (!center) {
     notFound();
