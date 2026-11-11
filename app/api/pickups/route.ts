@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     total: pickups.length,
+    pickups: pickups,
     data: pickups,
   });
 }

@@ -25,6 +25,7 @@ export type WasteCategory =
 export type PickupStatus =
   | 'Requested'
   | 'Approved'
+  | 'Scheduled'
   | 'Assigned'
   | 'Collected'
   | 'Weighed'

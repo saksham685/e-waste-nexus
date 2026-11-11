@@ -20,13 +20,11 @@ import {
   Award,
   Volume2,
   VolumeX,
-  Bell,
   Sparkles,
-  Film,
-  LogIn,
-  BookOpen,
-  ArrowRight,
   ChevronDown,
+  Calendar,
+  Scale,
+  Flame,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -37,6 +35,7 @@ export const Navbar: React.FC = () => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [portalsDropdownOpen, setPortalsDropdownOpen] = useState(false);
 
   // Hide Navbar completely on dedicated authentication pages for a clean full-screen experience
   if (pathname === '/login' || pathname === '/signup') {
@@ -46,6 +45,7 @@ export const Navbar: React.FC = () => {
   const handleNavClick = () => {
     soundEffects.playClick();
     setMobileMenuOpen(false);
+    setPortalsDropdownOpen(false);
   };
 
   const handleToggleSound = () => {
@@ -63,23 +63,42 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { href: '/', label: 'Overview', icon: Layers },
-    { href: '/pickups', label: 'Doorstep Pickup', icon: Truck },
+    { href: '/pickups', label: 'Doorstep Pickup & Schedule', icon: Calendar },
     { href: '/centers', label: 'Centers Map', icon: MapPin },
     { href: '/epr', label: 'EPR Exchange', icon: Award },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-    { href: '/cinema', label: '4K Cinema', icon: Film },
   ];
 
-  const roleTabs = [];
-  if (user?.role === 'partner' || user?.role === 'admin') {
-    roleTabs.push({ href: '/partner', label: 'Logistics Dock', icon: Truck });
-  }
-  if (user?.role === 'recycler' || user?.role === 'admin') {
-    roleTabs.push({ href: '/recycler', label: 'Smelter Hub', icon: Building2 });
-  }
-  if (user?.role === 'admin') {
-    roleTabs.push({ href: '/admin', label: 'CPCB Audit', icon: Shield });
-  }
+  const stakeholderPortals = [
+    {
+      href: '/pickups',
+      title: 'Citizen Consignor',
+      desc: 'Doorstep pickup requests, schedule calendar & tracking',
+      icon: Truck,
+      color: 'text-emerald-400',
+    },
+    {
+      href: '/partner',
+      title: 'Logistics Partner',
+      desc: 'Fleet driver allocation & calibrated weighbridge scale',
+      icon: Scale,
+      color: 'text-cyan-400',
+    },
+    {
+      href: '/recycler',
+      title: 'Certified Smelter',
+      desc: 'Refining assays, precious metals & EPR credit minting',
+      icon: Flame,
+      color: 'text-amber-400',
+    },
+    {
+      href: '/admin',
+      title: 'CPCB Administrator',
+      desc: 'Auditable manifests, statutory quotas & action ledger',
+      icon: Shield,
+      color: 'text-red-400',
+    },
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full bg-slate-950/85 backdrop-blur-2xl border-b border-white/[0.08] transition-all">
@@ -135,26 +154,53 @@ export const Navbar: React.FC = () => {
               );
             })}
 
-            {/* Role-Specific Portal Links */}
-            {roleTabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = pathname === tab.href;
-              return (
-                <Link
-                  key={tab.href}
-                  href={tab.href}
-                  onClick={handleNavClick}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
-                    isActive
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.25)]'
-                      : 'text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{tab.label}</span>
-                </Link>
-              );
-            })}
+            {/* Stakeholder Portals Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setPortalsDropdownOpen(!portalsDropdownOpen)}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                  pathname === '/partner' || pathname === '/recycler' || pathname === '/admin'
+                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                    : 'text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5" />
+                <span>Stakeholder Portals</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${portalsDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {portalsDropdownOpen && (
+                <div className="absolute left-0 mt-2 w-72 rounded-2xl bg-slate-950 border border-cyan-500/30 shadow-2xl p-2 z-50 animate-in fade-in space-y-1">
+                  <div className="px-3 py-2 text-[10px] font-mono text-gray-400 uppercase tracking-wider border-b border-white/5">
+                    Connect All 4 Roles
+                  </div>
+                  {stakeholderPortals.map((p) => {
+                    const Icon = p.icon;
+                    return (
+                      <Link
+                        key={p.href}
+                        href={p.href}
+                        onClick={handleNavClick}
+                        className="flex items-start space-x-2.5 p-2.5 rounded-xl hover:bg-slate-900 transition-colors group"
+                      >
+                        <div className={`p-2 rounded-lg bg-slate-900 border border-white/5 ${p.color} shrink-0`}>
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">
+                            {p.title}
+                          </div>
+                          <div className="text-[10px] text-gray-400 line-clamp-1 mt-0.5">
+                            {p.desc}
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Right Action Controls */}
@@ -213,7 +259,7 @@ export const Navbar: React.FC = () => {
 
                   {/* Profile Dropdown Menu */}
                   {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-slate-950 border border-white/10 shadow-2xl p-2 z-50 animate-in fade-in space-y-1">
+                    <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-slate-950 border border-white/10 shadow-2xl p-2 z-50 animate-in fade-in space-y-1">
                       <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/5 space-y-0.5">
                         <div className="text-xs font-bold text-white truncate">{user.name}</div>
                         <div className="text-[10px] text-slate-400 font-mono truncate">{user.email}</div>
@@ -222,23 +268,24 @@ export const Navbar: React.FC = () => {
                         </div>
                       </div>
 
-                      <Link
-                        href="/pickups"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center space-x-2 px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
-                      >
-                        <Truck className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>My Consignments</span>
-                      </Link>
+                      <div className="px-3 py-1.5 text-[10px] font-mono text-gray-500 uppercase">
+                        Portals
+                      </div>
 
-                      <Link
-                        href="/epr"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center space-x-2 px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
-                      >
-                        <Award className="w-3.5 h-3.5 text-cyan-400" />
-                        <span>EPR Credit Ledger</span>
-                      </Link>
+                      {stakeholderPortals.map((p) => {
+                        const Icon = p.icon;
+                        return (
+                          <Link
+                            key={p.href}
+                            href={p.href}
+                            onClick={() => setProfileDropdownOpen(false)}
+                            className="flex items-center space-x-2 px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
+                          >
+                            <Icon className={`w-3.5 h-3.5 ${p.color}`} />
+                            <span>{p.title}</span>
+                          </Link>
+                        );
+                      })}
 
                       <div className="pt-1 border-t border-white/10">
                         <button
@@ -272,9 +319,9 @@ export const Navbar: React.FC = () => {
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 hover:opacity-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all"
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 hover:brightness-110 shadow-glow-green transition-all"
                 >
-                  Get Started
+                  Join Nexus
                 </Link>
               </div>
             )}
@@ -300,7 +347,10 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-slate-950 border-b border-white/10 px-4 py-4 space-y-2 animate-page-enter-3d">
+        <div className="xl:hidden bg-slate-950 border-b border-white/10 px-4 py-4 space-y-3 animate-page-enter-3d">
+          <div className="text-[10px] font-mono text-gray-400 uppercase tracking-wider">
+            Main Navigation
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {navLinks.map((link) => {
               const Icon = link.icon;
@@ -323,10 +373,30 @@ export const Navbar: React.FC = () => {
             })}
           </div>
 
+          <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider pt-2 border-t border-white/10">
+            Stakeholder Portals
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {stakeholderPortals.map((p) => {
+              const Icon = p.icon;
+              return (
+                <Link
+                  key={p.href}
+                  href={p.href}
+                  onClick={handleNavClick}
+                  className="flex items-center space-x-2 p-2.5 rounded-xl bg-slate-900/80 border border-white/5 text-slate-300 hover:text-white text-xs font-medium"
+                >
+                  <Icon className={`w-4 h-4 shrink-0 ${p.color}`} />
+                  <span className="truncate">{p.title}</span>
+                </Link>
+              );
+            })}
+          </div>
+
           {user && (
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between">
               <div className="text-xs text-slate-400">
-                Logged in as <strong className="text-white">{user.name}</strong>
+                Logged in as <strong className="text-white">{user.name}</strong> ({user.role})
               </div>
               <button
                 onClick={handleLogout}

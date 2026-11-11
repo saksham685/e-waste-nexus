@@ -54,7 +54,7 @@ export default async function CenterDetailPage({ params }: Props) {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-emerald-500/20 pb-6 mb-8">
           <div>
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono uppercase tracking-wider mb-2">
-              <span>Dynamic Route: /centers/[slug]</span>
+              <span>CPCB Authorized E-Waste Collection Facility</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               {center.name}
