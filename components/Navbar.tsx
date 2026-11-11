@@ -68,6 +68,7 @@ export const Navbar: React.FC = () => {
     { href: '/centers', label: 'Centers Map', icon: MapPin },
     { href: '/epr', label: 'EPR Exchange', icon: Award },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { href: '/login', label: 'Login / Switch Role', icon: UserIcon },
   ];
 
   const stakeholderPortals = [
@@ -307,6 +308,16 @@ export const Navbar: React.FC = () => {
                     </div>
                   )}
                 </div>
+
+                {/* Quick Switch Role / Login Link */}
+                <Link
+                  href="/login"
+                  className="px-3 py-1.5 rounded-xl bg-slate-900 border border-white/10 hover:border-emerald-500/40 text-xs font-semibold text-slate-300 hover:text-white transition-colors flex items-center space-x-1.5"
+                  title="Open Login Screen / Switch Account"
+                >
+                  <UserIcon className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="hidden lg:inline">Switch Role</span>
+                </Link>
 
                 {/* Direct Logout Button */}
                 <button

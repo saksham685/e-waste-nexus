@@ -17,19 +17,13 @@ export function middleware(request: NextRequest) {
   // 2. Read session token from cookie
   const token = request.cookies.get('nexus_token')?.value;
 
-  // 3. Public authentication routes
+  // 3. Public authentication routes - ALWAYS allow /login and /signup to open!
   const isAuthRoute =
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
     pathname.startsWith('/logout') ||
     pathname.startsWith('/auth');
 
-  // If user is already authenticated and visits /login or /signup, direct to dashboard
-  if (token && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  // If on public auth page, let them proceed
   if (isAuthRoute) {
     return NextResponse.next();
   }
