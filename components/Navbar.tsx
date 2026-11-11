@@ -87,6 +87,10 @@ export const Navbar: React.FC = () => {
     roleTabs.push({ href: '/admin', label: 'Admin Center', icon: Shield });
   }
 
+  if (pathname === '/login' || pathname === '/signup') {
+    return null;
+  }
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-emerald-500/20 bg-nexus-dark/90 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

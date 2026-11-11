@@ -108,6 +108,10 @@ export const VoiceCompanion: React.FC = () => {
     }
   };
 
+  if (pathname === '/login' || pathname === '/signup') {
+    return null;
+  }
+
   return (
     <aside aria-label="AURA Voice Assistant" className="fixed bottom-6 right-6 z-40 flex flex-col items-end space-y-3 pointer-events-auto">
       {/* Speech Visualizer Indicator Banner */}

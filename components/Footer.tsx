@@ -1,8 +1,16 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Recycle, ShieldCheck, Heart } from 'lucide-react';
 
 export const Footer: React.FC = () => {
+  const pathname = usePathname();
+  if (pathname === '/login' || pathname === '/signup') {
+    return null;
+  }
+
   return (
     <footer className="w-full border-t border-slate-800 bg-nexus-dark/90 backdrop-blur-md pt-12 pb-8 text-xs text-slate-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

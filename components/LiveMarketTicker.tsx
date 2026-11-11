@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { TrendingUp, TrendingDown, Radio, Activity, Sparkles, Globe } from 'lucide-react';
 
 interface CommodityItem {
@@ -24,6 +25,11 @@ const INITIAL_COMMODITIES: CommodityItem[] = [
 ];
 
 export const LiveMarketTicker: React.FC = () => {
+  const pathname = usePathname();
+  if (pathname === '/login' || pathname === '/signup') {
+    return null;
+  }
+
   const [commodities, setCommodities] = useState<CommodityItem[]>(INITIAL_COMMODITIES);
   const [lastRefreshed, setLastRefreshed] = useState<string>('Live');
 

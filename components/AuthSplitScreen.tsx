@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store';
 import { soundEffects } from '@/lib/sound';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -39,7 +39,6 @@ interface AuthSplitScreenProps {
 
 export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 'signin' }) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { setUser } = useAuthStore();
 
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
@@ -88,7 +87,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
 
   const getDestination = () => {
     if (typeof window === 'undefined') return '/';
-    const redirect = searchParams?.get('redirect') || new URLSearchParams(window.location.search).get('redirect');
+    const redirect = new URLSearchParams(window.location.search).get('redirect');
     return redirect && redirect.startsWith('/') ? redirect : '/';
   };
 
@@ -123,7 +122,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
     setErrorMsg(null);
     setSuccessMsg(null);
     if (typeof window !== 'undefined') {
-      const redirect = searchParams?.get('redirect');
+      const redirect = new URLSearchParams(window.location.search).get('redirect');
       const query = redirect ? `?redirect=${encodeURIComponent(redirect)}` : '';
       window.history.pushState(null, '', newMode === 'signin' ? `/login${query}` : `/signup${query}`);
     }
