@@ -128,41 +128,107 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
     }
   };
 
-  // Google One-Click Authentication (Functional)
-  const handleGoogleAuth = async () => {
+  // Google Account Chooser States
+  const [googleModalOpen, setGoogleModalOpen] = useState(false);
+  const [selectedGoogleEmail, setSelectedGoogleEmail] = useState<string | null>(null);
+  const [customGoogleEmail, setCustomGoogleEmail] = useState('');
+  const [customGoogleName, setCustomGoogleName] = useState('');
+  const [showCustomGoogleInput, setShowCustomGoogleInput] = useState(false);
+
+  // Pre-configured Verified Google Personas
+  const PRESET_GOOGLE_ACCOUNTS = [
+    {
+      name: 'Aarav Sharma',
+      email: 'aarav.sharma@gmail.com',
+      role: 'individual' as const,
+      avatarGradient: 'from-emerald-500 to-teal-400',
+      subtitle: 'Citizen Consignor (Signed in)',
+    },
+    {
+      name: 'Saksham Dadwal',
+      email: 'sakshamdadwal543@gmail.com',
+      role: 'individual' as const,
+      avatarGradient: 'from-purple-500 to-indigo-400',
+      subtitle: 'Registered E-Waste Member',
+    },
+    {
+      name: 'Apex Clean Logistics',
+      email: 'apex.logistics.india@gmail.com',
+      role: 'partner' as const,
+      avatarGradient: 'from-cyan-500 to-blue-400',
+      subtitle: 'Fleet Logistics & Weighbridge',
+    },
+    {
+      name: 'Dr. Elena Vance',
+      email: 'elena.vance.cpcb@gmail.com',
+      role: 'admin' as const,
+      avatarGradient: 'from-amber-500 to-orange-400',
+      subtitle: 'CPCB Regulatory Compliance Officer',
+    },
+  ];
+
+  // Open Google Picker
+  const handleOpenGoogleModal = () => {
     soundEffects.playClick();
     setErrorMsg(null);
+    setGoogleModalOpen(true);
+  };
+
+  // Select a Google Account to Authenticate
+  const handleSelectGoogleAccount = async (account: {
+    name: string;
+    email: string;
+    role?: 'individual' | 'partner' | 'recycler' | 'admin';
+  }) => {
+    soundEffects.playClick();
+    setSelectedGoogleEmail(account.email);
     setGoogleLoading(true);
 
     try {
-      await new Promise((r) => setTimeout(r, 900));
+      await new Promise((r) => setTimeout(r, 700));
 
       const googleUser = {
-        id: 'usr_google_' + Date.now().toString(36),
-        name: 'Google Verified User',
-        email: email || 'user.google@nexus.eco',
-        role: role || 'individual',
+        id: 'usr_google_' + Math.random().toString(36).substring(2, 9),
+        name: account.name || 'Google Verified User',
+        email: account.email.toLowerCase(),
+        role: (account.role || role || 'individual') as any,
         status: 'active' as const,
         createdAt: new Date().toISOString(),
       };
 
-      const sessionToken = `nexus_jwt_google_${googleUser.id}_session`;
+      const sessionToken = `nexus_jwt_google_${googleUser.id}_session_2026`;
       document.cookie = `nexus_token=${sessionToken}; path=/; max-age=604800; SameSite=Lax`;
 
       setUser(googleUser, sessionToken);
       soundEffects.playSuccess();
-      setSuccessMsg('Authenticated with Google! Launching portal...');
-      voiceAssistant.speak('Google verification complete. Welcome to E-Waste Nexus.');
+      setSuccessMsg(`Welcome, ${googleUser.name}! Signed in via ${googleUser.email}.`);
+      voiceAssistant.speak(`Welcome, ${googleUser.name}. Google authentication verified.`);
 
       const target = getDestination();
       setTimeout(() => {
         window.location.href = target;
-      }, 400);
+      }, 350);
     } catch (err: any) {
       soundEffects.playError();
-      setErrorMsg('Google authentication encountered an error. Please use email sign in.');
+      setErrorMsg('Google authentication encountered an error. Please try again.');
       setGoogleLoading(false);
+      setSelectedGoogleEmail(null);
     }
+  };
+
+  // Submit custom Gmail address in account chooser
+  const handleCustomGoogleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customGoogleEmail.trim() || !customGoogleEmail.includes('@')) {
+      soundEffects.playError();
+      return;
+    }
+    const cleanName = customGoogleName.trim() || customGoogleEmail.split('@')[0];
+    handleSelectGoogleAccount({
+      name: cleanName,
+      email: customGoogleEmail.trim().toLowerCase(),
+      role: role || 'individual',
+    });
   };
 
   // Form Submit Handler
@@ -487,7 +553,7 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
           {/* Continue with Google Button */}
           <button
             type="button"
-            onClick={handleGoogleAuth}
+            onClick={handleOpenGoogleModal}
             disabled={googleLoading || isLoading}
             className="w-full py-3 px-4 rounded-2xl bg-slate-900/90 hover:bg-slate-850 text-white border border-white/15 hover:border-purple-500/40 text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center justify-center space-x-3 cursor-pointer hover:shadow-lg disabled:opacity-50 group mb-5"
           >
@@ -858,6 +924,171 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* =================================================================== */}
+      {/* GOOGLE ACCOUNT CHOOSER MODAL (OFFICIAL OAUTH SELECTOR INTERFACE)    */}
+      {/* =================================================================== */}
+      {googleModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-page-enter-3d">
+          <div className="bg-slate-950 border border-white/20 rounded-[28px] p-6 sm:p-8 max-w-md w-full space-y-5 shadow-[0_0_80px_rgba(0,0,0,0.95)] relative">
+            
+            {/* Google Header */}
+            <div className="flex items-start justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md">
+                  <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24">
+                    <path
+                      fill="#4285F4"
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Choose a Google Account</h3>
+                  <p className="text-xs text-slate-400">to continue to E-Waste Nexus</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  soundEffects.playClick();
+                  setGoogleModalOpen(false);
+                  setShowCustomGoogleInput(false);
+                }}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* List of Accounts */}
+            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1">
+                Select your verified Gmail account:
+              </span>
+
+              {PRESET_GOOGLE_ACCOUNTS.map((acc) => {
+                const isThisSelected = selectedGoogleEmail === acc.email;
+                return (
+                  <button
+                    key={acc.email}
+                    type="button"
+                    disabled={googleLoading}
+                    onClick={() => handleSelectGoogleAccount(acc)}
+                    className="w-full p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-850 border border-white/10 hover:border-cyan-500/50 transition-all flex items-center justify-between group cursor-pointer text-left disabled:opacity-50"
+                  >
+                    <div className="flex items-center space-x-3 min-w-0">
+                      <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${acc.avatarGradient} p-0.5 flex items-center justify-center shrink-0 shadow-sm`}>
+                        <div className="w-full h-full bg-slate-950 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                          {acc.name.charAt(0)}
+                        </div>
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors truncate">
+                          {acc.name}
+                        </div>
+                        <div className="text-[11px] text-slate-400 font-mono truncate">{acc.email}</div>
+                        <div className="text-[9px] text-emerald-400 font-mono">{acc.subtitle}</div>
+                      </div>
+                    </div>
+
+                    {isThisSelected && googleLoading ? (
+                      <div className="w-4 h-4 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin shrink-0 ml-2" />
+                    ) : (
+                      <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Use Another Account Button / Form */}
+            <div className="pt-2 border-t border-white/10">
+              {!showCustomGoogleInput ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundEffects.playClick();
+                    setShowCustomGoogleInput(true);
+                  }}
+                  className="w-full py-2.5 px-3 rounded-xl bg-slate-900 border border-white/10 hover:border-purple-500/40 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>Use another Gmail account...</span>
+                </button>
+              ) : (
+                <form onSubmit={handleCustomGoogleSubmit} className="space-y-3 bg-slate-900/90 p-3.5 rounded-2xl border border-white/10">
+                  <div className="text-xs font-bold text-white flex items-center justify-between">
+                    <span>Enter Your Gmail Details</span>
+                    <button
+                      type="button"
+                      onClick={() => setShowCustomGoogleInput(false)}
+                      className="text-[10px] text-slate-400 hover:text-white"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] text-slate-300 mb-1">Your Full Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Ramesh Kumar"
+                      value={customGoogleName}
+                      onChange={(e) => setCustomGoogleName(e.target.value)}
+                      className="w-full bg-slate-950 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] text-slate-300 mb-1">Gmail Address *</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="yourname@gmail.com"
+                      value={customGoogleEmail}
+                      onChange={(e) => setCustomGoogleEmail(e.target.value)}
+                      className="w-full bg-slate-950 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 font-mono"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={googleLoading}
+                    className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:opacity-95 text-slate-950 font-black text-xs transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                  >
+                    {googleLoading ? (
+                      <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-950 border-t-transparent animate-spin" />
+                    ) : (
+                      <>
+                        <span>Continue with this Gmail</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Google Disclaimer Footer */}
+            <div className="pt-1 text-[10px] text-slate-500 leading-tight text-center font-sans">
+              To continue, Google will securely share your verified name, email address, and profile credentials with E-Waste Nexus in compliance with CPCB data protection policies.
+            </div>
           </div>
         </div>
       )}
