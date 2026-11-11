@@ -1,5 +1,5 @@
 # E-WASTE NEXUS
-### AI-Powered Circular Logistics & Extended Producer Responsibility (EPR) Credit Management Platform
+### E-Waste Collection & Extended Producer Responsibility (EPR) Credit Management Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/Node.js-v20%2B-green.svg)](https://nodejs.org/)
