@@ -29,6 +29,9 @@ import {
 import { ImpactCalculator } from '@/components/ImpactCalculator';
 import { LiveActivityFeed } from '@/components/LiveActivityFeed';
 import { RealtimeWorldIntelligence } from '@/components/RealtimeWorldIntelligence';
+import { InstantValuationCalculator } from '@/components/InstantValuationCalculator';
+import { HowItWorksJourney } from '@/components/HowItWorksJourney';
+import { CustomerReviewsAndFaq } from '@/components/CustomerReviewsAndFaq';
 
 // Next.js Unit V: Lazy Loading Three.js Heavy 3D Canvas elements with code splitting
 const Globe3D = dynamic(() => import('@/components/Globe3D').then((mod) => mod.Globe3D), {
@@ -169,7 +172,12 @@ export default function HomePage() {
       </section>
 
       {/* =================================================================== */}
-      {/* 2. REAL-TIME COMMODITIES & WORLD INTELLIGENCE STREAM                */}
+      {/* 2. INSTANT DEVICE VALUATION & SCRAP QUOTE CALCULATOR                */}
+      {/* =================================================================== */}
+      <InstantValuationCalculator />
+
+      {/* =================================================================== */}
+      {/* 3. REAL-TIME COMMODITIES & WORLD INTELLIGENCE STREAM                */}
       {/* =================================================================== */}
       <RealtimeWorldIntelligence />
 
@@ -201,7 +209,12 @@ export default function HomePage() {
       </section>
 
       {/* =================================================================== */}
-      {/* 4. ROLE-BASED ACCESS CONTROL (RBAC) PORTAL SUITE                    */}
+      {/* 5. HOW DOORSTEP E-WASTE COLLECTION WORKS & DATA SANITIZATION        */}
+      {/* =================================================================== */}
+      <HowItWorksJourney />
+
+      {/* =================================================================== */}
+      {/* 6. ROLE-BASED ACCESS CONTROL (RBAC) PORTAL SUITE                    */}
       {/* =================================================================== */}
       <section className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-10">
@@ -422,6 +435,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* =================================================================== */}
+      {/* 8. VERIFIED CUSTOMER REVIEWS, CITIES COVERAGE & ACCORDION FAQS     */}
+      {/* =================================================================== */}
+      <CustomerReviewsAndFaq />
 
     </div>
   );
