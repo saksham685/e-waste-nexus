@@ -17,32 +17,24 @@ export function middleware(request: NextRequest) {
   // 2. Read session token from cookie
   const token = request.cookies.get('nexus_token')?.value;
 
-  // 3. Public accessible routes (Landing, Centers Map, Pickups Board, Verification)
-  const isPublicRoute =
+  // 3. Public authentication routes
+  const isAuthRoute =
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
     pathname.startsWith('/logout') ||
-    pathname.startsWith('/auth') ||
-    pathname.startsWith('/centers') ||
-    pathname.startsWith('/verify') ||
-    pathname.startsWith('/pickups') ||
-    pathname === '/';
+    pathname.startsWith('/auth');
 
   // If user is already authenticated and visits /login or /signup, direct to dashboard
   if (token && (pathname === '/login' || pathname === '/signup')) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  // If on public page, let them proceed directly with auto guest session
-  if (isPublicRoute) {
-    const response = NextResponse.next();
-    if (!token) {
-      response.cookies.set('nexus_token', 'mock_jwt_citizen', { path: '/', maxAge: 86400 });
-    }
-    return response;
+  // If on public auth page, let them proceed
+  if (isAuthRoute) {
+    return NextResponse.next();
   }
 
-  // 4. Role-Gated Admin & Partner Routes: require login
+  // 4. Strict Security Login Gate: Har visitor ko pehle Login Screen dikhegi!
   if (!token) {
     const loginUrl = new URL('/login', request.url);
     if (pathname !== '/') {
