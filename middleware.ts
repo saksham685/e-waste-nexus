@@ -17,28 +17,24 @@ export function middleware(request: NextRequest) {
   // 2. Read session token from cookie
   const token = request.cookies.get('nexus_token')?.value;
 
-  // 3. Public authentication routes - ALWAYS allow /login and /signup to open!
-  const isAuthRoute =
+  // 3. Always allow dedicated authentication routes to open
+  if (
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
     pathname.startsWith('/logout') ||
-    pathname.startsWith('/auth');
-
-  if (isAuthRoute) {
+    pathname.startsWith('/auth')
+  ) {
     return NextResponse.next();
   }
 
-  // 4. Strict Security Login Gate: Har visitor ko pehle Login Screen dikhegi!
+  // 4. Allow all features (Overview, Centers, Pickups, EPR, Analytics, Portals)
+  // to open directly for all visitors with a seamless default session!
+  const response = NextResponse.next();
   if (!token) {
-    const loginUrl = new URL('/login', request.url);
-    if (pathname !== '/') {
-      loginUrl.searchParams.set('redirect', pathname);
-    }
-    return NextResponse.redirect(loginUrl);
+    response.cookies.set('nexus_token', 'mock_jwt_citizen', { path: '/', maxAge: 86400 });
   }
 
   // 5. Attach Security Headers (Next.js Unit VI: Industry Practices & Security Best Practices)
-  const response = NextResponse.next();
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
