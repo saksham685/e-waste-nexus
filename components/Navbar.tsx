@@ -149,6 +149,7 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={true}
                   onClick={handleNavClick}
                   className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 ${
                     isActive
@@ -189,6 +190,7 @@ export const Navbar: React.FC = () => {
                       <Link
                         key={p.href}
                         href={p.href}
+                        prefetch={true}
                         onClick={handleNavClick}
                         className="flex items-start space-x-2.5 p-2.5 rounded-xl hover:bg-slate-900 transition-colors group"
                       >
@@ -377,6 +379,7 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={true}
                   onClick={handleNavClick}
                   className={`flex items-center space-x-2 p-2.5 rounded-xl text-xs font-medium ${
                     isActive

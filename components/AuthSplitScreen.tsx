@@ -180,9 +180,8 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
         setSuccessMsg(`Welcome back, ${user.name}`);
         setGoogleLoading(false);
         const target = getDestination();
-        setTimeout(() => {
-          window.location.href = target;
-        }, 300);
+        router.push(target);
+        router.refresh();
       }
     };
 
@@ -240,9 +239,8 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
       if (data.success && data.user) {
         setSuccessMsg(`Signing in as ${data.user.name}...`);
         setUser(data.user, data.token);
-        setTimeout(() => {
-          window.location.href = getDestination();
-        }, 300);
+        router.push(getDestination());
+        router.refresh();
       } else {
         throw new Error(data.error || 'Authentication failed');
       }
@@ -337,9 +335,8 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
         if (data.success && data.user) {
           setSuccessMsg(`Welcome, ${data.user.name}! Account registered successfully.`);
           setUser(data.user, data.token);
-          setTimeout(() => {
-            window.location.href = getDestination();
-          }, 350);
+          router.push(getDestination());
+          router.refresh();
         } else {
           setErrorMsg(data.error || 'Registration failed');
           setIsLoading(false);
@@ -360,9 +357,8 @@ export const AuthSplitScreen: React.FC<AuthSplitScreenProps> = ({ initialMode = 
         if (data.success && data.user) {
           setSuccessMsg(`Signed in as ${data.user.name}`);
           setUser(data.user, data.token);
-          setTimeout(() => {
-            window.location.href = getDestination();
-          }, 300);
+          router.push(getDestination());
+          router.refresh();
         } else {
           setErrorMsg(data.error || 'Invalid User ID or Password.');
           setIsLoading(false);
