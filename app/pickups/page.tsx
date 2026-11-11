@@ -348,86 +348,102 @@ export default function PickupsPage() {
   };
 
   return (
-    <div className="w-full min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+    <div className="w-full min-h-screen pt-8 pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
       {/* Top Banner */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono uppercase tracking-wider">
+        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium tracking-wide">
           <Truck className="w-4 h-4" />
           <span>CPCB Certified Doorstep Collection &amp; Dispatch Ledger</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-          E-Waste Collection &amp; Schedule Hub
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight text-balance">
+          E-Waste Collection &amp; Doorstep Scheduling Hub
         </h1>
-        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-light">
+        <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal max-w-2xl mx-auto">
           Connect citizens, authorized collection logistics, and smelters. Book doorstep collections, track scheduled time windows, verify calibrated scale weights, and mint auditable CPCB Form-6 recycling manifests.
         </p>
       </div>
 
       {/* High-Level Metrics Bar */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-nexus-card border border-emerald-500/25 rounded-2xl p-4.5 backdrop-blur-xl">
-          <div className="text-gray-400 text-xs font-mono flex items-center justify-between">
-            <span>TOTAL CONSIGNMENTS</span>
-            <Package className="w-4 h-4 text-emerald-400" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-nexus-card border border-emerald-500/20 rounded-2xl p-5 sm:p-6 backdrop-blur-xl shadow-lg shadow-black/20 flex flex-col justify-between hover:border-emerald-500/40 transition-colors">
+          <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider flex items-center justify-between">
+            <span>Total Consignments</span>
+            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <Package className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-white mt-1.5 font-mono">
+          <div className="text-3xl sm:text-4xl font-black text-white mt-3 font-sans tracking-tight">
             {stats.totalCount}
           </div>
-          <div className="text-[11px] text-gray-500 mt-1">Booked across 450+ hub cities</div>
+          <div className="text-xs text-slate-400 mt-2 font-normal">
+            Booked across 450+ hub cities
+          </div>
         </div>
 
-        <div className="bg-nexus-card border border-cyan-500/25 rounded-2xl p-4.5 backdrop-blur-xl">
-          <div className="text-gray-400 text-xs font-mono flex items-center justify-between">
-            <span>VERIFIED WEIGHT DIVERTED</span>
-            <ShieldCheck className="w-4 h-4 text-cyan-400" />
+        <div className="bg-nexus-card border border-cyan-500/20 rounded-2xl p-5 sm:p-6 backdrop-blur-xl shadow-lg shadow-black/20 flex flex-col justify-between hover:border-cyan-500/40 transition-colors">
+          <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider flex items-center justify-between">
+            <span>Verified Weight Diverted</span>
+            <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-cyan-300 mt-1.5 font-mono">
-            {stats.totalWeightKg} <span className="text-base text-gray-400 font-sans">kg</span>
+          <div className="text-3xl sm:text-4xl font-black text-cyan-300 mt-3 font-sans tracking-tight">
+            {stats.totalWeightKg} <span className="text-lg font-medium text-slate-400">kg</span>
           </div>
-          <div className="text-[11px] text-gray-500 mt-1">NIST 800-88 certified scale weighings</div>
+          <div className="text-xs text-slate-400 mt-2 font-normal">
+            NIST 800-88 certified scale weighings
+          </div>
         </div>
 
-        <div className="bg-nexus-card border border-amber-500/25 rounded-2xl p-4.5 backdrop-blur-xl">
-          <div className="text-gray-400 text-xs font-mono flex items-center justify-between">
-            <span>CERTIFIED FORM-6 MANIFESTS</span>
-            <Award className="w-4 h-4 text-amber-400" />
+        <div className="bg-nexus-card border border-amber-500/20 rounded-2xl p-5 sm:p-6 backdrop-blur-xl shadow-lg shadow-black/20 flex flex-col justify-between hover:border-amber-500/40 transition-colors">
+          <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider flex items-center justify-between">
+            <span>Certified Form-6 Manifests</span>
+            <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
+              <Award className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-amber-300 mt-1.5 font-mono">
+          <div className="text-3xl sm:text-4xl font-black text-amber-300 mt-3 font-sans tracking-tight">
             {stats.completedCount}
           </div>
-          <div className="text-[11px] text-gray-500 mt-1">EPR credits minted for OEM quotas</div>
+          <div className="text-xs text-slate-400 mt-2 font-normal">
+            EPR credits minted for OEM quotas
+          </div>
         </div>
 
-        <div className="bg-nexus-card border border-lime-500/25 rounded-2xl p-4.5 backdrop-blur-xl">
-          <div className="text-gray-400 text-xs font-mono flex items-center justify-between">
-            <span>ESTIMATED CASH &amp; REWARDS</span>
-            <Coins className="w-4 h-4 text-lime-400" />
+        <div className="bg-nexus-card border border-lime-500/20 rounded-2xl p-5 sm:p-6 backdrop-blur-xl shadow-lg shadow-black/20 flex flex-col justify-between hover:border-lime-500/40 transition-colors">
+          <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider flex items-center justify-between">
+            <span>Estimated Cash &amp; Rewards</span>
+            <div className="p-2 rounded-lg bg-lime-500/10 text-lime-400">
+              <Coins className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-lime-300 mt-1.5 font-mono">
+          <div className="text-3xl sm:text-4xl font-black text-lime-300 mt-3 font-sans tracking-tight">
             ₹{stats.totalRewards}
           </div>
-          <div className="text-[11px] text-gray-500 mt-1">Instant UPI doorstep payouts</div>
+          <div className="text-xs text-slate-400 mt-2 font-normal">
+            Instant UPI doorstep payouts
+          </div>
         </div>
       </div>
 
       {/* Main Mode Navigation Tabs */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-emerald-500/20 pb-4">
-        <div className="flex items-center space-x-2 bg-nexus-dark/80 p-1.5 rounded-2xl border border-emerald-500/25">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-emerald-500/20 pb-4">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 bg-nexus-dark/90 p-1.5 rounded-2xl border border-emerald-500/25">
           <button
             type="button"
             onClick={() => {
               soundEffects.playClick();
               setActiveTab('schedule');
             }}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+            className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all cursor-pointer ${
               activeTab === 'schedule'
-                ? 'bg-emerald-500 text-nexus-dark shadow-glow-green'
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-emerald-500 text-slate-950 shadow-glow-green'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
             }`}
           >
-            <Calendar className="w-4 h-4" />
+            <Calendar className="w-4 h-4 shrink-0" />
             <span>Scheduled Pickups Board</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-900/60 font-mono">
+            <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold tabular-nums ${activeTab === 'schedule' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-emerald-400'}`}>
               {pickups.length}
             </span>
           </button>
@@ -438,13 +454,13 @@ export default function PickupsPage() {
               soundEffects.playClick();
               setActiveTab('book');
             }}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+            className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all cursor-pointer ${
               activeTab === 'book'
-                ? 'bg-emerald-500 text-nexus-dark shadow-glow-green'
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-emerald-500 text-slate-950 shadow-glow-green'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
             }`}
           >
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="w-4 h-4 shrink-0" />
             <span>Book Doorstep Collection</span>
           </button>
 
@@ -454,13 +470,13 @@ export default function PickupsPage() {
               soundEffects.playClick();
               setActiveTab('corporate');
             }}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+            className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all cursor-pointer ${
               activeTab === 'corporate'
-                ? 'bg-emerald-500 text-nexus-dark shadow-glow-green'
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-emerald-500 text-slate-950 shadow-glow-green'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
             }`}
           >
-            <Building2 className="w-4 h-4" />
+            <Building2 className="w-4 h-4 shrink-0" />
             <span>Corporate B2B Bulk Disposal</span>
           </button>
 
@@ -470,26 +486,26 @@ export default function PickupsPage() {
               soundEffects.playClick();
               setActiveTab('list');
             }}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+            className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all cursor-pointer ${
               activeTab === 'list'
-                ? 'bg-emerald-500 text-nexus-dark shadow-glow-green'
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-emerald-500 text-slate-950 shadow-glow-green'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
             }`}
           >
-            <Package className="w-4 h-4" />
+            <Package className="w-4 h-4 shrink-0" />
             <span>All Consignments Directory</span>
           </button>
         </div>
 
         {/* Global Refresh & Green Wallet Button */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2 self-end lg:self-auto">
           <button
             type="button"
             onClick={() => {
               soundEffects.playClick();
               setIsWalletOpen(true);
             }}
-            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-lime-500/20 hover:from-emerald-500/30 hover:to-lime-500/30 border border-emerald-500/40 text-emerald-300 hover:text-white text-xs font-mono font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-glow-green"
+            className="px-3.5 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-emerald-500/20 to-lime-500/20 hover:from-emerald-500/30 hover:to-lime-500/30 border border-emerald-500/40 text-emerald-300 hover:text-white text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer shadow-glow-green"
           >
             <Coins className="w-4 h-4 text-emerald-400" />
             <span>Green Wallet (1,450 Pts)</span>
@@ -501,7 +517,7 @@ export default function PickupsPage() {
               soundEffects.playClick();
               fetchPickups();
             }}
-            className="p-2 rounded-xl bg-nexus-card border border-emerald-500/25 hover:border-emerald-500/50 text-gray-300 hover:text-white transition-all cursor-pointer flex items-center space-x-1.5 text-xs font-mono"
+            className="p-2 sm:px-3 sm:py-2.5 rounded-xl bg-nexus-card border border-emerald-500/25 hover:border-emerald-500/50 text-slate-300 hover:text-white transition-all cursor-pointer flex items-center space-x-1.5 text-xs font-medium"
             title="Refresh Ledger"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-emerald-400' : ''}`} />
@@ -531,9 +547,9 @@ export default function PickupsPage() {
       {activeTab === 'schedule' && (
         <div className="space-y-6">
           {/* Schedule Filter Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-nexus-card border border-emerald-500/25 rounded-2xl p-4 backdrop-blur-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-nexus-card border border-emerald-500/20 rounded-2xl p-4 sm:p-5 backdrop-blur-xl shadow-lg shadow-black/20">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-mono text-gray-400 mr-2 flex items-center space-x-1">
+              <span className="text-xs font-semibold text-slate-400 mr-2 flex items-center space-x-1.5 uppercase tracking-wider">
                 <Filter className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Schedule Filters:</span>
               </span>
@@ -541,10 +557,10 @@ export default function PickupsPage() {
               <button
                 type="button"
                 onClick={() => setDateFilter('all')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   dateFilter === 'all'
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                    : 'text-gray-400 hover:text-white bg-nexus-dark/50'
+                    ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                    : 'text-slate-300 hover:text-white bg-slate-900/70 border border-slate-800 hover:border-slate-700'
                 }`}
               >
                 All Dates
@@ -553,10 +569,10 @@ export default function PickupsPage() {
               <button
                 type="button"
                 onClick={() => setDateFilter('today')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   dateFilter === 'today'
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                    : 'text-gray-400 hover:text-white bg-nexus-dark/50'
+                    ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                    : 'text-slate-300 hover:text-white bg-slate-900/70 border border-slate-800 hover:border-slate-700'
                 }`}
               >
                 Today
@@ -565,10 +581,10 @@ export default function PickupsPage() {
               <button
                 type="button"
                 onClick={() => setDateFilter('tomorrow')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   dateFilter === 'tomorrow'
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                    : 'text-gray-400 hover:text-white bg-nexus-dark/50'
+                    ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                    : 'text-slate-300 hover:text-white bg-slate-900/70 border border-slate-800 hover:border-slate-700'
                 }`}
               >
                 Tomorrow
@@ -577,10 +593,10 @@ export default function PickupsPage() {
               <button
                 type="button"
                 onClick={() => setDateFilter('upcoming')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   dateFilter === 'upcoming'
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                    : 'text-gray-400 hover:text-white bg-nexus-dark/50'
+                    ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                    : 'text-slate-300 hover:text-white bg-slate-900/70 border border-slate-800 hover:border-slate-700'
                 }`}
               >
                 Active Only
@@ -589,11 +605,11 @@ export default function PickupsPage() {
 
             {/* Time Slot Filter */}
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-mono text-gray-400">Slot:</span>
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Slot:</span>
               <select
                 value={slotFilter}
                 onChange={(e) => setSlotFilter(e.target.value)}
-                className="bg-nexus-dark border border-emerald-500/30 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-400 font-sans"
+                className="bg-slate-900 border border-emerald-500/30 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-400 font-sans cursor-pointer"
               >
                 <option value="all">All Windows</option>
                 <option value="Morning">Morning (09:00 - 12:00)</option>
@@ -635,45 +651,45 @@ export default function PickupsPage() {
                 return (
                   <div
                     key={p.id}
-                    className="bg-nexus-card border border-emerald-500/25 hover:border-emerald-500/45 rounded-3xl p-6 transition-all shadow-xl space-y-5 group relative overflow-hidden"
+                    className="bg-nexus-card border border-emerald-500/20 hover:border-emerald-500/40 rounded-3xl p-5 sm:p-7 transition-all shadow-xl shadow-black/30 space-y-5 group relative overflow-hidden"
                   >
                     {/* Top Header Row */}
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-emerald-500/15 pb-4">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-emerald-500/15 pb-4">
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/30">
+                          <span className="font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/30">
                             #{p.id.slice(-8)}
                           </span>
                           {getStatusBadge(p.currentStatus)}
-                          <span className="text-[11px] font-mono text-gray-400 flex items-center space-x-1">
-                            <Calendar className="w-3 h-3 text-cyan-400" />
+                          <span className="text-xs font-medium text-slate-400 flex items-center space-x-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-cyan-400" />
                             <span className="text-white font-medium">{p.scheduledDate}</span>
-                            <span className="text-gray-500">&bull;</span>
-                            <span className="text-cyan-300">{p.timeSlot || 'Morning (09:00 - 12:00)'}</span>
+                            <span className="text-slate-600">&bull;</span>
+                            <span className="text-cyan-300 font-medium">{p.timeSlot || 'Morning (09:00 - 12:00)'}</span>
                           </span>
                         </div>
-                        <h3 className="text-lg font-bold text-white mt-1.5 flex items-center space-x-2">
+                        <h3 className="text-lg sm:text-xl font-bold text-white mt-2 flex items-center space-x-2">
                           <span>{p.category}</span>
                         </h3>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          Consignor: <span className="text-gray-200">{p.userName}</span> &bull; {p.userPhone}
+                        <p className="text-xs text-slate-400 mt-1">
+                          Consignor: <span className="text-slate-200 font-medium">{p.userName}</span> &bull; <span className="text-slate-300">{p.userPhone}</span>
                         </p>
                       </div>
 
                       {/* Right Handover Badge */}
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2.5 rounded-xl bg-nexus-dark/90 border border-emerald-500/30 text-right">
-                          <span className="text-[10px] font-mono text-gray-400 block">DOORSTEP HANDOVER PIN</span>
-                          <span className="text-sm font-mono font-black text-emerald-400 tracking-wider">
+                      <div className="flex items-center space-x-3 shrink-0">
+                        <div className="px-3.5 py-2 rounded-xl bg-slate-950/80 border border-emerald-500/30 text-right">
+                          <span className="text-[10px] font-semibold text-slate-400 block tracking-wider uppercase">DOORSTEP HANDOVER PIN</span>
+                          <span className="text-base font-mono font-bold text-emerald-400 tracking-wider">
                             {otpCode}
                           </span>
                         </div>
 
                         <div className="text-right">
-                          <div className="text-xs font-mono font-bold text-white">
+                          <div className="text-xs font-semibold text-white">
                             {p.estimatedQuantity} Units &bull; {p.actualWeightKg ? `${p.actualWeightKg} kg (Net)` : `${p.estimatedWeightKg} kg (Est)`}
                           </div>
-                          <div className="text-[11px] font-mono text-emerald-400 mt-0.5">
+                          <div className="text-xs font-medium text-emerald-400 mt-0.5">
                             Est. ₹{(p.estimatedQuantity * 350).toLocaleString('en-IN')} UPI
                           </div>
                         </div>
@@ -681,21 +697,21 @@ export default function PickupsPage() {
                     </div>
 
                     {/* 5-Step Visual Stepper */}
-                    <div className="bg-nexus-dark/60 rounded-2xl p-4 border border-emerald-500/15">
-                      <div className="text-[11px] font-mono text-gray-400 mb-3 flex items-center justify-between">
-                        <span>CHAIN-OF-CUSTODY AUDIT TRAIL</span>
-                        <span className="text-emerald-400">Step {step} of 5</span>
+                    <div className="bg-slate-950/60 rounded-2xl p-4 sm:p-5 border border-emerald-500/15">
+                      <div className="text-xs font-semibold text-slate-400 mb-3 flex items-center justify-between tracking-wide uppercase">
+                        <span>Chain-Of-Custody Audit Trail</span>
+                        <span className="text-emerald-400 font-bold normal-case">Step {step} of 5</span>
                       </div>
 
-                      <div className="grid grid-cols-5 gap-2 text-center text-[10px] font-mono">
+                      <div className="grid grid-cols-5 gap-2 text-center text-xs font-sans">
                         {/* Step 1 */}
                         <div className="space-y-1.5">
                           <div
                             className={`h-2 rounded-full transition-all ${
-                              step >= 1 ? 'bg-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)]' : 'bg-gray-800'
+                              step >= 1 ? 'bg-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)]' : 'bg-slate-800'
                             }`}
                           />
-                          <span className={step >= 1 ? 'text-cyan-300 font-bold' : 'text-gray-500'}>
+                          <span className={`text-[11px] font-medium block truncate ${step >= 1 ? 'text-cyan-300 font-semibold' : 'text-slate-500'}`}>
                             1. Booked
                           </span>
                         </div>
@@ -704,10 +720,10 @@ export default function PickupsPage() {
                         <div className="space-y-1.5">
                           <div
                             className={`h-2 rounded-full transition-all ${
-                              step >= 2 ? 'bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]' : 'bg-gray-800'
+                              step >= 2 ? 'bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]' : 'bg-slate-800'
                             }`}
                           />
-                          <span className={step >= 2 ? 'text-blue-300 font-bold' : 'text-gray-500'}>
+                          <span className={`text-[11px] font-medium block truncate ${step >= 2 ? 'text-blue-300 font-semibold' : 'text-slate-500'}`}>
                             2. Logistics
                           </span>
                         </div>
@@ -716,10 +732,10 @@ export default function PickupsPage() {
                         <div className="space-y-1.5">
                           <div
                             className={`h-2 rounded-full transition-all ${
-                              step >= 3 ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]' : 'bg-gray-800'
+                              step >= 3 ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]' : 'bg-slate-800'
                             }`}
                           />
-                          <span className={step >= 3 ? 'text-amber-300 font-bold' : 'text-gray-500'}>
+                          <span className={`text-[11px] font-medium block truncate ${step >= 3 ? 'text-amber-300 font-semibold' : 'text-slate-500'}`}>
                             3. In-Transit
                           </span>
                         </div>
@@ -728,10 +744,10 @@ export default function PickupsPage() {
                         <div className="space-y-1.5">
                           <div
                             className={`h-2 rounded-full transition-all ${
-                              step >= 4 ? 'bg-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.5)]' : 'bg-gray-800'
+                              step >= 4 ? 'bg-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.5)]' : 'bg-slate-800'
                             }`}
                           />
-                          <span className={step >= 4 ? 'text-indigo-300 font-bold' : 'text-gray-500'}>
+                          <span className={`text-[11px] font-medium block truncate ${step >= 4 ? 'text-indigo-300 font-semibold' : 'text-slate-500'}`}>
                             4. Weighed
                           </span>
                         </div>
@@ -740,10 +756,10 @@ export default function PickupsPage() {
                         <div className="space-y-1.5">
                           <div
                             className={`h-2 rounded-full transition-all ${
-                              step >= 5 ? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]' : 'bg-gray-800'
+                              step >= 5 ? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]' : 'bg-slate-800'
                             }`}
                           />
-                          <span className={step >= 5 ? 'text-emerald-300 font-bold' : 'text-gray-500'}>
+                          <span className={`text-[11px] font-medium block truncate ${step >= 5 ? 'text-emerald-300 font-semibold' : 'text-slate-500'}`}>
                             5. Certified
                           </span>
                         </div>
@@ -752,27 +768,27 @@ export default function PickupsPage() {
 
                     {/* Logistics Partner & Address Details */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                      <div className="p-3 rounded-xl bg-nexus-dark/50 border border-emerald-500/10 flex items-start space-x-2.5">
+                      <div className="p-3.5 rounded-xl bg-slate-900/60 border border-emerald-500/10 flex items-start space-x-3">
                         <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                         <div>
-                          <span className="text-[10px] font-mono text-gray-500 block uppercase">Doorstep Address</span>
-                          <span className="text-gray-200 line-clamp-2">{p.address}</span>
+                          <span className="text-[10px] font-semibold text-slate-400 block uppercase tracking-wider">Doorstep Address</span>
+                          <span className="text-slate-200 font-normal line-clamp-2 mt-0.5">{p.address}</span>
                           {p.specialInstructions && (
-                            <span className="text-[11px] text-gray-400 italic block mt-1">
+                            <span className="text-[11px] text-slate-400 italic block mt-1">
                               Note: &ldquo;{p.specialInstructions}&rdquo;
                             </span>
                           )}
                         </div>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-nexus-dark/50 border border-emerald-500/10 flex items-start space-x-2.5">
+                      <div className="p-3.5 rounded-xl bg-slate-900/60 border border-emerald-500/10 flex items-start space-x-3">
                         <Truck className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                         <div>
-                          <span className="text-[10px] font-mono text-gray-500 block uppercase">Assigned Fleet Partner</span>
-                          <span className="text-gray-200 font-medium">
+                          <span className="text-[10px] font-semibold text-slate-400 block uppercase tracking-wider">Assigned Fleet Partner</span>
+                          <span className="text-slate-200 font-medium block mt-0.5">
                             {p.assignedPartnerName || 'Apex Green Logistics • Driver: Vikram Singh (DL-12-EA-9821)'}
                           </span>
-                          <span className="text-[11px] text-cyan-400/90 font-mono block mt-0.5">
+                          <span className="text-[11px] text-cyan-400 font-mono block mt-1">
                             Calibrated Scale: AVERY-INDIA-WB940 &bull; Net: {p.actualWeightKg ? `${p.actualWeightKg} kg` : 'Pending weighbridge'}
                           </span>
                         </div>
@@ -788,7 +804,7 @@ export default function PickupsPage() {
                             type="button"
                             onClick={() => handleAdvanceStep(p.id)}
                             disabled={advancingId === p.id}
-                            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 hover:from-cyan-500/30 hover:to-emerald-500/30 text-cyan-300 hover:text-white border border-cyan-500/40 text-xs font-mono font-bold flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-50"
+                            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 hover:from-cyan-500/30 hover:to-emerald-500/30 text-cyan-300 hover:text-white border border-cyan-500/40 text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-50"
                             title="Simulate advancing consignment to the next physical stage"
                           >
                             <Sparkles className={`w-3.5 h-3.5 ${advancingId === p.id ? 'animate-spin' : ''}`} />
@@ -805,7 +821,7 @@ export default function PickupsPage() {
                             </span>
                           </button>
                         ) : (
-                          <div className="inline-flex items-center space-x-1.5 text-xs font-mono text-emerald-400">
+                          <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-emerald-400">
                             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                             <span>Consignment Fully Certified &amp; Minted</span>
                           </div>
@@ -821,7 +837,7 @@ export default function PickupsPage() {
                               soundEffects.playClick();
                               setSelectedCertPickup(p);
                             }}
-                            className="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-mono text-xs font-bold flex items-center space-x-1.5 border border-emerald-500/40 cursor-pointer shadow-glow-green"
+                            className="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold text-xs flex items-center space-x-1.5 border border-emerald-500/40 cursor-pointer shadow-glow-green"
                           >
                             <FileText className="w-3.5 h-3.5" />
                             <span>View CPCB Form-6</span>
@@ -830,7 +846,7 @@ export default function PickupsPage() {
 
                         <Link
                           href={`/pickups/${p.id}`}
-                          className="px-3.5 py-2 rounded-xl bg-nexus-dark hover:bg-slate-800 text-gray-300 hover:text-white border border-emerald-500/25 text-xs font-medium flex items-center space-x-1 transition-all"
+                          className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-emerald-500/25 text-xs font-medium flex items-center space-x-1 transition-all"
                         >
                           <span>Full Manifest</span>
                           <ChevronRight className="w-3.5 h-3.5" />
@@ -1126,17 +1142,17 @@ export default function PickupsPage() {
                     </div>
 
                     <div className="text-right">
-                      <div className="text-xs font-mono font-bold text-white">
+                      <div className="text-xs font-semibold text-white">
                         {p.estimatedQuantity} Units &bull; {p.actualWeightKg ? `${p.actualWeightKg} kg` : `${p.estimatedWeightKg} kg`}
                       </div>
-                      <div className="text-[11px] text-gray-400 font-mono mt-0.5">
+                      <div className="text-xs text-slate-400 mt-0.5">
                         Date: {p.scheduledDate} &bull; {p.timeSlot || 'Morning'}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-gray-300">
-                    <div className="flex items-center space-x-1.5 text-gray-400 line-clamp-1">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-300">
+                    <div className="flex items-center space-x-1.5 text-slate-400 line-clamp-1">
                       <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                       <span className="truncate">{p.address}</span>
                     </div>
@@ -1149,7 +1165,7 @@ export default function PickupsPage() {
                             soundEffects.playClick();
                             setSelectedCertPickup(p);
                           }}
-                          className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-mono text-xs font-bold flex items-center space-x-1 border border-emerald-500/40 cursor-pointer"
+                          className="px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center space-x-1 border border-emerald-500/40 cursor-pointer shadow-glow-green"
                         >
                           <FileText className="w-3.5 h-3.5" />
                           <span>View Certificate</span>
@@ -1157,7 +1173,7 @@ export default function PickupsPage() {
                       )}
                       <Link
                         href={`/pickups/${p.id}`}
-                        className="px-3 py-1.5 rounded-lg bg-nexus-dark hover:bg-slate-800 text-gray-300 hover:text-white border border-emerald-500/20 text-xs font-medium flex items-center space-x-1"
+                        className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-emerald-500/25 text-xs font-medium flex items-center space-x-1 transition-all"
                       >
                         <span>Details</span>
                         <ArrowRight className="w-3 h-3" />

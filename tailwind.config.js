@@ -23,7 +23,8 @@ module.exports = {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'Space Grotesk', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        mono: ['"Fira Code"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       boxShadow: {
         'glow-green': '0 0 25px -5px rgba(34, 197, 94, 0.4)',
