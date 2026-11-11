@@ -68,7 +68,6 @@ export const Navbar: React.FC = () => {
     { href: '/epr', label: 'EPR Exchange', icon: Award },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/cinema', label: '4K Cinema', icon: Film },
-    { href: '/syllabus', label: 'Syllabus Lab', icon: BookOpen },
   ];
 
   const roleTabs = [];

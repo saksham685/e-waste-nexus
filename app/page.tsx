@@ -118,11 +118,11 @@ export default function HomePage() {
           </Link>
 
           <Link
-            href="/syllabus"
-            className="px-5 py-3.5 rounded-2xl bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-white font-mono text-xs border border-white/10 hover:border-purple-500/40 transition-all flex items-center space-x-1.5"
+            href="/centers"
+            className="px-6 py-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 hover:text-white font-medium text-xs sm:text-sm border border-white/10 hover:border-emerald-500/40 transition-all flex items-center space-x-2"
           >
-            <BookOpen className="w-3.5 h-3.5 text-purple-400" />
-            <span>Syllabus Lab (Units I–VI)</span>
+            <Compass className="w-4 h-4 text-emerald-400" />
+            <span>Find 450+ Certified Centers</span>
           </Link>
         </div>
 
@@ -344,71 +344,74 @@ export default function HomePage() {
       </section>
 
       {/* =================================================================== */}
-      {/* 7. SYLLABUS ARCHITECTURE & LIVE AUDIT TELEMETRY FEED                */}
+      {/* 7. NATIONAL E-WASTE LOGISTICS & PRECIOUS METAL YIELDS               */}
       {/* =================================================================== */}
       <section className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Left: 4 Next.js Core Architecture Pillars */}
+          {/* Left: 4 Advanced Enterprise Logistics Capabilities */}
           <div className="lg:col-span-7 space-y-4">
             <div className="mb-4">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono uppercase tracking-wider mb-2">
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>React &amp; Next.js Academic Syllabus Alignment</span>
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono uppercase tracking-wider mb-2">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Statutory Chain of Custody &amp; Refining</span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-black text-white">
-                Engineered to Syllabus Specifications
+                National Logistics &amp; Smelter Yields
               </h3>
+              <p className="text-xs sm:text-sm text-slate-400 font-light mt-1">
+                Real-time dispatch telemetry, statutory Form-6 consignment generation, and certified rare-earth recovery.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-purple-500/30 transition-all">
-                <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-mono font-bold text-xs mb-3">
-                  U-I
-                </div>
-                <h4 className="text-sm font-bold text-white">ES6+, Immutability &amp; App Router</h4>
-                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-light">
-                  Arrow functions, rest/spread operators, deep copying, and Next.js 14 file-based routing architecture.
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-cyan-500/30 transition-all">
-                <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-mono font-bold text-xs mb-3">
-                  U-II
-                </div>
-                <h4 className="text-sm font-bold text-white">Component Design &amp; Tailwind CSS</h4>
-                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-light">
-                  Props-driven component composition, lifting state up, responsive breakpoints, and semantic accessible HTML.
-                </p>
-              </div>
-
               <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-emerald-500/30 transition-all">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs mb-3">
-                  U-III
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs mb-3">
+                  <ShieldCheck className="w-4 h-4" />
                 </div>
-                <h4 className="text-sm font-bold text-white">Hooks, useMemo &amp; Side Effects</h4>
+                <h4 className="text-sm font-bold text-white">Statutory CPCB Form-6 Manifests</h4>
                 <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-light">
-                  Managing state batching, optimizing expensive assays with `useMemo`, and custom Web Audio synthesizers.
+                  Automated generation of state compliance manifests with tamper-evident digital tracking for all consignments.
                 </p>
               </div>
 
               <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-amber-500/30 transition-all">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono font-bold text-xs mb-3">
-                  U-IV
+                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs mb-3">
+                  <Coins className="w-4 h-4" />
                 </div>
-                <h4 className="text-sm font-bold text-white">Forms, Zod &amp; Server Actions</h4>
+                <h4 className="text-sm font-bold text-white">Hydrometallurgical Gold Assays</h4>
                 <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-light">
-                  Controlled form inputs, schema-based Zod validation, and direct server mutations with optimistic UI updates.
+                  High-efficiency recovery of 99.9% pure gold, copper, palladium, and silver per metric ton of processed PCBs.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-cyan-500/30 transition-all">
+                <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs mb-3">
+                  <Truck className="w-4 h-4" />
+                </div>
+                <h4 className="text-sm font-bold text-white">Dual-Weighbridge Telemetry</h4>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-light">
+                  Gross and tare weight calibration at fleet docks, preventing informal leakage and ensuring full audit readiness.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-purple-500/30 transition-all">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs mb-3">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <h4 className="text-sm font-bold text-white">Direct Consignor UPI Payouts</h4>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-light">
+                  Automated settlements and green credit points credited directly to households upon certified collection.
                 </p>
               </div>
             </div>
 
             <div className="pt-2">
               <Link
-                href="/syllabus"
-                className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-purple-400 hover:text-purple-300"
+                href="/centers"
+                className="inline-flex items-center space-x-2 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
               >
-                <span>Launch Interactive Syllabus Lab with live benchmarks &rarr;</span>
+                <span>Explore 450+ Certified Recycling Centers Across India &rarr;</span>
               </Link>
             </div>
           </div>

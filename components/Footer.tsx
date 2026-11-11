@@ -120,14 +120,13 @@ export const Footer: React.FC = () => {
               <li><Link href="/recycler" className="hover:text-cyan-400 transition-colors">Certified Recycler Hub &amp; Smelter</Link></li>
               <li><Link href="/admin" className="hover:text-cyan-400 transition-colors">Central Governance Audit Center</Link></li>
               <li><Link href="/analytics" className="hover:text-cyan-400 transition-colors">Lifecycle Carbon Telemetry</Link></li>
-              <li><Link href="/syllabus" className="hover:text-purple-400 transition-colors">React &amp; Next.js Syllabus Lab</Link></li>
             </ul>
           </div>
 
           {/* Technical Architecture */}
           <div className="space-y-2">
             <h4 className="font-semibold text-white font-mono uppercase text-[11px] tracking-wider">
-              Curriculum Stack
+              Enterprise Platform Stack
             </h4>
             <div className="flex flex-wrap gap-1.5 pt-1">
               {[
