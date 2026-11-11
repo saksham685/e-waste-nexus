@@ -47,37 +47,47 @@ export default function GoogleAuthPopupPage() {
     setStep('password');
   };
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStep('loading');
 
+    const namePart = email.split('@')[0].replace(/[._-]/g, ' ');
+    const formattedName = namePart
+      .split(' ')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
+
     // Save email to localStorage for future quick access
     try {
-      const updated = Array.from(new Set([email, ...savedAccounts])).slice(0, 3);
+      const updated = Array.from(new Set([email, ...savedAccounts])).slice(0, 5);
       localStorage.setItem('nexus_google_saved_emails', JSON.stringify(updated));
     } catch {
       // Ignore
     }
 
-    // Complete sign-in
-    setTimeout(() => {
-      const namePart = email.split('@')[0].replace(/[._-]/g, ' ');
-      const formattedName = namePart
-        .split(' ')
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(' ');
+    try {
+      // Call Server API to persist to data/db.json
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'google',
+          email,
+          name: formattedName,
+        }),
+      });
 
-      const googleUser = {
+      const data = await res.json();
+      const safeUser = data.user || {
         id: 'usr_g_' + Math.random().toString(36).substring(2, 9),
-        name: formattedName || 'Google User',
+        name: formattedName,
         email: email.toLowerCase(),
         role: 'individual',
-        status: 'active',
-        createdAt: new Date().toISOString(),
       };
+      const token = data.token || `nexus_jwt_google_${safeUser.id}_session_2026`;
 
-      const sessionToken = `nexus_jwt_google_${googleUser.id}_session_2026`;
-      document.cookie = `nexus_token=${sessionToken}; path=/; max-age=604800; SameSite=Lax`;
+      // Set cookie client-side as well
+      document.cookie = `nexus_token=${token}; path=/; max-age=604800; SameSite=Lax`;
 
       // Notify parent window if opened as popup
       if (window.opener && !window.opener.closed) {
@@ -85,22 +95,25 @@ export default function GoogleAuthPopupPage() {
           window.opener.postMessage(
             {
               type: 'GOOGLE_AUTH_SUCCESS',
-              user: googleUser,
-              token: sessionToken,
+              user: safeUser,
+              token,
             },
             '*'
           );
         } catch {
-          // Ignore postMessage failure
+          // Ignore
         }
         setTimeout(() => {
           window.close();
         }, 500);
       } else {
-        // Direct navigation fallback
         window.location.href = '/';
       }
-    }, 1200);
+    } catch (err) {
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+    }
   };
 
   return (
