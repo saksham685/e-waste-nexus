@@ -95,6 +95,45 @@ export default function PickupsPage() {
   const [timeSlot, setTimeSlot] = useState<string>('Morning (09:00 - 12:00)');
   const [specialInstructions, setSpecialInstructions] = useState<string>('');
 
+  // LocalStorage key for persisting user-booked pickups across page refreshes
+  const getLocalKey = (userId: string) => `nexus_pickups_${userId}`;
+
+  // Save a newly booked pickup to localStorage
+  const savePickupLocally = (pickup: PickupRequest, userId: string) => {
+    try {
+      const key = getLocalKey(userId);
+      const existing: PickupRequest[] = JSON.parse(localStorage.getItem(key) || '[]');
+      // Avoid duplicates
+      if (!existing.find(p => p.id === pickup.id)) {
+        localStorage.setItem(key, JSON.stringify([pickup, ...existing]));
+      }
+    } catch {}
+  };
+
+  // Update a locally-saved pickup (e.g. after advance step)
+  const updatePickupLocally = (pickupId: string, updates: Partial<PickupRequest>, userId: string) => {
+    try {
+      const key = getLocalKey(userId);
+      const existing: PickupRequest[] = JSON.parse(localStorage.getItem(key) || '[]');
+      const updated = existing.map(p => p.id === pickupId ? { ...p, ...updates } : p);
+      localStorage.setItem(key, JSON.stringify(updated));
+    } catch {}
+  };
+
+  // Load locally-saved pickups and merge with API data (no duplicates)
+  const mergeLocalPickups = (apiPickups: PickupRequest[], userId: string): PickupRequest[] => {
+    try {
+      const key = getLocalKey(userId);
+      const local: PickupRequest[] = JSON.parse(localStorage.getItem(key) || '[]');
+      if (local.length === 0) return apiPickups;
+      const apiIds = new Set(apiPickups.map(p => p.id));
+      const onlyLocal = local.filter(p => !apiIds.has(p.id));
+      return [...onlyLocal, ...apiPickups];
+    } catch {
+      return apiPickups;
+    }
+  };
+
   // Fetch Pickups
   const fetchPickups = async () => {
     try {
@@ -107,7 +146,10 @@ export default function PickupsPage() {
       const res = await fetch(apiUrl);
       if (res.ok) {
         const data = await res.json();
-        setPickups(data.pickups || data.data || []);
+        const apiPickups = data.pickups || data.data || [];
+        // Merge with locally-stored pickups so new bookings survive page refresh
+        const merged = user?.id ? mergeLocalPickups(apiPickups, user.id) : apiPickups;
+        setPickups(merged);
       }
     } catch (err) {
       console.error('Error fetching pickups:', err);
@@ -203,6 +245,8 @@ export default function PickupsPage() {
         );
         // Optimistic update: add directly to state so it shows immediately
         setPickups(prev => [result.pickup!, ...prev]);
+        // Also save to localStorage so it persists after page refresh (Vercel serverless workaround)
+        if (user?.id) savePickupLocally(result.pickup, user.id);
         setActiveTab('schedule');
       } else {
         soundEffects.playError();
@@ -240,6 +284,8 @@ export default function PickupsPage() {
         // Optimistic update: update pickup status directly in state (no server refetch needed)
         if (updatedPickup) {
           setPickups(prev => prev.map(p => p.id === pickupId ? { ...p, ...updatedPickup } : p));
+          // Also update in localStorage if it was a locally-saved pickup
+          if (user?.id) updatePickupLocally(pickupId, updatedPickup, user.id);
         } else {
           await fetchPickups();
         }
