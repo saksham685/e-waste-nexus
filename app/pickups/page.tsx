@@ -111,9 +111,10 @@ export default function PickupsPage() {
     }
   };
 
+  // Re-fetch when user loads from Zustand (handles hydration delay)
   useEffect(() => {
     fetchPickups();
-  }, []);
+  }, [user?.id]);
 
   // Estimated Reward calculation
   const estimatedReward = useMemo(() => {

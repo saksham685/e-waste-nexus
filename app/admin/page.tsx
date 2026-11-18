@@ -45,9 +45,10 @@ export default function AdminPage() {
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const [pickupRes, eprRes] = await Promise.all([
+      const [pickupRes, eprRes, auditRes] = await Promise.all([
         fetch('/api/pickups'),
         fetch('/api/epr'),
+        fetch('/api/audit?limit=30'),
       ]);
 
       if (pickupRes.ok) {
@@ -58,6 +59,11 @@ export default function AdminPage() {
       if (eprRes.ok) {
         const eData = await eprRes.json();
         setEprRecords(eData.eprRecords || eData.data || []);
+      }
+
+      if (auditRes.ok) {
+        const aData = await auditRes.json();
+        setAuditLogs(aData.auditLogs || aData.data || []);
       }
     } catch (e) {
       console.error('Failed to load admin governance data', e);
