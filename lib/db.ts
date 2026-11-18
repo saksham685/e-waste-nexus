@@ -146,7 +146,6 @@ class NextDatabase {
         fs.mkdirSync(DATA_DIR, { recursive: true });
       }
 
-      // Check root data/db.json first or server/data/db.json
       let fileToRead = DATA_FILE;
       if (!fs.existsSync(fileToRead)) {
         const altFile = path.resolve(process.cwd(), 'server', 'data', 'db.json');
@@ -157,19 +156,21 @@ class NextDatabase {
 
       if (fs.existsSync(fileToRead)) {
         const raw = fs.readFileSync(fileToRead, 'utf-8');
-        this.data = JSON.parse(raw);
-        this.data.users = this.data.users || [];
-        this.data.pickups = this.data.pickups || [];
-        this.data.collections = this.data.collections || [];
-        this.data.recyclers = this.data.recyclers || [];
-        this.data.epr = this.data.epr || [];
-        this.data.centers = this.data.centers || [];
-        this.data.auditLogs = this.data.auditLogs || [];
-      } else {
-        this.seedDefaultData();
+        const parsed = JSON.parse(raw);
+        this.data.users = parsed.users || [];
+        this.data.pickups = parsed.pickups || [];
+        this.data.collections = parsed.collections || [];
+        this.data.recyclers = parsed.recyclers || [];
+        this.data.epr = parsed.epr || [];
+        this.data.centers = parsed.centers || [];
+        this.data.auditLogs = parsed.auditLogs || [];
       }
+
+      // Always ensure seed data exists (Vercel: db.json may be empty/minimal at runtime)
+      this.ensureSeedData();
+
     } catch (err) {
-      this.seedDefaultData();
+      this.ensureSeedData();
     }
   }
 
@@ -210,9 +211,11 @@ class NextDatabase {
     return entry;
   }
 
-  public seedDefaultData() {
+  // Merge seed users/pickups if missing (non-destructive)
+  private ensureSeedData() {
     const salt = bcrypt.genSaltSync(10);
-    this.data.users = [
+
+    const SEED_USERS: (User & { passwordHash?: string })[] = [
       {
         id: 'usr_admin_01',
         name: 'Dr. Evelyn Vance',
@@ -222,7 +225,7 @@ class NextDatabase {
         status: 'active',
         phone: '+1 (555) 019-2831',
         organization: 'E-Waste Nexus Global Governance',
-        createdAt: new Date().toISOString()
+        createdAt: '2026-01-15T08:00:00.000Z'
       },
       {
         id: 'usr_partner_01',
@@ -233,7 +236,7 @@ class NextDatabase {
         status: 'active',
         phone: '+1 (555) 342-8819',
         organization: 'GreenRoute Eco-Logistics Fleet',
-        createdAt: new Date().toISOString()
+        createdAt: '2026-01-18T10:15:00.000Z'
       },
       {
         id: 'usr_recycler_01',
@@ -244,7 +247,7 @@ class NextDatabase {
         status: 'active',
         phone: '+1 (555) 871-3342',
         organization: 'AeroSmelt Rare-Earth Refining Corp',
-        createdAt: new Date().toISOString()
+        createdAt: '2026-01-20T12:00:00.000Z'
       },
       {
         id: 'usr_individual_01',
@@ -256,77 +259,51 @@ class NextDatabase {
         phone: '+1 (555) 612-9901',
         address: '420 Innovation Way, Silicon Valley, CA 94025',
         organization: 'Cognitive Dynamics Labs',
-        createdAt: new Date().toISOString()
+        createdAt: '2026-02-01T09:30:00.000Z'
+      },
+      {
+        id: 'usr_citizen_01',
+        name: 'Aarav Sharma',
+        email: 'citizen@nexus.eco',
+        passwordHash: bcrypt.hashSync('Citizen@123', salt),
+        role: 'individual',
+        status: 'active',
+        phone: '+91 98101 23456',
+        address: 'Flat 402, Green Valley Apartments, Sector 62, Noida, UP 201309',
+        createdAt: '2026-02-05T10:00:00.000Z'
       }
     ];
 
-    this.data.centers = [
+    const SEED_PICKUPS: PickupRequest[] = [
       {
-        id: 'cntr_01',
-        name: 'Silicon Valley Central E-Waste Facility',
-        slug: 'silicon-valley-central',
-        address: '1020 Enterprise Way',
-        city: 'Sunnyvale',
-        state: 'CA',
-        postalCode: '94089',
-        phone: '+1 (408) 730-7262',
-        email: 'sv-hub@nexus.eco',
-        acceptedCategories: [
-          'Smartphones and Tablets',
-          'Laptops and Computers',
-          'Batteries and Chargers',
-          'Printers and Office Electronics'
+        id: 'pck_101',
+        userId: 'usr_individual_01',
+        userName: 'Sarah Jenkins',
+        userEmail: 'user@nexus.eco',
+        userPhone: '+1 (555) 612-9901',
+        category: 'Printers and Office Electronics',
+        estimatedQuantity: 2,
+        estimatedWeightKg: 9,
+        actualWeightKg: 9,
+        address: '420 Innovation Way, Silicon Valley, CA 94025',
+        scheduledDate: '2026-10-15',
+        timeSlot: 'Morning (09:00 - 12:00)',
+        specialInstructions: 'Old office printers.',
+        assignedPartnerId: 'usr_partner_01',
+        assignedPartnerName: 'GreenRoute Eco-Logistics Fleet',
+        currentStatus: 'Certified',
+        statusHistory: [
+          { status: 'Requested', timestamp: '2026-10-10T10:00:00.000Z', changedBy: 'usr_individual_01', changedByName: 'Sarah Jenkins', note: 'Pickup request initialized' },
+          { status: 'Assigned', timestamp: '2026-10-11T09:00:00.000Z', changedBy: 'usr_admin_01', changedByName: 'Dr. Evelyn Vance', note: 'Partner assigned' },
+          { status: 'InTransit', timestamp: '2026-10-14T08:00:00.000Z', changedBy: 'usr_partner_01', changedByName: 'Marcus Sterling', note: 'En route to facility' },
+          { status: 'Weighed', timestamp: '2026-10-15T10:00:00.000Z', changedBy: 'usr_recycler_01', changedByName: 'Elena Rostova', note: 'Weight confirmed: 9kg' },
+          { status: 'Certified', timestamp: '2026-10-16T11:00:00.000Z', changedBy: 'usr_recycler_01', changedByName: 'Elena Rostova', note: 'EPR Certificate issued' }
         ],
-        operatingHours: 'Mon - Fri: 08:00 - 18:00, Sat: 09:00 - 16:00',
-        isVerified: true,
-        latitude: 37.4085,
-        longitude: -122.0263
+        createdAt: '2026-10-10T10:00:00.000Z',
+        updatedAt: '2026-10-16T11:00:00.000Z'
       },
       {
-        id: 'cntr_02',
-        name: 'Bay Area Lithium & Battery Safe-Deposit Depot',
-        slug: 'bay-area-lithium-depot',
-        address: '550 7th Street',
-        city: 'San Francisco',
-        state: 'CA',
-        postalCode: '94103',
-        phone: '+1 (415) 554-6193',
-        email: 'sf-batteries@nexus.eco',
-        acceptedCategories: [
-          'Batteries and Chargers',
-          'Smartphones and Tablets'
-        ],
-        operatingHours: 'Mon - Sat: 09:00 - 17:00',
-        isVerified: true,
-        latitude: 37.7712,
-        longitude: -122.4042
-      },
-      {
-        id: 'cntr_03',
-        name: 'Pacific Northwest Heavy Electronics Intake Hub',
-        slug: 'pacific-northwest-hub',
-        address: '2200 6th Ave S',
-        city: 'Seattle',
-        state: 'WA',
-        postalCode: '98134',
-        phone: '+1 (206) 684-3000',
-        email: 'pnw-intake@nexus.eco',
-        acceptedCategories: [
-          'Televisions and Monitors',
-          'Large Electrical Appliances',
-          'Printers and Office Electronics',
-          'Other Electronic Waste'
-        ],
-        operatingHours: 'Mon - Sun: 07:30 - 19:00',
-        isVerified: true,
-        latitude: 47.5833,
-        longitude: -122.3267
-      }
-    ];
-
-    this.data.pickups = [
-      {
-        id: 'pick_01',
+        id: 'pck_102',
         userId: 'usr_individual_01',
         userName: 'Sarah Jenkins',
         userEmail: 'user@nexus.eco',
@@ -342,26 +319,329 @@ class NextDatabase {
         assignedPartnerName: 'GreenRoute Eco-Logistics Fleet',
         currentStatus: 'Approved',
         statusHistory: [
-          {
-            status: 'Requested',
-            timestamp: new Date().toISOString(),
-            changedBy: 'usr_individual_01',
-            changedByName: 'Sarah Jenkins',
-            note: 'Pickup request initialized'
-          },
-          {
-            status: 'Approved',
-            timestamp: new Date().toISOString(),
-            changedBy: 'usr_admin_01',
-            changedByName: 'Dr. Evelyn Vance',
-            note: 'Approved for fleet dispatch'
-          }
+          { status: 'Requested', timestamp: '2026-11-01T08:00:00.000Z', changedBy: 'usr_individual_01', changedByName: 'Sarah Jenkins', note: 'Pickup request initialized' },
+          { status: 'Approved', timestamp: '2026-11-02T09:00:00.000Z', changedBy: 'usr_admin_01', changedByName: 'Dr. Evelyn Vance', note: 'Approved for fleet dispatch' }
         ],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        createdAt: '2026-11-01T08:00:00.000Z',
+        updatedAt: '2026-11-02T09:00:00.000Z'
+      },
+      {
+        id: 'pck_103',
+        userId: 'usr_individual_01',
+        userName: 'Sarah Jenkins',
+        userEmail: 'user@nexus.eco',
+        userPhone: '+1 (555) 612-9901',
+        category: 'Televisions and Monitors',
+        estimatedQuantity: 2,
+        estimatedWeightKg: 15,
+        address: '420 Innovation Way, Silicon Valley, CA 94025',
+        scheduledDate: '2026-11-25',
+        timeSlot: 'Afternoon (12:00 - 17:00)',
+        specialInstructions: '2 large LED monitors from server room.',
+        currentStatus: 'Requested',
+        statusHistory: [
+          { status: 'Requested', timestamp: '2026-11-15T10:00:00.000Z', changedBy: 'usr_individual_01', changedByName: 'Sarah Jenkins', note: 'Pickup scheduled' }
+        ],
+        createdAt: '2026-11-15T10:00:00.000Z',
+        updatedAt: '2026-11-15T10:00:00.000Z'
+      },
+      {
+        id: 'pick_citizen_demo_1',
+        userId: 'usr_citizen_01',
+        userName: 'Aarav Sharma',
+        userEmail: 'citizen@nexus.eco',
+        userPhone: '+91 98101 23456',
+        category: 'Smartphones and Tablets',
+        estimatedQuantity: 3,
+        estimatedWeightKg: 0.9,
+        actualWeightKg: 0.95,
+        address: 'Flat 402, Green Valley Apartments, Sector 62, Noida, UP 201309',
+        scheduledDate: '2026-11-25',
+        timeSlot: 'Morning (09:00 - 12:00)',
+        specialInstructions: '2 old iPhones and 1 Android. Factory reset done.',
+        assignedPartnerId: 'usr_partner_01',
+        assignedPartnerName: 'GreenRoute Eco-Logistics Fleet',
+        currentStatus: 'Assigned',
+        statusHistory: [
+          { status: 'Requested', timestamp: '2026-11-18T17:00:00.000Z', changedBy: 'usr_citizen_01', changedByName: 'Aarav Sharma', note: 'Pickup booked online' },
+          { status: 'Assigned', timestamp: '2026-11-18T18:00:00.000Z', changedBy: 'usr_admin_01', changedByName: 'Dr. Evelyn Vance', note: 'Partner assigned for doorstep collection' }
+        ],
+        createdAt: '2026-11-18T17:00:00.000Z',
+        updatedAt: '2026-11-18T18:00:00.000Z'
+      },
+      {
+        id: 'pick_citizen_demo_2',
+        userId: 'usr_citizen_01',
+        userName: 'Aarav Sharma',
+        userEmail: 'citizen@nexus.eco',
+        userPhone: '+91 98101 23456',
+        category: 'Batteries and Chargers',
+        estimatedQuantity: 5,
+        estimatedWeightKg: 2.5,
+        actualWeightKg: 2.6,
+        address: 'Flat 402, Green Valley Apartments, Sector 62, Noida, UP 201309',
+        scheduledDate: '2026-11-10',
+        timeSlot: 'Afternoon (12:00 - 17:00)',
+        specialInstructions: 'Laptop batteries and phone chargers',
+        currentStatus: 'Completed',
+        statusHistory: [
+          { status: 'Requested', timestamp: '2026-11-05T10:00:00.000Z', changedBy: 'usr_citizen_01', changedByName: 'Aarav Sharma', note: 'Booked via app' },
+          { status: 'Completed', timestamp: '2026-11-10T14:00:00.000Z', changedBy: 'usr_recycler_01', changedByName: 'Elena Rostova', note: 'Successfully recycled at facility' }
+        ],
+        createdAt: '2026-11-05T10:00:00.000Z',
+        updatedAt: '2026-11-10T14:00:00.000Z'
+      },
+      {
+        id: 'pick_citizen_demo_3',
+        userId: 'usr_citizen_01',
+        userName: 'Aarav Sharma',
+        userEmail: 'citizen@nexus.eco',
+        userPhone: '+91 98101 23456',
+        category: 'Televisions and Monitors',
+        estimatedQuantity: 1,
+        estimatedWeightKg: 8.0,
+        address: 'Flat 402, Green Valley Apartments, Sector 62, Noida, UP 201309',
+        scheduledDate: '2026-11-28',
+        timeSlot: 'Evening (17:00 - 20:00)',
+        specialInstructions: 'Old 32-inch LED TV. Please bring 2 persons for heavy lifting.',
+        currentStatus: 'Requested',
+        statusHistory: [
+          { status: 'Requested', timestamp: '2026-11-18T17:00:00.000Z', changedBy: 'usr_citizen_01', changedByName: 'Aarav Sharma', note: 'Scheduled via doorstep portal' }
+        ],
+        createdAt: '2026-11-18T17:00:00.000Z',
+        updatedAt: '2026-11-18T17:00:00.000Z'
+      },
+      {
+        id: 'pick_1794389136478_npz0',
+        userId: 'usr_citizen_01',
+        userName: 'Aarav Sharma',
+        userEmail: 'citizen@nexus.eco',
+        userPhone: '9805926846',
+        category: 'Laptops and Computers',
+        estimatedQuantity: 2,
+        estimatedWeightKg: 5,
+        address: 'Flat 402, Green Valley Apartments, Sector 62, Noida, Uttar Pradesh 201309',
+        scheduledDate: '2026-11-13',
+        timeSlot: 'Morning (09:00 - 12:00)',
+        specialInstructions: 'Standard doorstep collection requested.',
+        currentStatus: 'Requested',
+        statusHistory: [
+          { status: 'Requested', timestamp: '2026-11-11T09:25:36.478Z', changedBy: 'usr_citizen_01', changedByName: 'Aarav Sharma', note: 'Pickup request submitted via CPCB Chain-of-Custody Portal' }
+        ],
+        createdAt: '2026-11-11T09:25:36.478Z',
+        updatedAt: '2026-11-11T09:25:36.478Z'
+      },
+      {
+        id: 'pick_1794383454642_kwva',
+        userId: 'usr_citizen_01',
+        userName: 'Aarav Sharma',
+        userEmail: 'citizen@nexus.eco',
+        userPhone: '9805926846',
+        category: 'Laptops and Computers',
+        estimatedQuantity: 2,
+        estimatedWeightKg: 5,
+        address: 'Flat 402, Green Valley Apartments, Sector 62, Noida, Uttar Pradesh',
+        scheduledDate: '2026-11-11',
+        timeSlot: 'Morning (09:00 - 12:00)',
+        specialInstructions: '',
+        currentStatus: 'Certified',
+        statusHistory: [
+          { status: 'Requested', timestamp: '2026-11-11T07:50:54.642Z', changedBy: 'usr_citizen_01', changedByName: 'Aarav Sharma', note: 'Pickup request submitted' },
+          { status: 'Assigned', timestamp: '2026-11-11T08:00:00.000Z', changedBy: 'usr_admin_01', changedByName: 'Dr. Evelyn Vance', note: 'Assigned to partner' },
+          { status: 'InTransit', timestamp: '2026-11-11T09:00:00.000Z', changedBy: 'usr_partner_01', changedByName: 'Marcus Sterling', note: 'In transit' },
+          { status: 'Weighed', timestamp: '2026-11-11T10:00:00.000Z', changedBy: 'usr_recycler_01', changedByName: 'Elena Rostova', note: 'Weighed at facility' },
+          { status: 'Certified', timestamp: '2026-11-11T11:00:00.000Z', changedBy: 'usr_recycler_01', changedByName: 'Elena Rostova', note: 'EPR Certificate issued' }
+        ],
+        createdAt: '2026-11-11T07:50:54.642Z',
+        updatedAt: '2026-11-11T11:00:00.000Z'
       }
     ];
 
+    const SEED_CENTERS: CollectionCenter[] = [
+      {
+        id: 'cntr_01',
+        name: 'Silicon Valley Central E-Waste Facility',
+        slug: 'silicon-valley-central',
+        address: '1020 Enterprise Way',
+        city: 'Sunnyvale',
+        state: 'CA',
+        postalCode: '94089',
+        phone: '+1 (408) 730-7262',
+        email: 'sv-hub@nexus.eco',
+        acceptedCategories: ['Smartphones and Tablets', 'Laptops and Computers', 'Batteries and Chargers', 'Printers and Office Electronics'],
+        operatingHours: 'Mon - Fri: 08:00 - 18:00, Sat: 09:00 - 16:00',
+        isVerified: true,
+        latitude: 37.4085,
+        longitude: -122.0263
+      },
+      {
+        id: 'cntr_02',
+        name: 'Bay Area Lithium & Battery Safe-Deposit Depot',
+        slug: 'bay-area-lithium-depot',
+        address: '550 7th Street',
+        city: 'San Francisco',
+        state: 'CA',
+        postalCode: '94103',
+        phone: '+1 (415) 554-6193',
+        email: 'sf-batteries@nexus.eco',
+        acceptedCategories: ['Batteries and Chargers', 'Smartphones and Tablets'],
+        operatingHours: 'Mon - Sat: 09:00 - 17:00',
+        isVerified: true,
+        latitude: 37.7712,
+        longitude: -122.4042
+      },
+      {
+        id: 'cntr_03',
+        name: 'Pacific Northwest Heavy Electronics Intake Hub',
+        slug: 'pacific-northwest-hub',
+        address: '2200 6th Ave S',
+        city: 'Seattle',
+        state: 'WA',
+        postalCode: '98134',
+        phone: '+1 (206) 684-3000',
+        email: 'pnw-intake@nexus.eco',
+        acceptedCategories: ['Televisions and Monitors', 'Printers and Office Electronics', 'Other Electronic Waste'],
+        operatingHours: 'Mon - Sun: 07:30 - 19:00',
+        isVerified: true,
+        latitude: 47.5833,
+        longitude: -122.3267
+      },
+      {
+        id: 'cntr_04',
+        name: 'Delhi NCR E-Waste Processing Hub',
+        slug: 'delhi-ncr-hub',
+        address: 'Plot 45, Sector 18, Industrial Area',
+        city: 'Noida',
+        state: 'UP',
+        postalCode: '201301',
+        phone: '+91 120-456-7890',
+        email: 'delhi-hub@nexus.eco',
+        acceptedCategories: ['Laptops and Computers', 'Smartphones and Tablets', 'Batteries and Chargers', 'Televisions and Monitors', 'Other Electronic Waste'],
+        operatingHours: 'Mon - Sat: 09:00 - 18:00',
+        isVerified: true,
+        latitude: 28.5355,
+        longitude: 77.3910
+      },
+      {
+        id: 'cntr_05',
+        name: 'Mumbai Coastal E-Waste Reclamation Center',
+        slug: 'mumbai-coastal-center',
+        address: 'B-12, MIDC Industrial Estate, Andheri East',
+        city: 'Mumbai',
+        state: 'MH',
+        postalCode: '400093',
+        phone: '+91 22-2836-4500',
+        email: 'mumbai@nexus.eco',
+        acceptedCategories: ['Printers and Office Electronics', 'Laptops and Computers', 'Televisions and Monitors', 'Other Electronic Waste'],
+        operatingHours: 'Mon - Fri: 08:00 - 17:00',
+        isVerified: true,
+        latitude: 19.1136,
+        longitude: 72.8697
+      }
+    ];
+
+    const SEED_EPR: EPRRecord[] = [
+      {
+        id: 'epr_001',
+        certificateNumber: 'CPCB-EPR-2026-593947',
+        producerName: 'Cognitive Dynamics Labs',
+        recyclerName: 'AeroSmelt Rare-Earth Refining Corp',
+        creditsEarnedKg: 12.5,
+        status: 'Active',
+        issuedAt: '2026-10-20T10:00:00.000Z',
+        pickupId: 'pck_102',
+        category: 'Laptops and Computers',
+        creditStatus: 'Available',
+        approvalStatus: 'Approved'
+      },
+      {
+        id: 'epr_002',
+        certificateNumber: 'EPR-2026-401',
+        producerName: 'GreenRoute Eco-Logistics Fleet',
+        recyclerName: 'AeroSmelt Rare-Earth Refining Corp',
+        creditsEarnedKg: 45,
+        status: 'Active',
+        issuedAt: '2026-09-15T09:00:00.000Z',
+        category: 'Printers and Office Electronics',
+        creditStatus: 'Available',
+        approvalStatus: 'Approved'
+      },
+      {
+        id: 'epr_003',
+        certificateNumber: 'EPR-2026-402',
+        producerName: 'AeroSmelt Rare-Earth Refining Corp',
+        recyclerName: 'AeroSmelt Rare-Earth Refining Corp',
+        creditsEarnedKg: 150,
+        status: 'Active',
+        issuedAt: '2026-08-01T08:00:00.000Z',
+        category: 'Batteries and Chargers',
+        creditStatus: 'Available',
+        approvalStatus: 'Approved'
+      },
+      {
+        id: 'epr_004',
+        certificateNumber: 'EPR-2026-403',
+        producerName: 'Sarah Jenkins',
+        recyclerName: 'AeroSmelt Rare-Earth Refining Corp',
+        creditsEarnedKg: 9,
+        status: 'Active',
+        issuedAt: '2026-10-16T11:00:00.000Z',
+        pickupId: 'pck_101',
+        category: 'Printers and Office Electronics',
+        creditStatus: 'Available',
+        approvalStatus: 'Approved'
+      },
+      {
+        id: 'epr_citizen_001',
+        certificateNumber: 'CPCB-EPR-2026-847291',
+        producerName: 'Aarav Sharma',
+        recyclerName: 'AeroSmelt Rare-Earth Refining Corp',
+        creditsEarnedKg: 5,
+        status: 'Active',
+        issuedAt: '2026-11-11T11:00:00.000Z',
+        pickupId: 'pick_1794383454642_kwva',
+        category: 'Laptops and Computers',
+        creditStatus: 'Available',
+        approvalStatus: 'Approved'
+      }
+    ];
+
+    // Merge users (don't duplicate existing ones)
+    const existingUserIds = new Set(this.data.users.map(u => u.id));
+    for (const u of SEED_USERS) {
+      if (!existingUserIds.has(u.id)) {
+        this.data.users.push(u);
+      }
+    }
+
+    // Merge pickups (don't duplicate existing ones)
+    const existingPickupIds = new Set(this.data.pickups.map(p => p.id));
+    for (const p of SEED_PICKUPS) {
+      if (!existingPickupIds.has(p.id)) {
+        this.data.pickups.push(p);
+      }
+    }
+
+    // Merge centers
+    const existingCenterIds = new Set(this.data.centers.map(c => c.id));
+    for (const c of SEED_CENTERS) {
+      if (!existingCenterIds.has(c.id)) {
+        this.data.centers.push(c);
+      }
+    }
+
+    // Merge EPR
+    const existingEprIds = new Set(this.data.epr.map(e => e.id));
+    for (const e of SEED_EPR) {
+      if (!existingEprIds.has(e.id)) {
+        this.data.epr.push(e);
+      }
+    }
+  }
+
+  // Keep for backward compatibility
+  public seedDefaultData() {
+    this.ensureSeedData();
     this.save();
   }
 }
