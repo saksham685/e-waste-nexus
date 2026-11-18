@@ -233,10 +233,16 @@ export default function PickupsPage() {
       const res = await simulateAdvancePickupStep(pickupId, actor);
       if (res.success) {
         soundEffects.playSuccess();
-        const nextStatus = (res as any).pickup?.currentStatus;
+        const updatedPickup = (res as any).pickup;
+        const nextStatus = updatedPickup?.currentStatus;
         setSuccessMsg(`Consignment #${pickupId.slice(-6)} advanced to: ${nextStatus}`);
         voiceAssistant.speak(`Consignment updated to ${nextStatus}.`);
-        await fetchPickups();
+        // Optimistic update: update pickup status directly in state (no server refetch needed)
+        if (updatedPickup) {
+          setPickups(prev => prev.map(p => p.id === pickupId ? { ...p, ...updatedPickup } : p));
+        } else {
+          await fetchPickups();
+        }
       } else {
         soundEffects.playError();
         setErrorMsg(res.error || 'Could not advance pickup.');
