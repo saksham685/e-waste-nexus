@@ -99,7 +99,7 @@ export default function PickupsPage() {
   const fetchPickups = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/pickups');
+      const res = await fetch(`/api/pickups${user?.id ? '?userId=' + user.id : ''}`);
       if (res.ok) {
         const data = await res.json();
         setPickups(data.pickups || data.data || []);
@@ -195,7 +195,8 @@ export default function PickupsPage() {
         voiceAssistant.speak(
           `Your collection has been scheduled for ${result.pickup.scheduledDate} in the ${timeSlot} slot.`
         );
-        await fetchPickups();
+        // Optimistic update: add directly to state so it shows immediately
+        setPickups(prev => [result.pickup!, ...prev]);
         setActiveTab('schedule');
       } else {
         soundEffects.playError();
