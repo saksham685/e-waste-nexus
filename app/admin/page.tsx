@@ -495,60 +495,32 @@ export default function AdminPage() {
           </div>
 
           <div className="space-y-3">
-            {[
-              {
-                id: 'AUD-8805',
-                action: 'MINT_EPR_CREDIT',
-                entity: 'epr/epr_samsung_01',
-                actor: 'EcoRefine Hydrometallurgy Ltd (Recycler)',
-                ip: '10.0.4.12',
-                time: 'Just now',
-              },
-              {
-                id: 'AUD-8804',
-                action: 'RECORD_WEIGHBRIDGE',
-                entity: 'collection/col_9921',
-                actor: 'Apex Green Logistics (Partner)',
-                ip: '192.168.1.104',
-                time: '8 mins ago',
-              },
-              {
-                id: 'AUD-8803',
-                action: 'ASSIGN_FLEET_DRIVER',
-                entity: 'pickup/pick_882',
-                actor: 'Apex Green Fleet (Partner)',
-                ip: '192.168.1.104',
-                time: '19 mins ago',
-              },
-              {
-                id: 'AUD-8802',
-                action: 'CREATE_PICKUP',
-                entity: 'pickup/pick_citizen_01',
-                actor: 'Authorized Consignor (Individual)',
-                ip: '172.56.21.9',
-                time: '34 mins ago',
-              },
-            ].map((log) => (
-              <div
-                key={log.id}
-                className="p-3.5 rounded-2xl bg-nexus-dark/70 border border-emerald-500/15 flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="flex items-center space-x-2 font-mono">
-                    <span className="text-emerald-400 font-bold">{log.id}</span>
-                    <span className="text-white">{log.action}</span>
-                  </div>
-                  <div className="text-[11px] text-gray-400 mt-0.5">
-                    Actor: {log.actor} &bull; Target: {log.entity}
-                  </div>
-                </div>
-
-                <div className="text-right font-mono text-[10px] text-gray-500">
-                  <span>{log.ip}</span>
-                  <div className="text-emerald-400/80">{log.time}</div>
-                </div>
+            {auditLogs.length === 0 ? (
+              <div className="p-6 text-center text-gray-400 text-sm font-mono">
+                Loading audit logs...
               </div>
-            ))}
+            ) : (
+              auditLogs.map((log) => (
+                <div
+                  key={log.id}
+                  className="p-3.5 rounded-2xl bg-nexus-dark/70 border border-emerald-500/15 flex items-center justify-between text-xs"
+                >
+                  <div>
+                    <div className="flex items-center space-x-2 font-mono">
+                      <span className="text-emerald-400 font-bold">#{log.id.slice(-6).toUpperCase()}</span>
+                      <span className="text-white">{log.action}</span>
+                    </div>
+                    <div className="text-[11px] text-gray-400 mt-0.5">
+                      Actor: {log.actorName} ({log.actorRole}) &bull; Target: {log.entityType}/{log.entityId}
+                    </div>
+                  </div>
+                  <div className="text-right font-mono text-[10px] text-gray-500">
+                    <span className="capitalize">{log.actorRole}</span>
+                    <div className="text-emerald-400/80">{new Date(log.timestamp).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}</div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}
