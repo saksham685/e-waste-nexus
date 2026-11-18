@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import bcrypt from 'bcryptjs';
 import {
   User,
   PickupRequest,
@@ -212,15 +211,23 @@ class NextDatabase {
   }
 
   // Merge seed users/pickups if missing (non-destructive)
+  // Uses pre-computed password hashes to avoid bcrypt cost on every serverless cold start
   private ensureSeedData() {
-    const salt = bcrypt.genSaltSync(10);
+    // Pre-computed bcrypt hashes (cost factor 10) — avoids running bcrypt on every request
+    const HASHES = {
+      admin:    '$2a$10$Hhb4FCLMHcGQ.Saje1LfOe9qMLjTpXck5l1GYX6fz5OQT9ZcbbNGO', // Admin@123
+      partner:  '$2a$10$Hhb4FCLMHcGQ.Saje1LfOeJmpYrYOZuehG99FNlfTC20MdRwmYJgW', // Partner@123
+      recycler: '$2a$10$Hhb4FCLMHcGQ.Saje1LfOeyazQDlTQA8aDFVul.5DO15.5EUw2kc2', // Recycler@123
+      user:     '$2a$10$Hhb4FCLMHcGQ.Saje1LfOehGyFe0c2pyCZvF9TGrmGYEzJXV9e.hO', // User@123
+      citizen:  '$2b$10$6L3bkLIr.k.9Dhhg9M6FuuZQDzzNKkINUg.WniQcLH8.LY6wJHmN6', // Citizen@123
+    };
 
     const SEED_USERS: (User & { passwordHash?: string })[] = [
       {
         id: 'usr_admin_01',
         name: 'Dr. Evelyn Vance',
         email: 'admin@nexus.eco',
-        passwordHash: bcrypt.hashSync('Admin@123', salt),
+        passwordHash: HASHES.admin,
         role: 'admin',
         status: 'active',
         phone: '+1 (555) 019-2831',
@@ -231,7 +238,7 @@ class NextDatabase {
         id: 'usr_partner_01',
         name: 'Marcus Sterling',
         email: 'partner@nexus.eco',
-        passwordHash: bcrypt.hashSync('Partner@123', salt),
+        passwordHash: HASHES.partner,
         role: 'partner',
         status: 'active',
         phone: '+1 (555) 342-8819',
@@ -242,7 +249,7 @@ class NextDatabase {
         id: 'usr_recycler_01',
         name: 'Elena Rostova',
         email: 'recycler@nexus.eco',
-        passwordHash: bcrypt.hashSync('Recycler@123', salt),
+        passwordHash: HASHES.recycler,
         role: 'recycler',
         status: 'active',
         phone: '+1 (555) 871-3342',
@@ -253,7 +260,7 @@ class NextDatabase {
         id: 'usr_individual_01',
         name: 'Sarah Jenkins',
         email: 'user@nexus.eco',
-        passwordHash: bcrypt.hashSync('User@123', salt),
+        passwordHash: HASHES.user,
         role: 'individual',
         status: 'active',
         phone: '+1 (555) 612-9901',
@@ -265,7 +272,7 @@ class NextDatabase {
         id: 'usr_citizen_01',
         name: 'Aarav Sharma',
         email: 'citizen@nexus.eco',
-        passwordHash: bcrypt.hashSync('Citizen@123', salt),
+        passwordHash: HASHES.citizen,
         role: 'individual',
         status: 'active',
         phone: '+91 98101 23456',
