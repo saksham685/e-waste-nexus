@@ -99,7 +99,12 @@ export default function PickupsPage() {
   const fetchPickups = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch(`/api/pickups${user?.id ? '?userId=' + user.id : ''}`);
+      // Only filter by userId for individual/citizen users - admin/partner/recycler see all
+      const shouldFilter = user?.role === 'individual';
+      const apiUrl = shouldFilter && user?.id
+        ? `/api/pickups?userId=${user.id}`
+        : '/api/pickups';
+      const res = await fetch(apiUrl);
       if (res.ok) {
         const data = await res.json();
         setPickups(data.pickups || data.data || []);
