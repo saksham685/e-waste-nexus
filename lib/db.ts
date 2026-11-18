@@ -140,36 +140,33 @@ class NextDatabase {
   }
 
   private load() {
+    // Load from db.json if available (works locally; on Vercel file is bundled read-only)
     try {
-      if (!fs.existsSync(DATA_DIR)) {
-        fs.mkdirSync(DATA_DIR, { recursive: true });
-      }
-
       let fileToRead = DATA_FILE;
       if (!fs.existsSync(fileToRead)) {
         const altFile = path.resolve(process.cwd(), 'server', 'data', 'db.json');
-        if (fs.existsSync(altFile)) {
-          fileToRead = altFile;
-        }
+        if (fs.existsSync(altFile)) fileToRead = altFile;
       }
-
       if (fs.existsSync(fileToRead)) {
         const raw = fs.readFileSync(fileToRead, 'utf-8');
         const parsed = JSON.parse(raw);
-        this.data.users = parsed.users || [];
-        this.data.pickups = parsed.pickups || [];
-        this.data.collections = parsed.collections || [];
-        this.data.recyclers = parsed.recyclers || [];
-        this.data.epr = parsed.epr || [];
-        this.data.centers = parsed.centers || [];
-        this.data.auditLogs = parsed.auditLogs || [];
+        this.data.users        = Array.isArray(parsed.users)     ? parsed.users     : [];
+        this.data.pickups      = Array.isArray(parsed.pickups)   ? parsed.pickups   : [];
+        this.data.collections  = Array.isArray(parsed.collections)? parsed.collections: [];
+        this.data.recyclers    = Array.isArray(parsed.recyclers) ? parsed.recyclers : [];
+        this.data.epr          = Array.isArray(parsed.epr)       ? parsed.epr       : [];
+        this.data.centers      = Array.isArray(parsed.centers)   ? parsed.centers   : [];
+        this.data.auditLogs    = Array.isArray(parsed.auditLogs) ? parsed.auditLogs : [];
       }
+    } catch (_) {
+      // If file read fails (e.g. Vercel), data stays as empty arrays — seed below fills it
+    }
 
-      // Always ensure seed data exists (Vercel: db.json may be empty/minimal at runtime)
+    // Always merge seed data (adds missing records, never duplicates)
+    try {
       this.ensureSeedData();
-
-    } catch (err) {
-      this.ensureSeedData();
+    } catch (seedErr) {
+      console.error('Seed error:', seedErr);
     }
   }
 
@@ -179,8 +176,8 @@ class NextDatabase {
         fs.mkdirSync(DATA_DIR, { recursive: true });
       }
       fs.writeFileSync(DATA_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
-    } catch (err) {
-      console.error('Error saving Next.js database:', err);
+    } catch (_) {
+      // Silently ignore on Vercel (read-only filesystem) — data lives in memory for this request
     }
   }
 
@@ -648,8 +645,10 @@ class NextDatabase {
 
   // Keep for backward compatibility
   public seedDefaultData() {
-    this.ensureSeedData();
-    this.save();
+    try {
+      this.ensureSeedData();
+      this.save();
+    } catch (_) {}
   }
 }
 
